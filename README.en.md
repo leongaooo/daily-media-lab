@@ -93,6 +93,6 @@ Priorities include a publicly reproducible authorized voice, fresh-machine insta
 
 ## Status and licensing
 
-This is an experimental, unpublished open-source preparation snapshot of a working local workflow. Fresh-machine end-to-end installation is unverified. The current voice policy pins private reference hashes; supplying an arbitrary recording does not work. A public voice configuration needs implementation and verification.
+This is an experimental snapshot of a working local workflow. Fresh-machine end-to-end installation is unverified. The current voice policy pins private reference hashes; supplying an arbitrary recording does not work. A public voice configuration needs implementation and verification.
 
-MIT is proposed for project-owned code and documentation, pending ownership and license confirmation; this draft does not claim an MIT grant. Music, models, Remotion, fonts and other third-party materials retain their own terms. [Release preparation](docs/RELEASE_PREPARATION.md).
+Project-owned code and documentation use the [MIT License](LICENSE). The maintainer has confirmed public distribution of the existing preview images; private voice materials and voiced samples remain excluded. Music, models, Remotion, fonts and other third-party materials retain their own terms. [Release preparation](docs/RELEASE_PREPARATION.md).
