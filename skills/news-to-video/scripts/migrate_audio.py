@@ -1,4 +1,4 @@
-"""显式迁移旧项目到唯一 B 声音和成品音乐，输出变更记录，不改口播与画面。"""
+"""显式迁移旧项目到 B 声和成品音乐；已支持的公开音色保持不变。"""
 
 import argparse
 from copy import deepcopy
@@ -8,18 +8,24 @@ import shutil
 
 from music_bed import DEFAULT_MUSIC, validate_music
 from voice_backend import VOICE_ID, DEFAULT_SPEED, validate_voice
+from public_voice import PUBLIC_VOICE_ID
 
 
 def migrate(project):
     result = deepcopy(project)
     previous_voice = result.get("voice")
     previous_music = result.get("music")
-    # 已是 B 的项目保留明确倍率；其他引擎的倍率不继承到新声音。
+    # 已支持的项目保留音色和倍率；旧引擎的倍率不继承到 B 声。
     speed = DEFAULT_SPEED
-    if isinstance(previous_voice, dict) and previous_voice.get("id") == VOICE_ID:
+    voice_id = VOICE_ID
+    if isinstance(previous_voice, dict) and previous_voice.get("id") in (
+        VOICE_ID,
+        PUBLIC_VOICE_ID,
+    ):
         validate_voice(result)
         speed = previous_voice.get("speed", DEFAULT_SPEED)
-    result["voice"] = {"id": VOICE_ID, "speed": speed}
+        voice_id = previous_voice["id"]
+    result["voice"] = {"id": voice_id, "speed": speed}
     legacy = previous_music or {}
     if "gain" in legacy or "tempo_multiplier" in legacy:
         result["music"] = (

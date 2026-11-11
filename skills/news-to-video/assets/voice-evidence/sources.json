@@ -1,0 +1,8 @@
+{
+  "checked_at": "2026-11-11 Asia/Shanghai",
+  "model_card": "https://huggingface.co/Qwen/Qwen3-TTS-12Hz-0.6B-CustomVoice/resolve/85e237c12c027371202489a0ec509ded67b5e4b5/README.md",
+  "model_revision": "85e237c12c027371202489a0ec509ded67b5e4b5",
+  "upstream_license": "https://raw.githubusercontent.com/QwenLM/Qwen3-TTS/022e286b98fbec7e1e916cb940cdf532cd9f488e/LICENSE",
+  "upstream_revision": "022e286b98fbec7e1e916cb940cdf532cd9f488e",
+  "scope": "Official model license and built-in speaker documentation; no private recording used. Model weights are downloaded separately, not redistributed by this repository. Human listening acceptance is separate."
+}

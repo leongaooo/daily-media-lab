@@ -31,11 +31,13 @@ python "$skill/scripts/generate_images.py" $project `
 | --- | --- |
 | 画面 | Node、固定版本 Remotion、浏览器、FFmpeg/FFprobe、中文字体；1920×1080 / 24 fps |
 | Python | 依赖见 `assets/requirements.txt`；Qwen 独立环境见 `assets/requirements-qwen.txt` |
-| 配音 | 固定 Qwen3-TTS 模型、CUDA、本地私有 B 参考及匹配哈希 |
+| 配音 | 固定 Qwen3-TTS 模型、CUDA；公开 Uncle_Fu 无需参考，私人 B 声仍需匹配参考 |
 | 配乐 | 技能内音乐池及清晰的署名输出 |
 | 生图 | 可选；已有本地合法素材可直接使用 |
 
-当前最关键的限制是：`voice-policy.json` 锁定私人参考，`setup_runtime.py` 不接受任意替代录音。本仓库不带参考音频、私有 profile 或模型权重。因而这不是陌生用户克隆后即可运行的完整配音包。公开声音适配见 ROADMAP 的 P0。
+公开入口为[公开声音配置](../skills/news-to-video/references/public-voice.md)：显式选择 `qwen-uncle-fu-v1`，运行独立 setup 并使用 `examples/public-voice-smoke/project.json`。它无需私人录音，但仍需自行安装依赖与下载模型。新机器安装由 REP-02 单独验收。
+
+旧 `voice-policy.json` 和 `setup_runtime.py` 继续服务私人 B 声，不接受任意替代录音；不带参考音频、私有 profile 或模型权重。
 
 如果你已经具备匹配的授权私有环境，可参照技能的 [本地运行](../skills/news-to-video/references/local-runtime.md) 与 [Editorial 依赖](../skills/news-to-video/references/remotion-editorial.md)，使用自有 `runtime.json`：
 

@@ -186,7 +186,7 @@ def production_plan(project, cues, payload, output):
         [
             "## 配音与音乐",
             "",
-            f"唯一B版男声，{project['voice']['speed']}倍保留音高变速及已认可轻度降噪；音乐原速。",
+            f"显式音色 {project['voice']['id']}，{project['voice']['speed']}倍保留音高变速及轻度降噪；音乐原速，听感另行验收。",
             "",
             (output / "音乐署名.txt").read_text(encoding="utf-8"),
             "",
@@ -224,7 +224,7 @@ def run(args):
     }
     project.update(visual_engine=ENGINE, width=width, height=height, fps=fps)
     project["voice"] = {
-        "id": VOICE_ID,
+        "id": project.get("voice", {}).get("id", VOICE_ID),
         "speed": project.get("voice", {}).get("speed", DEFAULT_SPEED),
     }
     project["music"] = {**DEFAULT_MUSIC, **project.get("music", {})}

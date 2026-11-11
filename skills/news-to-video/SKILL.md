@@ -9,7 +9,7 @@ description: 将已有分幕剧本、新闻稿、产品资料或口播稿制作�
 
 **一期一片：** 每日/每周的一份剧本默认含多个独立新闻板块，转换为一个项目、一条连续配音/字幕/镜头时间线和一个MP4。标题数、板块数及已有子目录数不能决定成片数。只有用户明确要求分集或逐条独立视频才拆片。旧稿拆片指令与最新用户要求冲突时，保留原稿快照并记录包装调整。
 
-**声音与音乐：** 唯一启用声音为用户认可的B版男声`b-male-v1`，本地Qwen3-TTS参考条件生成，默认1.15倍保留音高变速及已认可轻度降噪。模型、参考与采样身份参与缓存；后端缺失明确停止，无其他音色回退。默认核验免费成品音乐池，原速，relative_db=-19、duck_db=2；未指定曲目时从voice-over-under、tech-live、inspired随机选一首，按实际人声活跃段RMS配平并平滑避让，输出署名。详见[配音与音乐](references/audio-production.md)。
+**声音与音乐：** 项目可显式选择公开内置男声 `qwen-uncle-fu-v1`（官方 Apache-2.0 Qwen 0.6B CustomVoice / Uncle_Fu，无需参考录音），或保留私人 `b-male-v1`。省略 ID 仍按旧 B 声处理；不得自动换声。项目与 runtime 的 ID 必须相同。二者默认1.15倍保留音高变速和轻度降噪；公开音色尚待维护者人耳认可。后端缺失明确停止。默认核验免费成品音乐池，原速，relative_db=-19、duck_db=2；未指定曲目时从voice-over-under、tech-live、inspired随机选一首，按实际人声活跃段RMS配平并平滑避让，输出署名。详见[配音与音乐](references/audio-production.md)和[公开声音配置](references/public-voice.md)。
 
 ## 执行流程
 
@@ -19,7 +19,7 @@ description: 将已有分幕剧本、新闻稿、产品资料或口播稿制作�
 4. 按[项目格式](references/project-format.md)写UTF-8 JSON。`segments[].text`保留字幕，`spoken`给出中文朗读及缩写读法；按自然语义拆分，不切成单字。相对素材路径基于输入JSON所在目录。`visual_direction`、`image_prompt`和`negative_prompt`说明主体、构图、光色与边界；正负要求必须合并到实际`image_generation.prompt`。
 5. 用户指定生成图片时按[生图规范](references/generated-images.md)执行唯一素材任务、看图后绑定本地路径。复用已有合适素材，记录真实照片、生成示意、原创图解的区别。只请求图片止于素材阶段；只请求剧本/制作计划不读密钥、不请求API、不启动配音。有效配置及已授权范围内直接执行，不重复索要权限。
 6. 逐幕判断原创SVG是否更易解释关系、循环、阶段、冗余或闭环，适用时主动按[SVG标准](references/svg-standard.md)制作，保留源文件并转PNG供hero完整包含；简单流程也可由原生flow重绘同一关系。不要每幕强制SVG，不以图解冒充实拍、操作规程或链上执行。转换报告只证明源图，不证明最终构图安全。
-7. 按[本地运行](references/local-runtime.md)预检Node、Remotion、FFprobe、中文字体及唯一B声环境。运行render.py，以实测配音长度创建一条时间线。硬性目标不足时缩稿或延长，不截断尾音、不靠过度加速凑时长。渲染只读本地素材，不联网生成新闻现场视频。
+7. 按[本地运行](references/local-runtime.md)预检Node、Remotion、FFprobe、中文字体及项目选定的声音环境。运行render.py，以实测配音长度创建一条时间线。硬性目标不足时缩稿或延长，不截断尾音、不靠过度加速凑时长。渲染只读本地素材，不联网生成新闻现场视频。
 8. 检查validation.json、完整音视频解码、逐幕抽帧、字幕及音频。字幕从零开始连续替换，最后一条覆盖片尾；底部轨始终保留，素材与运动结束在y904之前。检查字形、来源、版本、日期、治理条件和图解关系；标题或字幕过长应合理换行/拆分，不能缩成不可读脚注。
 9. 交付MP4、SRT、干声/混音、分镜预览、口播、production-plan.md、项目/时间线/验证JSON。已有剧本另交script-map.json与script-execution-report.md；用SVG时另交源稿、PNG、asset-manifest.json、使用时机和转换报告。只交付内容稿时不强行渲染。技术通过不代表人耳试听、事实、授权或美学验收；未完成项如实记录。
 
@@ -33,7 +33,7 @@ description: 将已有分幕剧本、新闻稿、产品资料或口播稿制作�
 
 ## 缓存与旧项目
 
-同项目维护复用输出目录。原生B干声、变速与降噪分别按实际身份缓存，音频处理后重测时间线；仅改音乐不改变画面身份。图片、字幕、镜头源码与字体内容改变时重建画面。仅修改music时复用Editorial画面并重新混音，不能把其他引擎历史缓存当候选。
+同项目维护复用输出目录。原生干声、变速与降噪分别按实际身份缓存，音频处理后重测时间线；仅改音乐不改变画面身份。图片、字幕、镜头源码与字体内容改变时重建画面。仅修改music时复用Editorial画面并重新混音，不能把其他引擎历史缓存当候选。
 
 旧项目先另存制作副本，移除已停用布局字段（layout、presenter、visual_beats、image_layout、header_style、background_focus、background_opacity、decoration），按Editorial重新规划构图并设置正确画幅；旧配音另按migrate_audio.py显式迁移。不得悄悄修改旧成片或声称旧版像素兼容。用户只要求旧版改音乐且未同意视觉迁移时，先说明当前入口已不支持该旧布局。
 

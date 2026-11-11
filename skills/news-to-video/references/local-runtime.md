@@ -1,6 +1,6 @@
 # 本地运行
 
-当前默认适配文件仍为 `~/.cache/news-to-video/runtime.json`，也可用 `--runtime` 或 `NEWS_TO_VIDEO_RUNTIME` 指定。只启用 B 版男声，不再配置或下载旧引擎。
+当前默认适配文件仍为 `~/.cache/news-to-video/runtime.json`，也可用 `--runtime` 或 `NEWS_TO_VIDEO_RUNTIME` 指定。旧默认为私人 B 声；公开复现请按[公开声音配置](public-voice.md)生成独立 runtime，并在项目中显式选择公开 ID。两个配置不会自动替换。以下私有环境示例仅供旧工程维护。
 
 画面只使用[Remotion Editorial](remotion-editorial.md)，需要本机Node、固定Remotion运行环境、Chrome/Edge或Headless Shell及独立FFprobe。
 

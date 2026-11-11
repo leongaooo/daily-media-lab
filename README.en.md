@@ -36,7 +36,7 @@ Music: “Voice Over Under” by Kevin MacLeod, [source](https://incompetech.com
 
 **Technical work needs a way to be understood.** A repository URL rarely explains who a project helps or why an engineering decision matters. We want maintainers and small teams to communicate their work clearly. We do not promise reach, growth, or commercial results.
 
-**An API key is a starting point, not a production workflow.** Research, image composition, pronunciation, caption timing and music levels still need to fit together. Here, the instructions, scripts and intermediate artifacts live together so a generation can become something inspectable and editable. Today, a key alone is insufficient: image generation uses a compatible Images API, narration requires local Qwen3-TTS, CUDA and a particular private reference, and video uses local Remotion and FFmpeg.
+**An API key is a starting point, not a production workflow.** Research, image composition, pronunciation, caption timing and music levels still need to fit together. Here, the instructions, scripts and intermediate artifacts live together so a generation can become something inspectable and editable. Today, a key alone is insufficient: image generation uses a compatible Images API, narration requires local Qwen3-TTS and CUDA, with an explicitly selectable public built-in speaker that needs no private recording, and video uses local Remotion and FFmpeg.
 
 **Limited time belongs with editorial judgment.** Reusable assets and readable configuration can reduce repeated tool work. Creators should have more time to ask whether a claim is true, whether it matters, and whether the explanation is understandable. Failures should leave useful intermediate results and a clear reason.
 
@@ -67,7 +67,7 @@ Web3 is the first editorial topic. The production skill can also accept existing
 
 **Images should earn their place.** Each scene has one understanding goal. Choose verified materials, generated illustrations, original SVGs, charts or text accordingly. Use scene images for context and visual memory; keep numbers, arrows and factual relationships controllable. Generated illustrations are never evidence of a real deployment or event.
 
-**Narration needs more than readable text.** Caption text and `spoken` text can differ to handle acronyms, numbers and pronunciation. The current B male voice uses reference-conditioned local generation, 1.15× pitch-preserving playback and mild noise reduction. Captions follow the processed audio. The private reference is not distributed; there is no automatic fallback voice.
+**Narration needs more than readable text.** Caption text and `spoken` text can differ to handle acronyms, numbers and pronunciation. The current B male voice uses reference-conditioned local generation, 1.15× pitch-preserving playback and mild noise reduction. Captions follow the processed audio. The private reference is not distributed. An explicit public built-in voice, `qwen-uncle-fu-v1`, has a [separate setup](skills/news-to-video/references/public-voice.md). Neither voice acts as an automatic fallback.
 
 **Mixing should protect the speaker.** The current default pool selects among three tracks. Music is balanced against speech-active RMS, normally 19 dB below speech with another 2 dB of ducking. Fades and attribution are part of the output. These checks do not replace listening on headphones and a phone.
 
@@ -89,10 +89,10 @@ Example request:
 
 Start with a pronunciation correction, an awkward caption, a stronger source, a better diagram, or the first issue you encounter on a fresh machine. Concrete examples and honest feedback are welcome.
 
-Priorities include a publicly reproducible authorized voice, fresh-machine installation, a complete Web3 example, sound-effect events, bilingual production and more editorial topics. These are plans, not implemented features. [Contribute](CONTRIBUTING.md) · [Roadmap](ROADMAP.md).
+Priorities include public voice listening acceptance, fresh-machine installation, a complete Web3 example, sound-effect events, bilingual production and more editorial topics. These are plans, not implemented features. [Contribute](CONTRIBUTING.md) · [Roadmap](ROADMAP.md).
 
 ## Status and licensing
 
-This is an experimental snapshot of a working local workflow. Fresh-machine end-to-end installation is unverified. The current voice policy pins private reference hashes; supplying an arbitrary recording does not work. A public voice configuration needs implementation and verification.
+This is an experimental snapshot of a working local workflow. Fresh-machine end-to-end installation is unverified. The legacy B voice still pins private reference hashes. A separate public built-in voice configuration and smoke project are available; human listening acceptance remains tracked in REP-01.
 
 Project-owned code and documentation use the [MIT License](LICENSE). The maintainer has confirmed public distribution of the existing preview images; private voice materials and voiced samples remain excluded. Music, models, Remotion, fonts and other third-party materials retain their own terms. [Release preparation](docs/RELEASE_PREPARATION.md).

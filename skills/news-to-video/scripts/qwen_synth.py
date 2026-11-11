@@ -1,4 +1,4 @@
-"""仅由已配置的 Qwen 解释器运行；参考人声不出本机，无换声回退。"""
+"""由已配置的 Qwen 解释器运行；内置音色与私人参考严格分派，无换声回退。"""
 
 import argparse
 import gc
@@ -10,10 +10,11 @@ import numpy as np
 import soundfile as sf
 
 from voice_backend import load_profile, read_json
+from public_voice import PUBLIC_VOICE_ID
 
 
 def prepare_audio(audio, sample_rate):
-    """沿用已认可 B 样音的边界裁静音和峰值处理，不改音高或播放速度。"""
+    """统一边界裁静音和峰值处理，不改音高或播放速度。"""
     audio = np.asarray(audio, dtype=np.float32)
     if audio.ndim != 1 or len(audio) < sample_rate // 5 or not np.isfinite(audio).all():
         raise ValueError("Qwen produced empty, short or non-finite speech")
@@ -38,7 +39,7 @@ def run(request_path, check_only=False):
     profile, identity = load_profile(request["runtime"], verify_weights=False)
     if not torch.cuda.is_available():
         raise RuntimeError(
-            "The configured B backend requires CUDA; no fallback voice is allowed"
+            "The configured Qwen backend requires CUDA; no fallback voice is allowed"
         )
     if check_only:
         print(
@@ -52,7 +53,7 @@ def run(request_path, check_only=False):
         )
         return
     torch.set_num_threads(6)
-    print("Loading the sole approved B voice backend", flush=True)
+    print("Loading configured voice backend", flush=True)
     model = Qwen3TTSModel.from_pretrained(
         profile["model_dir"],
         # Windows 上直接向 CUDA 映射 safetensors 切片会在 storage 索引中
@@ -69,31 +70,43 @@ def run(request_path, check_only=False):
     tokenizer = model.model.speech_tokenizer
     tokenizer.model.to(device)
     tokenizer.device = device
-    reference, reference_rate = sf.read(profile["reference_audio"], dtype="float32")
-    prompt = model.create_voice_clone_prompt(
-        ref_audio=(reference, reference_rate),
-        ref_text=profile["reference_text"],
-        x_vector_only_mode=False,
-    )
+    public = identity["voice_id"] == PUBLIC_VOICE_ID
+    prompt = None
+    if not public:
+        reference, reference_rate = sf.read(profile["reference_audio"], dtype="float32")
+        prompt = model.create_voice_clone_prompt(
+            ref_audio=(reference, reference_rate),
+            ref_text=profile["reference_text"],
+            x_vector_only_mode=False,
+        )
     settings = dict(profile["settings"])
     seed = settings.pop("seed")
     for job in request["jobs"]:
         torch.manual_seed(seed)
         with torch.inference_mode():
-            waves, sample_rate = model.generate_voice_clone(
-                text=job["text"],
-                language="Chinese",
-                voice_clone_prompt=prompt,
-                non_streaming_mode=True,
-                **settings,
-            )
+            if public:
+                waves, sample_rate = model.generate_custom_voice(
+                    text=job["text"],
+                    language=profile["language"],
+                    speaker=profile["speaker"],
+                    non_streaming_mode=True,
+                    **settings,
+                )
+            else:
+                waves, sample_rate = model.generate_voice_clone(
+                    text=job["text"],
+                    language="Chinese",
+                    voice_clone_prompt=prompt,
+                    non_streaming_mode=True,
+                    **settings,
+                )
         audio = prepare_audio(waves[0], sample_rate)
         path = Path(job["output"])
         path.parent.mkdir(parents=True, exist_ok=True)
         temporary = path.with_suffix(".partial.wav")
         sf.write(temporary, audio, sample_rate, subtype="PCM_16")
         temporary.replace(path)
-        print(f"B voice synthesized: {job['text']}", flush=True)
+        print(f"Configured voice synthesized: {job['text']}", flush=True)
         del waves, audio
         gc.collect()
         torch.cuda.empty_cache()

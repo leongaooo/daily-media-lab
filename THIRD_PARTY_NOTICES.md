@@ -20,6 +20,12 @@ License: https://creativecommons.org/licenses/by/4.0/
 
 私有参考录音、参考文字、profile 与模型权重不在仓库内。现有 B 声输出仅留在 Git 排除的本地审阅包。个人试听认可不等于允许公开传播或再分发；未取得适用授权前，不把它们作为公开开源资产。
 
+## 公开内置声音（REP-01）
+
+`qwen-uncle-fu-v1` 使用 [Qwen3-TTS-12Hz-0.6B-CustomVoice](https://huggingface.co/Qwen/Qwen3-TTS-12Hz-0.6B-CustomVoice) 官方内置 Uncle_Fu，模型卡声明 Apache-2.0。固定 revision、下载文件哈希和推理参数见 [public-voice-policy.json](skills/news-to-video/assets/public-voice-policy.json)；[来源快照](skills/news-to-video/assets/voice-evidence/sources.json)及[上游 Apache 许可证](skills/news-to-video/assets/voice-evidence/Qwen3-TTS-LICENSE.txt)保留用于审阅。模型权重另行下载，没有纳入本仓库。
+
+[公开声音短样本](examples/public-voice-smoke/README.md)使用本仓库自写测试文案，经内置音色合成、变速、轻度降噪与限峰，无参考录音、私人声音或音乐。声音文件是合成输出，不能把模型许可描述为真人录音授权书；人耳认可另行记录，不把私人 B 声的认可套用到该样本。
+
 ## 图片与样片
 
 预览画面来自已有 Web3 Editorial 工程。生成场景为示意，流程/状态关系由原创图解或组件表达；不是项目现场、真实设备或链上执行证明。记录见 [预览清单](previews/manifest.json)。维护者于 2026-11-11 明确确认现有预览图片可公开分发；这是本次发布的授权依据，不代表独立法律审查，也不自动适用于未来素材。私人声音仍不公开。

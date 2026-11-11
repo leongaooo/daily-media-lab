@@ -7,3 +7,4 @@
 *.gif binary
 # Preserve captured third-party evidence without applying source formatting rules.
 skills/news-to-video/assets/music-pool/evidence/** -text -whitespace
+skills/news-to-video/assets/voice-evidence/** -text -whitespace

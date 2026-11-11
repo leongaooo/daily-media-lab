@@ -1,0 +1,88 @@
+{
+  "duration": 9.875,
+  "width": 1920,
+  "height": 1080,
+  "fps": 24,
+  "cue_count": 2,
+  "continuous_captions": true,
+  "picture_stream_reused": false,
+  "visual_engine": "remotion_editorial",
+  "full_decode_passed": true,
+  "audio": {
+    "music_mode": "off",
+    "peak": 0.7800000309944153
+  },
+  "warnings": [],
+  "model_sha256": {
+    "backend": "qwen-custom-voice-v1",
+    "voice_id": "qwen-uncle-fu-v1",
+    "model": "Qwen/Qwen3-TTS-12Hz-0.6B-CustomVoice",
+    "revision": "85e237c12c027371202489a0ec509ded67b5e4b5",
+    "model_sha256": {
+      "README.md": "1e3adeecc7a72d6756fdb77c2847f8e994195e105b51206a7a5c049b0dfa48a8",
+      "config.json": "81aca2b6fac304944d8acf345272d8a9a727d5fc2e2e66b222ab4729340c7455",
+      "generation_config.json": "f1b90b4513f3b34c62851049e2492d7b4c5940daf1276f89c82b8ef04127f3aa",
+      "merges.txt": "599bab54075088774b1733fde865d5bd747cbcc7a547c5bc12610e874e26f5e3",
+      "model.safetensors": "bc3c7e785eb961179c25450d1acff03f839e0002f2f3a5aeb67b5735c0fa2adb",
+      "preprocessor_config.json": "efdde1022ea9d76928bf7a9cd53139138f5ba2e466e837f08f6105ab1af1c119",
+      "speech_tokenizer/config.json": "ee65bb901c876664ab8707c487157aa1a6ee57c65969b28fb5ec9dc211e68167",
+      "speech_tokenizer/configuration.json": "6bc26d64eb5024b4d1dab5a52371958b429256d6c9d59787f1f5294a54e0cebd",
+      "speech_tokenizer/model.safetensors": "836b7b357f5ea43e889936a3709af68dfe3751881acefe4ecf0dbd30ba571258",
+      "speech_tokenizer/preprocessor_config.json": "fcb3805e597e786d4067706e602f6688524640f8d3396790e2e09b5942fcbdfb",
+      "tokenizer_config.json": "dc3c31c3bdaedd5016382bb3cbe07323026775ad51f5a4fb564505992ae4a670",
+      "vocab.json": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910"
+    },
+    "speaker": "Uncle_Fu",
+    "language": "Chinese",
+    "settings": {
+      "seed": 2026,
+      "temperature": 0.75,
+      "top_p": 0.95,
+      "repetition_penalty": 1.05,
+      "max_new_tokens": 1200
+    },
+    "license": "Apache-2.0",
+    "source_url": "https://huggingface.co/Qwen/Qwen3-TTS-12Hz-0.6B-CustomVoice/tree/85e237c12c027371202489a0ec509ded67b5e4b5",
+    "postprocess": "boundary-trim-0.003-pad-0.12-0.20-peak-0.89-v1",
+    "playback": {
+      "speed": 1.15,
+      "transform": "ffmpeg-atempo-f32-v1"
+    },
+    "cleanup": {
+      "enabled": true,
+      "filter": "afftdn=nr=8:nf=-35:tn=0:gs=6",
+      "transform": "approved-mild-afftdn-aligned-rms-v1",
+      "order": "after tempo, before timeline and music"
+    }
+  },
+  "voice": {
+    "id": "qwen-uncle-fu-v1",
+    "speed": 1.15
+  },
+  "sources": [],
+  "encoded_metadata": {
+    "size": [
+      1920,
+      1080
+    ],
+    "fps": 24.0,
+    "duration": 9.88,
+    "codec": "h264",
+    "pix_fmt": "yuvj420p(pc, bt470bg/unknown/unknown, progressive)"
+  },
+  "layout_contract": "Editorial composition with a reserved bottom caption rail",
+  "alignment": "Measured synthesized semantic clips; not ASR word-level forced alignment",
+  "remotion_editorial": {
+    "version": "remotion-editorial-v1",
+    "composition": "Editorial",
+    "picture_frame_count": 237,
+    "captions_in_video": "bottom_rail",
+    "caption_rail": {
+      "reserved_y": [
+        904,
+        1080
+      ],
+      "content_must_end_before_y": 904
+    }
+  }
+}

@@ -11,7 +11,7 @@
 | width / height / fps | 可省略；写出时必须与1920/1080/24一致 |
 | visual_engine | 可省略；只接受remotion_editorial |
 | duration | 可省略，按实测配音定长；硬性目标不足时报错，不截音 |
-| voice | id仅b-male-v1，speed默认1.15，接受0.5—2.0有限数值；变速后默认轻度降噪 |
+| voice | id支持b-male-v1或显式qwen-uncle-fu-v1，必须匹配runtime；speed默认1.15，接受0.5—2.0有限数值；变速后默认轻度降噪 |
 | music | mode=pool/off；style=business/news/documentary；relative_db=-19、duck_db=2；省略track_id时从核验的三首随机选择；start_seconds可选 |
 | font | 可选中文字体文件；优先于运行环境字体 |
 | art_direction / sources / footer | 制作意图、证据/素材来源、必要披露；不自动成为画面层 |

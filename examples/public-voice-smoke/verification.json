@@ -1,0 +1,51 @@
+{
+  "date": "2026-11-11",
+  "os": "Windows-11-10.0.26300-SP0",
+  "render_python": "3.13.3",
+  "default_duration": 9.875,
+  "speed_1_duration": 11.333333333333334,
+  "first_caption_zero": true,
+  "last_caption_covers_end": true,
+  "speech_not_clipped": true,
+  "human_listening": "pending maintainer feedback",
+  "fresh_machine_install": "not tested",
+  "files": {
+    "captions.srt": {
+      "sha256": "31d2aa47f30b6b81fa723ee3d25cff789e893ee78ff174803bd778d16ec2b839",
+      "bytes": 178
+    },
+    "project.json": {
+      "sha256": "ec87655e0e22b412de9be5a19edeed35ea4f0153d321489be9a4890df4025f38",
+      "bytes": 1006
+    },
+    "README.md": {
+      "sha256": "d513dd6b624e6e9e144fd3fc904259d798ddaf40f2c915a2ed8dc150fdec5d9c",
+      "bytes": 1114
+    },
+    "timeline.json": {
+      "sha256": "43fc0e04bdeab90e7097f4a6f94c504e7d5da3933f75679b5b25cb91334eb456",
+      "bytes": 327
+    },
+    "validation.json": {
+      "sha256": "31a6c7eef5b3bbc3f7dc86fcc3f3beb0fefb666d3bd627429c0e02b963141a4d",
+      "bytes": 3243
+    },
+    "voice-speed-1.0.wav": {
+      "sha256": "a0f4059b05cc7a37609e1549a5870836f4083d097fd9bde63a00a42975a659f5",
+      "bytes": 544044
+    },
+    "voice-speed-1.15.wav": {
+      "sha256": "1b047aff8ad27573d3ab76ac9a9c16be4a7ddfa318dec45e99b6787c1677ddea",
+      "bytes": 474044
+    }
+  },
+  "qwen_environment": {
+    "python": "3.13.3",
+    "gpu": "NVIDIA GeForce RTX 3060 Ti 8GB",
+    "torch": "2.9.1+cu126",
+    "torchaudio": "2.9.1+cu126",
+    "qwen-tts": "0.1.1",
+    "transformers": "4.57.3",
+    "accelerate": "1.12.0"
+  }
+}

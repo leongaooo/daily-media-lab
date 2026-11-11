@@ -1,0 +1,41 @@
+{
+  "title": "公开声音复现检查",
+  "date_label": "制作 2026.11.11",
+  "voice": {
+    "id": "qwen-uncle-fu-v1",
+    "speed": 1.15
+  },
+  "music": {
+    "mode": "off"
+  },
+  "footer": "AI 合成配音 · 官方内置音色 · 技术验收样本",
+  "scenes": [
+    {
+      "editorial_kind": "flow",
+      "headline": "公开声音，无需私人参考",
+      "summary": "固定模型与采样配置，字幕按实测音频计时。",
+      "segments": [
+        {
+          "text": "这是公开声音的复现样本。"
+        },
+        {
+          "text": "字幕按实际语音长度生成，私人参考录音不参与制作。"
+        }
+      ],
+      "editorial_nodes": [
+        {
+          "title": "公开内置音色",
+          "detail": "无需私人参考"
+        },
+        {
+          "title": "实测语音",
+          "detail": "处理后计算长度"
+        },
+        {
+          "title": "连续字幕",
+          "detail": "覆盖至片尾"
+        }
+      ]
+    }
+  ]
+}

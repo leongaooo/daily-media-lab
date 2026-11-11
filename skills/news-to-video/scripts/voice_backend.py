@@ -1,4 +1,4 @@
-"""B 版唯一音色的策略、缓存与隔离进程边界；不加载旧语音引擎。"""
+"""显式声音策略、缓存与隔离进程边界；缺失配置时不换声。"""
 
 import hashlib
 import json
@@ -10,6 +10,8 @@ import numpy as np
 import soundfile as sf
 import imageio_ffmpeg
 
+from public_voice import PUBLIC_VOICE_ID, load_public_profile
+
 
 SKILL = Path(__file__).resolve().parent.parent
 VOICE_ID = "b-male-v1"
@@ -20,7 +22,7 @@ DENOISE_VERSION = "approved-mild-afftdn-aligned-rms-v1"
 
 
 def denoise_clip(path):
-    """对变速后的B干声执行已认可的轻度降噪，音乐和原始缓存不变。
+    """对变速后的干声执行轻度降噪，音乐和原始缓存不变。
 
     afftdn在24kHz引入600样本延迟，先补足尾部再移除延迟，保持字尾和长度。
     讲话帧RMS匹配原声，统一限峰；仅低能量音频不增益。缓存由输入内容、
@@ -42,7 +44,7 @@ def denoise_clip(path):
         or not np.isfinite(original).all()
         or np.max(np.abs(original)) >= 1
     ):
-        raise ValueError(f"Invalid B voice before denoise: {path}")
+        raise ValueError(f"Invalid voice before denoise: {path}")
     temporary = target.with_suffix(".partial.wav")
     delay = 600
     filters = (
@@ -84,7 +86,7 @@ def denoise_clip(path):
             before_rms = float(np.sqrt(np.mean(original[active] ** 2)))
             after_rms = float(np.sqrt(np.mean(audio[active] ** 2)))
             if after_rms < 1e-8:
-                raise ValueError("Denoise unexpectedly removed active B speech")
+                raise ValueError("Denoise unexpectedly removed active speech")
             gain = before_rms / after_rms
         gain = min(gain, 0.94 / max(float(np.max(np.abs(audio))), 1e-8))
         sf.write(temporary, audio * gain, sample_rate, subtype="FLOAT")
@@ -104,13 +106,13 @@ def file_hash(path):
 
 
 def validate_voice(project):
-    """仅启用 B 版；语速为独立的保留音高播放倍率。"""
+    """接受私人 B 声或显式公开音色；省略 ID 保持旧项目行为。"""
     voice = project.get("voice", {})
     if not isinstance(voice, dict) or set(voice) - {"id", "speed"}:
-        raise ValueError("voice only accepts id=b-male-v1 and numeric speed")
-    if voice.get("id", VOICE_ID) != VOICE_ID:
+        raise ValueError("voice only accepts a supported id and numeric speed")
+    if voice.get("id", VOICE_ID) not in (VOICE_ID, PUBLIC_VOICE_ID):
         raise ValueError(
-            "Only B voice b-male-v1 is enabled. Run migrate_audio.py on the legacy project."
+            "Unsupported voice id; select b-male-v1 or qwen-uncle-fu-v1 explicitly."
         )
     speed = voice.get("speed", DEFAULT_SPEED)
     if (
@@ -172,10 +174,12 @@ def tempo_clip(path, speed):
 
 
 def load_profile(runtime, verify_weights=True):
-    """核验私有参考与固定策略，返回可跨解释器使用的本地音色配置。"""
+    """按 runtime 显式分派；公开音色不进入私人参考校验分支。"""
+    if runtime.get("voice_id") == PUBLIC_VOICE_ID:
+        return load_public_profile(runtime, verify_weights)
     if runtime.get("voice_id") != VOICE_ID:
         raise ValueError(
-            "runtime.voice_id must be b-male-v1; legacy runtime is retired"
+            "runtime.voice_id must be b-male-v1 or qwen-uncle-fu-v1"
         )
     profile_path = Path(runtime["voice_profile"])
     profile = read_json(profile_path)
@@ -231,6 +235,11 @@ def audio_key(spoken, identity):
 def make_voice(project, runtime, cache):
     """小批隔离进程补齐未命中片段，限制长稿的进程资源驻留。"""
     validate_voice(project)
+    requested_id = project.get("voice", {}).get("id", VOICE_ID)
+    if runtime.get("voice_id", VOICE_ID) != requested_id:
+        raise ValueError(
+            "Project voice id differs from runtime; refusing silent voice substitution"
+        )
     _, identity = load_profile(runtime)
     python = Path(runtime["tts_python"])
     if not python.is_file():
@@ -248,7 +257,7 @@ def make_voice(project, runtime, cache):
             if not path.exists():
                 pending[key] = {"text": spoken, "output": str(path)}
     if pending:
-        request = cache / "b-voice-request.json"
+        request = cache / "voice-request.json"
         tasks = list(pending.values())
         # Windows 长稿连续生成曾在三十余段后无法分配内存。
         # 每批最多八段，进程退出释放模型及分配器；已完成的干声可续用。
@@ -287,7 +296,7 @@ def make_voice(project, runtime, cache):
             or not math.isfinite(float(np.max(np.abs(audio))))
             or np.max(np.abs(audio)) >= 1
         ):
-            raise ValueError(f"Invalid B voice cache: {path}; remove it and regenerate")
+            raise ValueError(f"Invalid voice cache: {path}; remove it and regenerate")
         items.append(
             dict(
                 scene=scene_index,
