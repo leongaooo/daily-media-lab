@@ -4,11 +4,11 @@
 
 | 任务 | 参与门槛 | 讨论入口 |
 | --- | --- | --- |
-| EXP-02-01 · 10组中文读法样例 | 无需GPU，适合内容贡献者 | [Issue](https://github.com/leongaooo/daily-media-lab/issues?q=is%3Aissue+EXP-02-01) |
-| REP-04-01 · 无GPU单元测试CI | Python与GitHub Actions | [Issue](https://github.com/leongaooo/daily-media-lab/issues?q=is%3Aissue+REP-04-01) |
-| EXP-02-02 · 手机字幕反馈 | 无需编程，真实设备或注明模拟 | [Issue](https://github.com/leongaooo/daily-media-lab/issues?q=is%3Aissue+EXP-02-02) |
-| REP-02-01 · 独立Windows/CUDA复现 | 已有NVIDIA设备，无需购买硬件 | [Issue](https://github.com/leongaooo/daily-media-lab/issues?q=is%3Aissue+REP-02-01) |
-| EXP-01-01 · 单张原创SVG | Python/Pillow与合法字体，无需付费API | [Issue](https://github.com/leongaooo/daily-media-lab/issues?q=is%3Aissue+EXP-01-01) |
+| EXP-02-01 · 10组中文读法样例 | 无需GPU，适合内容贡献者 | [Issue](https://github.com/leongaooo/daily-media-lab/issues/1) |
+| REP-04-01 · 无GPU单元测试CI | Python与GitHub Actions | [Issue](https://github.com/leongaooo/daily-media-lab/issues/2) |
+| EXP-02-02 · 手机字幕反馈 | 无需编程，真实设备或注明模拟 | [Issue](https://github.com/leongaooo/daily-media-lab/issues/3) |
+| REP-02-01 · 独立Windows/CUDA复现 | 已有NVIDIA设备，无需购买硬件 | [Issue](https://github.com/leongaooo/daily-media-lab/issues/4) |
+| EXP-01-01 · 单张原创SVG | Python/Pillow与合法字体，无需付费API | [Issue](https://github.com/leongaooo/daily-media-lab/issues/5) |
 
 读法、字幕反馈、单张SVG为 `good first issue`；CI及独立机器复现为 `help wanted`。每项仅覆盖对应父任务的一部分。维护者可协助后续GPU合成或入片检查，贡献者如实说明自己完成的验证。
 

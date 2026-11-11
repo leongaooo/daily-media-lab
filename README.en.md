@@ -95,11 +95,11 @@ Priorities include fresh-machine installation, a complete Web3 example, sound-ef
 
 Start with one bounded task; reading examples, caption feedback and SVG work need no GPU.
 
-- [Chinese reading examples](https://github.com/leongaooo/daily-media-lab/issues?q=is%3Aissue+EXP-02-01) · `EXP-02-01`
-- [CPU-only test CI](https://github.com/leongaooo/daily-media-lab/issues?q=is%3Aissue+REP-04-01) · `REP-04-01`
-- [Mobile caption feedback](https://github.com/leongaooo/daily-media-lab/issues?q=is%3Aissue+EXP-02-02) · `EXP-02-02`
-- [Independent Windows/CUDA setup](https://github.com/leongaooo/daily-media-lab/issues?q=is%3Aissue+REP-02-01) · `REP-02-01`
-- [One original SVG diagram](https://github.com/leongaooo/daily-media-lab/issues?q=is%3Aissue+EXP-01-01) · `EXP-01-01`
+- [Chinese reading examples](https://github.com/leongaooo/daily-media-lab/issues/1) · `EXP-02-01`
+- [CPU-only test CI](https://github.com/leongaooo/daily-media-lab/issues/2) · `REP-04-01`
+- [Mobile caption feedback](https://github.com/leongaooo/daily-media-lab/issues/3) · `EXP-02-02`
+- [Independent Windows/CUDA setup](https://github.com/leongaooo/daily-media-lab/issues/4) · `REP-02-01`
+- [One original SVG diagram](https://github.com/leongaooo/daily-media-lab/issues/5) · `EXP-01-01`
 
 [Scopes and acceptance](docs/community/README.md) · [New issue](https://github.com/leongaooo/daily-media-lab/issues/new/choose)
 

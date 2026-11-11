@@ -6,7 +6,7 @@
 
 公开声音REP-01已收口。维护者于本轮试听默认1.15倍样本后反馈“挺好的”，仅认可当前样本整体听感；原速、逐词和跨设备未单独验收。技术证据见[公开声音实施](progress/2026-11-11-public-voice.md)，样本见[试听入口](../examples/public-voice-smoke/README.md)。私人B声仍不公开，独立公开runtime不覆盖旧配置。
 
-COM-04本轮建设三类Issue模板及五个社区任务入口。发布验证及实际链接见[社区启动记录](progress/2026-11-11-community-launch.md)与[贡献任务](community/README.md)。父任务不因发布Issue自动完成；认领和讨论在Issue，状态只在ROADMAP。
+COM-04已发布三类Issue模板及五个社区任务入口（Issue #1—#5）。发布验证及实际链接见[社区启动记录](progress/2026-11-11-community-launch.md)与[贡献任务](community/README.md)。父任务不因发布Issue自动完成；认领和讨论在Issue，状态只在ROADMAP。
 
 ## 下一步
 

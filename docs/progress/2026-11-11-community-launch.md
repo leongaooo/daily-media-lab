@@ -19,3 +19,22 @@
 准备阶段：GitHub CLI未登录，浏览器有现有维护者会话；Issue将通过该会话发布，不创建新凭据。公开声音实现来自此前本地提交ec73941，尚待随本轮推送。
 
 发布后的实际Issue链接与验证结果在下文补记。
+
+## 真实发布结果
+
+- 公开声音及模板入口已通过 `git push origin main` 发布，首个社区准备提交为6c9ea72（同时带上此前ec73941声音实现）。未创建凭据、未修改安全设置。
+- GitHub模板选择页实际显示三类模板、Blank issue及贡献指引。
+- 五个Issue已逐项创建并核验标题、编号及标签，列表显示Open(5)、Closed(0)：
+  - [#1 中文读法](https://github.com/leongaooo/daily-media-lab/issues/1)：EXP-02-01，good first issue。
+  - [#2 无GPU测试CI](https://github.com/leongaooo/daily-media-lab/issues/2)：REP-04-01，help wanted。
+  - [#3 手机字幕反馈](https://github.com/leongaooo/daily-media-lab/issues/3)：EXP-02-02，good first issue。
+  - [#4 Windows/CUDA独立复现](https://github.com/leongaooo/daily-media-lab/issues/4)：REP-02-01，help wanted。
+  - [#5 原创SVG](https://github.com/leongaooo/daily-media-lab/issues/5)：EXP-01-01，good first issue。
+- 每项包含范围、文件入口、验收清单、环境门槛和证据限制；未指派给外部人员，也未声称已有贡献者参与。
+- README中英文与贡献索引由任务搜索链接替换为上述实际Issue地址。
+
+## 验证与限制
+
+本轮无音频或生产代码行为修改。49项测试、合成/全解码/时间线结果沿用REP-01记录，没有将其冒称为本轮重跑。准备阶段82个本地文档链接、三个模板结构、7项样本哈希通过。发布前33个未发布历史blob检查未发现禁止文件路径或常见凭据签名；后续文档提交按相同规则检查。模板只作结构检查，GitHub实际显示为运行证据。Issue公开不意味着贡献量或流量已经增长。
+
+初次保存长命令被自动执行策略拒绝，改为范围明确的文件补丁及短命令完成；未依赖该失败动作的任何输出。

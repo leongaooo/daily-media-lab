@@ -45,7 +45,7 @@
 
 | ID | 范围 | 依赖 | 状态 | 验收条件与证据 |
 | --- | --- | --- | --- | --- |
-| COM-04 | 社区贡献入口、三类Issue模板、五个招领Issue；负责人：当前Codex agent | PUB-06、REP-01 | 进行中 | 远程模板、五个Issue及中英文README真实链接可用；见本轮社区启动progress |
+| COM-04 | 社区贡献入口、三类Issue模板、五个招领Issue；负责人：当前Codex agent | PUB-06、REP-01 | 已完成 | 三类模板及空白入口已核验；五个Issue #1—#5已公开，3个good first issue与2个help wanted；中英文README接入实际链接，见[社区启动证据](docs/progress/2026-11-11-community-launch.md) |
 | EXP-02-01 | 中文缩写/数字读法样例（EXP-02子任务） | REP-01 | 待开始 | 10组text/spoken对照、读法依据及可解析样例；不要求GPU |
 | EXP-02-02 | 手机观看字幕反馈（EXP-02子任务） | REP-01 | 待开始 | 同一公开样本的设备/显示尺寸、时间点截图、观察与改进建议 |
 | EXP-01-01 | 单幕原创SVG图解（EXP-01子任务） | — | 待开始 | 720×480 SVG、转换结果、前后图及关系来源；无需生图API |

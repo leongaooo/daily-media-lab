@@ -107,11 +107,11 @@ Web3 是第一个采编方向；制作技能也可接收已有产品材料或口
 
 先选一件小事：读法样例、字幕反馈和单张SVG都无需GPU。
 
-- [补充10组中文读法](https://github.com/leongaooo/daily-media-lab/issues?q=is%3Aissue+EXP-02-01) · `EXP-02-01`
-- [无GPU测试CI](https://github.com/leongaooo/daily-media-lab/issues?q=is%3Aissue+REP-04-01) · `REP-04-01`
-- [手机字幕反馈](https://github.com/leongaooo/daily-media-lab/issues?q=is%3Aissue+EXP-02-02) · `EXP-02-02`
-- [第二台Windows/NVIDIA复现](https://github.com/leongaooo/daily-media-lab/issues?q=is%3Aissue+REP-02-01) · `REP-02-01`
-- [单张原创SVG](https://github.com/leongaooo/daily-media-lab/issues?q=is%3Aissue+EXP-01-01) · `EXP-01-01`
+- [补充10组中文读法](https://github.com/leongaooo/daily-media-lab/issues/1) · `EXP-02-01`
+- [无GPU测试CI](https://github.com/leongaooo/daily-media-lab/issues/2) · `REP-04-01`
+- [手机字幕反馈](https://github.com/leongaooo/daily-media-lab/issues/3) · `EXP-02-02`
+- [第二台Windows/NVIDIA复现](https://github.com/leongaooo/daily-media-lab/issues/4) · `REP-02-01`
+- [单张原创SVG](https://github.com/leongaooo/daily-media-lab/issues/5) · `EXP-01-01`
 
 [任务范围与验收](docs/community/README.md) · [新建Issue](https://github.com/leongaooo/daily-media-lab/issues/new/choose)
 
