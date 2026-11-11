@@ -40,3 +40,10 @@
 初次保存长命令被自动执行策略拒绝，改为范围明确的文件补丁及短命令完成；未依赖该失败动作的任何输出。
 
 最终检查发现样本README在试听记录更新后规范为LF，verification.json仍保留规范前字节哈希。仅README元数据不符，两个WAV及其他样本匹配；已按Git提交中的实际字节重算，七项全部通过。未改写音频。最终74个本地链接及三个入口中的五个实际Issue链接通过。
+
+## 远程复核收口
+
+- 实际浏览GitHub中英文README，确认贡献章节正常渲染，五项链接指向Issue #1—#5；Issue列表显示五项开放及预期标签。
+- 按修正提交d98ac565bc2129e9bba621ebf212d210da545a5b从raw.githubusercontent.com重新获取7项样本文件，逐项SHA-256与字节数均匹配；中英文README含全部五个实际Issue链接，四个模板文件可获取。
+- `git ls-remote origin refs/heads/main`与本地HEAD一致，工作区干净（本条记录提交前检查）。发布截图只留在忽略目录 `outputs/community-launch/issues-published.jpg`，没有把登录会话页面截图纳入Git。
+- COM-04已按实际公开证据收口；REP-02/REP-03及五个社区子任务仍需后续实施，不因创建Issue而完成。
