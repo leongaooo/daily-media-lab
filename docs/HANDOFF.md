@@ -1,20 +1,16 @@
 # 当前交接
 
-更新：2026-11-11（Asia/Shanghai）。先读根目录 AGENTS 和 ROADMAP；任务状态仅在 ROADMAP 维护。
+更新：2026-11-11（Asia/Shanghai）。先读AGENTS和ROADMAP，任务状态仅在ROADMAP维护。
 
 ## 当前焦点
 
-REP-01 已接入公开内置男声 `qwen-uncle-fu-v1`，采用官方 Apache-2.0 Qwen 0.6B CustomVoice / Uncle_Fu。无需私人参考，项目必须显式选择公开 ID 并匹配独立 runtime。私人 B 声及默认 runtime 保留；未修改本机 canonical skills。
+公开声音REP-01已收口。维护者于本轮试听默认1.15倍样本后反馈“挺好的”，仅认可当前样本整体听感；原速、逐词和跨设备未单独验收。技术证据见[公开声音实施](progress/2026-11-11-public-voice.md)，样本见[试听入口](../examples/public-voice-smoke/README.md)。私人B声仍不公开，独立公开runtime不覆盖旧配置。
 
-- [本轮实施与证据](progress/2026-11-11-public-voice.md)：49 项回归、实际模型合成、9.875 秒成片完整解码、字幕计时及本机环境。
-- [试听入口](../examples/public-voice-smoke/README.md)：1.0 倍与默认 1.15 倍，无音乐。维护者人耳反馈尚缺，不能标记声音验收完成。
-- [公开配置与复现命令](../skills/news-to-video/references/public-voice.md)：固定 revision 和所有文件哈希，模型另行下载；没有新机器首装证据。
-- `outputs/rep-01-public-voice/` 为 Git 排除的实际完整渲染输出，含 MP4、干声/混音、字幕、时间线与验证 JSON。可提交短测试声音来自官方内置音色，不是私人 B 声。
-- GitHub 发布基础的旧证据见 [发布记录](progress/2026-11-11-publication-foundation.md)。本轮未推送远程，也未检查新改动的 GitHub 页面。
+COM-04本轮建设三类Issue模板及五个社区任务入口。发布验证及实际链接见[社区启动记录](progress/2026-11-11-community-launch.md)与[贡献任务](community/README.md)。父任务不因发布Issue自动完成；认领和讨论在Issue，状态只在ROADMAP。
 
-## 下一步具体动作
+## 下一步
 
-1. 检查当前 Git 状态、提交与远程，不把历史发布 SHA 当作当前实现。
-2. 获取维护者对两份声音的读音、尾字、停顿、速度与音色反馈；必要时调整公开配置并更新缓存身份、样本和证据。
-3. 人耳验收证据齐备后再收口 REP-01，随后按 ROADMAP 依赖推进 REP-02 干净机器安装及 REP-03 完整公开 Web3 示例。旧 Web3 工程仍为私人 B 声，不代表已交付公开示例。
-4. 无需等待声音反馈的独立项可选 REP-04，仍由唯一 ROADMAP 管理，不另建状态表。
+1. 检查实际Git状态与远程ref，按社区启动记录确认发布结果。
+2. 优先推进REP-02独立环境安装，或REP-03完整公开Web3示例；也可接手REP-04回归。先检查Issue认领，避免与贡献者重复实施。
+3. 五个社区子任务均需实际证据才能标记完成。新机器失败也应保留环境/命令/修复记录；不以本机成功代替首装。
+4. 旧Web3示例仍含私人B声ID；其有声成片及参考不提交。`outputs/rep-01-public-voice/`为忽略的本机短样片输出。

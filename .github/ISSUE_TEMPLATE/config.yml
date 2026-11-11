@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: "贡献说明 / Contribution guide"
+    url: https://github.com/leongaooo/daily-media-lab/blob/main/CONTRIBUTING.md
+    about: "查看文件入口、验证边界与素材许可要求。"

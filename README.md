@@ -101,10 +101,24 @@ Web3 是第一个采编方向；制作技能也可接收已有产品材料或口
 
 可以从一件很小的事开始：修正一次术语读音、反馈一处字幕换行、补充一个来源、设计一张图，或者记录新机器安装时的第一个卡点。我们欢迎真实样本与具体反馈。
 
-近期优先：公开可复现的授权声音、全新机器安装验证、可直接使用的 Web3 样例工程、音效事件轨、双语制作和更多领域采编适配。以上是建设方向，不是已实现功能。[贡献方式](CONTRIBUTING.md) · [计划](ROADMAP.md)。
+近期优先：全新机器安装验证、可直接使用的 Web3 样例工程、音效事件轨、双语制作和更多领域采编适配。上述未完成事项见计划；公开声音短样本已完成验收。[贡献方式](CONTRIBUTING.md) · [计划](ROADMAP.md)。
+
+## 从这里贡献
+
+先选一件小事：读法样例、字幕反馈和单张SVG都无需GPU。
+
+- [补充10组中文读法](https://github.com/leongaooo/daily-media-lab/issues?q=is%3Aissue+EXP-02-01) · `EXP-02-01`
+- [无GPU测试CI](https://github.com/leongaooo/daily-media-lab/issues?q=is%3Aissue+REP-04-01) · `REP-04-01`
+- [手机字幕反馈](https://github.com/leongaooo/daily-media-lab/issues?q=is%3Aissue+EXP-02-02) · `EXP-02-02`
+- [第二台Windows/NVIDIA复现](https://github.com/leongaooo/daily-media-lab/issues?q=is%3Aissue+REP-02-01) · `REP-02-01`
+- [单张原创SVG](https://github.com/leongaooo/daily-media-lab/issues?q=is%3Aissue+EXP-01-01) · `EXP-01-01`
+
+[任务范围与验收](docs/community/README.md) · [新建Issue](https://github.com/leongaooo/daily-media-lab/issues/new/choose)
+
+公开声音：[已获认可的默认短样本与原速对照](examples/public-voice-smoke/README.md)。
 
 ## 当前状态与许可
 
-这是从本地实际使用流程整理的实验性开源准备版，尚未完成全新机器端到端安装验证。私人 B 声仍锁定参考；公开内置声音已有独立配置入口和短测试工程，人耳试听验收见 REP-01。
+这是从本地实际使用流程整理的实验性开源准备版，尚未完成全新机器端到端安装验证。私人 B 声仍锁定参考；公开内置声音已有独立配置入口和短测试工程，维护者已认可当前短样本整体听感，见 REP-01；新文稿仍需试听。
 
 项目自有代码与文档采用 [MIT](LICENSE)。维护者已确认现有预览图片可公开分发；私人声音及完整有声样片继续排除。第三方音乐、模型、Remotion、字体与其他素材各自适用其许可，不能被项目代码许可覆盖。[发布准备记录](docs/RELEASE_PREPARATION.md)。

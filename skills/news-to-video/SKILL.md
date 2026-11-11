@@ -9,7 +9,7 @@ description: 将已有分幕剧本、新闻稿、产品资料或口播稿制作�
 
 **一期一片：** 每日/每周的一份剧本默认含多个独立新闻板块，转换为一个项目、一条连续配音/字幕/镜头时间线和一个MP4。标题数、板块数及已有子目录数不能决定成片数。只有用户明确要求分集或逐条独立视频才拆片。旧稿拆片指令与最新用户要求冲突时，保留原稿快照并记录包装调整。
 
-**声音与音乐：** 项目可显式选择公开内置男声 `qwen-uncle-fu-v1`（官方 Apache-2.0 Qwen 0.6B CustomVoice / Uncle_Fu，无需参考录音），或保留私人 `b-male-v1`。省略 ID 仍按旧 B 声处理；不得自动换声。项目与 runtime 的 ID 必须相同。二者默认1.15倍保留音高变速和轻度降噪；公开音色尚待维护者人耳认可。后端缺失明确停止。默认核验免费成品音乐池，原速，relative_db=-19、duck_db=2；未指定曲目时从voice-over-under、tech-live、inspired随机选一首，按实际人声活跃段RMS配平并平滑避让，输出署名。详见[配音与音乐](references/audio-production.md)和[公开声音配置](references/public-voice.md)。
+**声音与音乐：** 项目可显式选择公开内置男声 `qwen-uncle-fu-v1`（官方 Apache-2.0 Qwen 0.6B CustomVoice / Uncle_Fu，无需参考录音），或保留私人 `b-male-v1`。省略 ID 仍按旧 B 声处理；不得自动换声。项目与 runtime 的 ID 必须相同。二者默认1.15倍保留音高变速和轻度降噪；维护者已认可当前公开短样本整体听感；其他文稿仍需试听。后端缺失明确停止。默认核验免费成品音乐池，原速，relative_db=-19、duck_db=2；未指定曲目时从voice-over-under、tech-live、inspired随机选一首，按实际人声活跃段RMS配平并平滑避让，输出署名。详见[配音与音乐](references/audio-production.md)和[公开声音配置](references/public-voice.md)。
 
 ## 执行流程
 

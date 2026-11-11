@@ -89,10 +89,24 @@ Example request:
 
 Start with a pronunciation correction, an awkward caption, a stronger source, a better diagram, or the first issue you encounter on a fresh machine. Concrete examples and honest feedback are welcome.
 
-Priorities include public voice listening acceptance, fresh-machine installation, a complete Web3 example, sound-effect events, bilingual production and more editorial topics. These are plans, not implemented features. [Contribute](CONTRIBUTING.md) · [Roadmap](ROADMAP.md).
+Priorities include fresh-machine installation, a complete Web3 example, sound-effect events, bilingual production and more editorial topics. These are plans, not implemented features. [Contribute](CONTRIBUTING.md) · [Roadmap](ROADMAP.md).
+
+## Pick a first contribution
+
+Start with one bounded task; reading examples, caption feedback and SVG work need no GPU.
+
+- [Chinese reading examples](https://github.com/leongaooo/daily-media-lab/issues?q=is%3Aissue+EXP-02-01) · `EXP-02-01`
+- [CPU-only test CI](https://github.com/leongaooo/daily-media-lab/issues?q=is%3Aissue+REP-04-01) · `REP-04-01`
+- [Mobile caption feedback](https://github.com/leongaooo/daily-media-lab/issues?q=is%3Aissue+EXP-02-02) · `EXP-02-02`
+- [Independent Windows/CUDA setup](https://github.com/leongaooo/daily-media-lab/issues?q=is%3Aissue+REP-02-01) · `REP-02-01`
+- [One original SVG diagram](https://github.com/leongaooo/daily-media-lab/issues?q=is%3Aissue+EXP-01-01) · `EXP-01-01`
+
+[Scopes and acceptance](docs/community/README.md) · [New issue](https://github.com/leongaooo/daily-media-lab/issues/new/choose)
+
+Public built-in voice: [accepted default sample and native-speed comparison](examples/public-voice-smoke/README.md).
 
 ## Status and licensing
 
-This is an experimental snapshot of a working local workflow. Fresh-machine end-to-end installation is unverified. The legacy B voice still pins private reference hashes. A separate public built-in voice configuration and smoke project are available; human listening acceptance remains tracked in REP-01.
+This is an experimental snapshot of a working local workflow. Fresh-machine end-to-end installation is unverified. The legacy B voice still pins private reference hashes. A separate public built-in voice configuration and smoke project are available; the maintainer accepted the overall sound of the current default-speed sample (REP-01), while new scripts still need listening review.
 
 Project-owned code and documentation use the [MIT License](LICENSE). The maintainer has confirmed public distribution of the existing preview images; private voice materials and voiced samples remain excluded. Music, models, Remotion, fonts and other third-party materials retain their own terms. [Release preparation](docs/RELEASE_PREPARATION.md).

@@ -23,3 +23,9 @@
 5. 代码按项目语言格式化，注释解释约束与失败策略；同步校准修改范围内的旧说明。
 
 通过 [Issues](https://github.com/leongaooo/daily-media-lab/issues) 描述问题或建议，通过 [Pull requests](https://github.com/leongaooo/daily-media-lab/pulls) 提交改进。请关联 ROADMAP 任务 ID，附实际验证结果与素材授权信息。
+
+## 认领首个任务
+
+从[五个具体任务](docs/community/README.md)选一个，在对应Issue评论认领范围即可。读法、字幕观察和单张SVG标为good first issue；CI及独立机器复现标为help wanted。维护者可协助后续GPU验证，请如实记录你完成的检查。
+
+状态只在ROADMAP维护，Issue用于讨论、认领与证据，PR关联Issue及任务ID。新建Issue可选择复现失败、声音与字幕反馈、改进建议三类模板，也保留空白入口。

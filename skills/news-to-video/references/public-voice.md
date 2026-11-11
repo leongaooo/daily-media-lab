@@ -36,6 +36,6 @@ setup 只连接模型、解释器和字体；不安装软件、不做完整设�
 
 原生音频按模型文件、speaker、language、采样设置、后处理版本与口播文本缓存；与私人 B 声隔离。变速/轻度降噪继续按音频内容和参数缓存，字幕按处理后的实测语音时长生成。仅改音乐不重做配音。
 
-检查 `validation.json` 的 `voice.id`、`model_sha256.speaker`、`continuous_captions`、`full_decode_passed`；`timeline.json` 第一条从零开始、相邻字幕无空隙、最后一条覆盖片尾。这是语义片段计时，不是 ASR 逐字对齐。人耳另听原速读音、默认 1.15 倍速度、停顿和尾字；尚未反馈不得称为音色验收完成。
+检查 `validation.json` 的 `voice.id`、`model_sha256.speaker`、`continuous_captions`、`full_decode_passed`；`timeline.json` 第一条从零开始、相邻字幕无空隙、最后一条覆盖片尾。这是语义片段计时，不是 ASR 逐字对齐。人耳另听原速读音、默认 1.15 倍速度、停顿和尾字；当前默认短样本已获维护者“挺好的”的整体听感认可；该结论不自动延伸到其他文稿、倍率或播放设备。
 
 本轮实际证据与限制见 [REP-01 进度](../../../docs/progress/2026-11-11-public-voice.md)。

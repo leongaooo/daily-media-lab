@@ -8,4 +8,4 @@
 
 两段字幕覆盖默认样本全长；不是 ASR 逐字对齐。完整视频在运行后输出到 `outputs/`，不为该短测试重复分发字体或模型。无音乐，无额外署名音乐要求。
 
-[复现命令](../../skills/news-to-video/references/public-voice.md)。本轮是已有 Windows/CUDA 环境验证；新机器安装与完整 Web3 示例分别由 REP-02、REP-03 验收。样本等待维护者人耳试听反馈，技术通过不表示发音、音色或速度已获认可。
+[复现命令](../../skills/news-to-video/references/public-voice.md)。本轮是已有 Windows/CUDA 环境验证；新机器安装与完整 Web3 示例分别由 REP-02、REP-03 验收。2026-11-11 维护者试听默认1.15倍样本后反馈“挺好的”，认可当前短样本整体听感。原速对照未获单独评价；不是逐词读音或跨设备验收。

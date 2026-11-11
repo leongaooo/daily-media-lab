@@ -7,7 +7,7 @@
   "first_caption_zero": true,
   "last_caption_covers_end": true,
   "speech_not_clipped": true,
-  "human_listening": "pending maintainer feedback",
+  "human_listening": "2026-11-11：维护者试听默认1.15倍公开样本后反馈“挺好的”；认可当前短样本整体听感。未单独确认原速对照、逐词读音或其他设备。",
   "fresh_machine_install": "not tested",
   "files": {
     "captions.srt": {
@@ -19,8 +19,8 @@
       "bytes": 1006
     },
     "README.md": {
-      "sha256": "d513dd6b624e6e9e144fd3fc904259d798ddaf40f2c915a2ed8dc150fdec5d9c",
-      "bytes": 1114
+      "sha256": "c0f424103a6eb85c21b86a6f941fbfa40c8bb5d72d608a61bd4dfdab29fa9325",
+      "bytes": 1203
     },
     "timeline.json": {
       "sha256": "43fc0e04bdeab90e7097f4a6f94c504e7d5da3933f75679b5b25cb91334eb456",
