@@ -9,9 +9,9 @@
 | PUB-01 | AGENTS、ROADMAP、HANDOFF、progress 接续文件 | — | 已完成 | 接续文件齐备，10 份文档链接、17 个任务编号与格式检查通过；见本轮 progress |
 | PUB-02 | LICENSE、自有代码许可、中英 README | — | 已完成 | 维护者确认 MIT；LICENSE 与中英 README 一致，见本轮 progress |
 | PUB-03 | THIRD_PARTY_NOTICES、预览及示例分发范围 | — | 已完成 | 图片授权已记录，音乐署名保留，106 个跟踪文件及 104 个历史 blob 检查无禁止项；见本轮 progress |
-| PUB-04 | GitHub 仓库、origin、main 推送 | PUB-01、PUB-02、PUB-03 | 进行中 | 页面归属/公开可见正确，远程 main 与本地一致 |
-| PUB-05 | GitHub 中英 README、GIF 和预览入口 | PUB-04 | 待开始 | 实际渲染截图、关键链接与预览检查，区分下载与在线播放 |
-| PUB-06 | CONTRIBUTING、Issue/PR 入口 | PUB-04 | 待开始 | 真实地址可达，贡献说明包含验证与素材许可要求 |
+| PUB-04 | GitHub 仓库、origin、main 推送 | PUB-01、PUB-02、PUB-03 | 已完成 | leongaooo/daily-media-lab 为 Public；推送与远程 SHA 校验通过，见本轮 progress |
+| PUB-05 | GitHub 中英 README、GIF 和预览入口 | PUB-04 | 已完成 | 中英文渲染、640×360 GIF 加载与截图通过；MP4/MP3 提供 Raw 下载入口，见本轮 progress |
+| PUB-06 | CONTRIBUTING、Issue/PR 入口 | PUB-04 | 已完成 | Issue/PR 页面可达，CONTRIBUTING 已链接真实地址并说明验证/授权要求，见本轮 progress |
 
 ## 第二阶段：可复现制作
 

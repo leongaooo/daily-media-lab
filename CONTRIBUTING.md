@@ -22,4 +22,4 @@
 4. 记录实际运行命令与结果。区分静态检查、完整解码、看图、人耳试听、真实发布反馈；没做的验证明确写明。
 5. 代码按项目语言格式化，注释解释约束与失败策略；同步校准修改范围内的旧说明。
 
-当前尚无远程 Issue/PR 地址，不填写虚构链接。仓库发布后可通过 Issue 描述以上内容。
+通过 [Issues](https://github.com/leongaooo/daily-media-lab/issues) 描述问题或建议，通过 [Pull requests](https://github.com/leongaooo/daily-media-lab/pulls) 提交改进。请关联 ROADMAP 任务 ID，附实际验证结果与素材授权信息。

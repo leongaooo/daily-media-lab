@@ -21,7 +21,14 @@
 - `previews/manifest.json` 可解析；更新图片分发授权，私人声音继续排除。
 - LICENSE 使用 MIT，版权行归于 Daily Media Lab contributors；维护者确认记录与中英 README/第三方说明一致。
 - `gh auth status`：CLI 未登录；Git 已配置 credential manager。远程推送将先尝试现有认证，不创建凭据。
-- 远程与页面结果待实际操作后追加。
+- `git commit`：866ad4d，接续文件及许可收口；首次 `git push -u origin main` 成功，main 跟踪 origin/main。
+- 首次非交互 HTTPS 失败（本机未认证）；SSH BatchMode 失败（publickey）；之后正常 Git Credential Manager 流程完成，推送成功。没有采集/记录 Token。
+- `git ls-remote origin refs/heads/main` 与 `git rev-parse HEAD`：首次推送均为 866ad4db72c5a554bda5da658d35f889b344fc11；本记录提交后再检查最终同步。
+- Chrome 实查仓库首页：归属 leongaooo，Public，main，中英 README 与 MIT license 正确显示。
+- 首页 GIF：DOM 显示 complete=true、naturalWidth=640、naturalHeight=360；截图中图解和预览表格可见。英文 README 的 Preview 正常渲染。
+- MP4/MP3 文件页均存在，分别显示 266 KB / 392 KB 与 View raw、Download raw file；只确认文件和下载入口，没有进行下载播放或人耳验收。
+- Issues 页面显示 New issue，Pull requests 页面显示 New pull request，均正常可达；CONTRIBUTING 补入真实入口。
+- 截图：[GitHub README 预览](assets/2026-11-11-github-readme-preview.png)。
 
 ## 限制
 
