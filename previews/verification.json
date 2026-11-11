@@ -1,0 +1,35 @@
+{
+  "media": [
+    {
+      "file": "previews/editorial-preview.gif",
+      "decode_passed": true
+    },
+    {
+      "file": "previews/editorial-silent.mp4",
+      "decode_passed": true
+    },
+    {
+      "file": "previews/music-preview.mp3",
+      "decode_passed": true
+    },
+    {
+      "file": "local-review/mix-preview.mp3",
+      "decode_passed": true
+    },
+    {
+      "file": "local-review/video.mp4",
+      "decode_passed": true
+    },
+    {
+      "file": "local-review/voice-preview.mp3",
+      "decode_passed": true
+    }
+  ],
+  "missing_links_at_check": [],
+  "linked_documents_checked": 9,
+  "unit_tests": {
+    "count": 44,
+    "passed": true,
+    "kind": "local unittest; mock API interactions"
+  }
+}

@@ -1,0 +1,5 @@
+{
+  "base_url": "https://YOUR-PROVIDER.example/v1",
+  "api_mode": "images",
+  "image_model": "YOUR_SUPPORTED_IMAGE_MODEL"
+}

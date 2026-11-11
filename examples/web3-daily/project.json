@@ -1,0 +1,600 @@
+{
+  "title": "Web3要闻｜2026年11月11日",
+  "date_label": "制作 2026.11.11",
+  "width": 1920,
+  "height": 1080,
+  "fps": 24,
+  "theme": "neutral",
+  "art_direction": "Remotion Editorial横屏编辑构图。每日一期，两块独立新闻，共用一条连续时间线与一个成片。深蓝青色承载隐私范围，琥珀强调治理条件；图解完整包含，不裁掉字段。底部y904—1080保留字幕轨。概念图非现场，来源贴近内容。",
+  "palette": {
+    "background": "#101F2C",
+    "text": "#EDF5F7",
+    "muted": "#C2CED5",
+    "accent": "#80E2D1",
+    "subtitle_background": "#111820",
+    "subtitle_text": "#F7FAFC"
+  },
+  "voice": {
+    "id": "b-male-v1",
+    "speed": 1.15
+  },
+  "music": {
+    "mode": "pool",
+    "style": "news",
+    "relative_db": -19,
+    "duck_db": 2
+  },
+  "footer": "AI配音；原创资料及生成示意，非现场照片；依据官方披露。",
+  "sources": [
+    {
+      "id": "E01",
+      "url": "https://solana.com/news/solana-privacy-rings-bring-programmable-privacy-onchain",
+      "title": "Solana Foundation，11月10日发布 ",
+      "accessed": "2026-11-11",
+      "usage": "事实依据；未复制品牌图像"
+    },
+    {
+      "id": "E02",
+      "url": "https://www.helius.dev/docs/privacy",
+      "title": "Helius，Privacy Rings技术文档，11月11日读取，页面未标原始发布日期 ",
+      "accessed": "2026-11-11",
+      "usage": "事实依据；未复制品牌图像"
+    },
+    {
+      "id": "E03",
+      "url": "https://enjin.io/blog/enjin-blockchain-fort-canning-upgrade/",
+      "title": "Enjin，Fort Canning公告，10月6日原文、11月9日状态更新 ",
+      "accessed": "2026-11-11",
+      "usage": "事实依据；未复制品牌图像"
+    },
+    {
+      "id": "E04",
+      "url": "https://enjin.io/changelog/fort-canning/",
+      "title": "Enjin，Fort Canning变更记录，10月6日原文、11月9日更新 ",
+      "accessed": "2026-11-11",
+      "usage": "事实依据；未复制品牌图像"
+    },
+    {
+      "id": "E05",
+      "url": "https://github.com/enjin/governance-proposals/blob/master/GP-2026-11-10-01-matrixchain-v1-4-1-upgrade.md",
+      "title": "Enjin，Matrixchain升级提案GP-2026-11-10-01，文内日期11月10日，注明10月6日提前发布 ",
+      "accessed": "2026-11-11",
+      "usage": "事实依据；未复制品牌图像"
+    }
+  ],
+  "visual_selection_version": 1,
+  "scenes": [
+    {
+      "chapter": "WEB3 要闻 / 2026.11.11 / 01 隐私支付 / 1",
+      "headline": "金额保密\n地址仍公开",
+      "center_text": "",
+      "mode": "product_image",
+      "background": "dark",
+      "visual_note": "四个精确字段必须分别展示可见与隐藏，通用图片不能表达字段边界。",
+      "visual_direction": "四个精确字段必须分别展示可见与隐藏，通用图片不能表达字段边界。；Editorial横屏完整包含素材，禁止裁掉图解文字。",
+      "background_direction": "原创资料示意，非现场照片；深蓝与青色强调信息可见范围。",
+      "image_prompt": "无需生成，使用指定原创SVG或后期文字卡。",
+      "negative_prompt": "虚构现场、品牌界面、无依据的已完成状态、字幕遮挡。",
+      "video_prompt": "静态拓扑加轻微推近；不声称对象真的运动。",
+      "segments": [
+        {
+          "text": "11月10日，Solana官方宣布，",
+          "spoken": "十一月十日，索拉纳官方宣布，"
+        },
+        {
+          "text": "Helius的Privacy Rings已上线主网。",
+          "spoken": "赫利乌斯的普莱维西，瑞英斯已上线主网。"
+        },
+        {
+          "text": "首发版本能隐藏资产和金额，",
+          "spoken": "首发版本能隐藏资产和金额，"
+        },
+        {
+          "text": "但收发地址仍然公开。",
+          "spoken": "但收发地址仍然公开。"
+        },
+        {
+          "text": "把它说成完全匿名支付，",
+          "spoken": "把它说成完全匿名支付，"
+        },
+        {
+          "text": "会误判产品能力。",
+          "spoken": "会误判产品能力。"
+        }
+      ],
+      "visual_selection": {
+        "goal": "金额保密，地址公开",
+        "selected": "diagram",
+        "candidates": [
+          {
+            "id": "image",
+            "uses_image": true,
+            "gates": {
+              "facts": true,
+              "source": true,
+              "layout": true,
+              "execution": true
+            },
+            "scores": {
+              "relevance": 4,
+              "appeal": 4,
+              "narrative": 3,
+              "readability": 4
+            },
+            "reason": "备选生成概念图可提供视觉锚点，但不能替代精确字段、日期或阶段条件。"
+          },
+          {
+            "id": "diagram",
+            "uses_image": false,
+            "gates": {
+              "facts": true,
+              "source": true,
+              "layout": true,
+              "execution": true
+            },
+            "scores": {
+              "relevance": 5,
+              "appeal": 4,
+              "narrative": 5,
+              "readability": 5
+            },
+            "reason": "四个精确字段必须分别展示可见与隐藏，通用图片不能表达字段边界。"
+          }
+        ]
+      },
+      "image": "assets/P-DIAGRAM.png",
+      "editorial_summary": "Privacy Rings 首发范围：资产与金额加密，收发地址可见。",
+      "data_source": "来源 E01/E02 · Solana 11月10日公告 / Helius文档 · 原创图解",
+      "editorial_kind": "hero",
+      "editorial_image_fit": "contain"
+    },
+    {
+      "chapter": "WEB3 要闻 / 2026.11.11 / 01 隐私支付 / 2",
+      "headline": "先定义\n隐私边界",
+      "center_text": "",
+      "mode": "product_image",
+      "background": "dark",
+      "visual_note": "局部磨砂与公开端点形成选择性保密的记忆锚点。",
+      "visual_direction": "局部磨砂与公开端点形成选择性保密的记忆锚点。 已核查完整卡片裁切为宽幅图像槽；无文字遮住卡片端点或磨砂区域。；Editorial横屏完整包含素材，禁止裁掉图解文字。",
+      "background_direction": "原创资料示意，非现场照片；深蓝与青色强调信息可见范围。",
+      "image_prompt": "竖屏1080×1920目标构图，克制的金融科技编辑插画，一块横向半透明玻璃卡悬浮在深蓝工作台上，卡片两端各有一个开放可见的圆形端点，中部有两块被不透明磨砂层覆盖的信息区域，柔和青色边缘光，主体占画面宽度约60%，主焦点位于X80—880、Y600—1120，顶部辅助信息区、Y1200—1400字幕区和X900—1080右侧保持干净留白，无文字、无数字、无Logo，不画复杂网络，清晰表达局部保密而非全部匿名。",
+      "negative_prompt": "文字，乱码，数字，品牌标志，钱包截图，交易哈希，代码，真实金融机构标识，硬币堆，币价图，完全不可见的交易端点，虚构新闻实拍，拥挤背景，字幕区遮挡。",
+      "video_prompt": "静态拓扑加轻微推近；不声称对象真的运动。",
+      "segments": [
+        {
+          "text": "它让开发团队可以在同一条链上，",
+          "spoken": "它让开发团队可以在同一条链上，"
+        },
+        {
+          "text": "为支付增加保密余额和转账功能。",
+          "spoken": "为支付增加保密余额和转账功能。"
+        },
+        {
+          "text": "Helius文档说明，",
+          "spoken": "赫利乌斯文档说明，"
+        },
+        {
+          "text": "交易仍由资产所有者签名。",
+          "spoken": "交易仍由资产所有者签名。"
+        },
+        {
+          "text": "我的判断是，产品设计要先定义哪些信息可见，",
+          "spoken": "我的判断是，产品设计要先定义哪些信息可见，"
+        },
+        {
+          "text": "再决定如何向用户解释隐私。",
+          "spoken": "再决定如何向用户解释隐私。"
+        }
+      ],
+      "visual_selection": {
+        "goal": "先定义隐私边界",
+        "selected": "image",
+        "candidates": [
+          {
+            "id": "image",
+            "uses_image": true,
+            "gates": {
+              "facts": true,
+              "source": true,
+              "layout": true,
+              "execution": true
+            },
+            "scores": {
+              "relevance": 5,
+              "appeal": 5,
+              "narrative": 4,
+              "readability": 4
+            },
+            "reason": "局部磨砂与公开端点形成选择性保密的记忆锚点。"
+          },
+          {
+            "id": "diagram",
+            "uses_image": false,
+            "gates": {
+              "facts": true,
+              "source": true,
+              "layout": true,
+              "execution": true
+            },
+            "scores": {
+              "relevance": 5,
+              "appeal": 3,
+              "narrative": 3,
+              "readability": 5
+            },
+            "reason": "文字能清楚表达结论，但缺少局部遮蔽的对象类比。"
+          }
+        ]
+      },
+      "image": "assets/P-CONCEPT-focus.png",
+      "editorial_summary": "所有者签名；先明确哪些信息可见，再向用户解释隐私。",
+      "data_source": "来源 E02 · Helius文档 · 生成概念示意，非产品截图",
+      "editorial_kind": "hero",
+      "editorial_image_fit": "contain"
+    },
+    {
+      "chapter": "WEB3 要闻 / 2026.11.11 / 01 隐私支付 / 3",
+      "headline": "企业定制\n仍在审计",
+      "center_text": "首发版本：已上线\n企业定制：审计中",
+      "mode": "product_image",
+      "background": "dark",
+      "visual_note": "两个并列状态的措辞必须精确，不应画成自动升级路线。",
+      "visual_direction": "两个并列状态的措辞必须精确，不应画成自动升级路线。；Editorial横屏完整包含素材，禁止裁掉图解文字。",
+      "background_direction": "原创资料示意，非现场照片；深蓝与青色强调信息可见范围。",
+      "image_prompt": "无需生成，使用指定原创SVG或后期文字卡。",
+      "negative_prompt": "虚构现场、品牌界面、无依据的已完成状态、字幕遮挡。",
+      "video_prompt": "静态拓扑加轻微推近；不声称对象真的运动。",
+      "segments": [
+        {
+          "text": "企业定制的Custom Rings，",
+          "spoken": "企业定制的卡斯特姆，瑞英斯，"
+        },
+        {
+          "text": "公告仍列为审计中，不能当作已上线。",
+          "spoken": "公告仍列为审计中，不能当作已上线。"
+        },
+        {
+          "text": "接入前应逐项验证查询、转账",
+          "spoken": "接入前应逐项验证查询、转账"
+        },
+        {
+          "text": "和余额恢复时的数据暴露范围。",
+          "spoken": "和余额恢复时的数据暴露范围。"
+        },
+        {
+          "text": "本期依据官方公告和文档，",
+          "spoken": "本期依据官方公告和文档，"
+        },
+        {
+          "text": "没有独立验证性能或安全效果。",
+          "spoken": "没有独立验证性能或安全效果。"
+        }
+      ],
+      "visual_selection": {
+        "goal": "企业定制版仍在审计",
+        "selected": "diagram",
+        "candidates": [
+          {
+            "id": "image",
+            "uses_image": true,
+            "gates": {
+              "facts": true,
+              "source": true,
+              "layout": true,
+              "execution": true
+            },
+            "scores": {
+              "relevance": 4,
+              "appeal": 4,
+              "narrative": 3,
+              "readability": 4
+            },
+            "reason": "备选生成概念图可提供视觉锚点，但不能替代精确字段、日期或阶段条件。"
+          },
+          {
+            "id": "diagram",
+            "uses_image": false,
+            "gates": {
+              "facts": true,
+              "source": true,
+              "layout": true,
+              "execution": true
+            },
+            "scores": {
+              "relevance": 5,
+              "appeal": 4,
+              "narrative": 5,
+              "readability": 5
+            },
+            "reason": "两个并列状态的措辞必须精确，不应画成自动升级路线。"
+          }
+        ]
+      },
+      "image": "assets/P-CHECK.png",
+      "editorial_summary": "接入前检查查询、转账、余额恢复；未独立验证安全或性能。",
+      "data_source": "来源 E01/E02 · 官方公告与文档 · 未独立验证性能/安全",
+      "editorial_kind": "hero",
+      "editorial_image_fit": "contain"
+    },
+    {
+      "chapter": "WEB3 要闻 / 2026.11.11 / 02 链升级 / 1",
+      "headline": "已生效与\n待表决",
+      "center_text": "",
+      "mode": "product_image",
+      "background": "dark",
+      "visual_note": "已完成与附治理条件的目标需要实心/空心点区分，不能用照片替代状态。",
+      "visual_direction": "已完成与附治理条件的目标需要实心/空心点区分，不能用照片替代状态。；Editorial横屏完整包含素材，禁止裁掉图解文字。",
+      "background_direction": "原创资料示意，非现场照片；石墨与琥珀强调状态差异。",
+      "image_prompt": "无需生成，使用指定原创SVG或后期文字卡。",
+      "negative_prompt": "虚构现场、品牌界面、无依据的已完成状态、字幕遮挡。",
+      "video_prompt": "静态拓扑加轻微推近；不声称对象真的运动。",
+      "segments": [
+        {
+          "text": "Enjin在11月9日更新公告：",
+          "spoken": "恩金在十一月九日更新公告："
+        },
+        {
+          "text": "Relaychain运行时1.8.0已生效。",
+          "spoken": "中继链运行时一点八点零已生效。"
+        },
+        {
+          "text": "但承载游戏等应用的Matrixchain，",
+          "spoken": "但承载游戏等应用的矩阵链，"
+        },
+        {
+          "text": "升级目标仍是11月16日，",
+          "spoken": "升级目标仍是十一月十六日，"
+        },
+        {
+          "text": "并以公投通过为前提。",
+          "spoken": "并以公投通过为前提。"
+        },
+        {
+          "text": "两个阶段要分开看。",
+          "spoken": "两个阶段要分开看。"
+        }
+      ],
+      "visual_selection": {
+        "goal": "两阶段，要分开看",
+        "selected": "diagram",
+        "candidates": [
+          {
+            "id": "image",
+            "uses_image": true,
+            "gates": {
+              "facts": true,
+              "source": true,
+              "layout": true,
+              "execution": true
+            },
+            "scores": {
+              "relevance": 4,
+              "appeal": 4,
+              "narrative": 3,
+              "readability": 4
+            },
+            "reason": "备选生成概念图可提供视觉锚点，但不能替代精确字段、日期或阶段条件。"
+          },
+          {
+            "id": "diagram",
+            "uses_image": false,
+            "gates": {
+              "facts": true,
+              "source": true,
+              "layout": true,
+              "execution": true
+            },
+            "scores": {
+              "relevance": 5,
+              "appeal": 4,
+              "narrative": 5,
+              "readability": 5
+            },
+            "reason": "已完成与附治理条件的目标需要实心/空心点区分，不能用照片替代状态。"
+          }
+        ]
+      },
+      "image": "assets/J-STAGES.png",
+      "editorial_summary": "Relaychain 官方确认生效；Matrixchain 目标 11月16日，以公投通过为前提。",
+      "data_source": "来源 E03/E04 · Enjin 11月9日状态更新 · 目标日期非已执行",
+      "editorial_kind": "hero",
+      "editorial_image_fit": "contain"
+    },
+    {
+      "chapter": "WEB3 要闻 / 2026.11.11 / 02 链升级 / 2",
+      "headline": "新规则\n效果待验证",
+      "center_text": "计划能力\n借用期限 · 到期规则\n属性冻结",
+      "mode": "product_image",
+      "background": "dark",
+      "visual_note": "沿用剧本指定的计划能力文字卡，不生成虚构游戏界面；三幕连续图文已复查，无需增加无证据的游戏场景。",
+      "visual_direction": "沿用剧本指定的计划能力文字卡，不生成虚构游戏界面；三幕连续图文已复查，无需增加无证据的游戏场景。；Editorial横屏完整包含素材，禁止裁掉图解文字。",
+      "background_direction": "原创资料示意，非现场照片；石墨与琥珀强调状态差异。",
+      "image_prompt": "无需生成，使用指定原创SVG或后期文字卡。",
+      "negative_prompt": "虚构现场、品牌界面、无依据的已完成状态、字幕遮挡。",
+      "video_prompt": "静态拓扑加轻微推近；不声称对象真的运动。",
+      "segments": [
+        {
+          "text": "Matrixchain方案包括定期借用道具、",
+          "spoken": "矩阵链方案包括定期借用道具、"
+        },
+        {
+          "text": "到期销毁的代币，以及永久冻结的属性。",
+          "spoken": "到期销毁的代币，以及永久冻结的属性。"
+        },
+        {
+          "text": "这些规则可以服务游戏资产管理，",
+          "spoken": "这些规则可以服务游戏资产管理，"
+        },
+        {
+          "text": "但新能力能否改善体验，",
+          "spoken": "但新能力能否改善体验，"
+        },
+        {
+          "text": "还要看应用怎样接入，",
+          "spoken": "还要看应用怎样接入，"
+        },
+        {
+          "text": "不能只凭升级公告判断。",
+          "spoken": "不能只凭升级公告判断。"
+        }
+      ],
+      "visual_selection": {
+        "goal": "新规则仍待激活",
+        "selected": "diagram",
+        "candidates": [
+          {
+            "id": "image",
+            "uses_image": true,
+            "gates": {
+              "facts": true,
+              "source": true,
+              "layout": true,
+              "execution": true
+            },
+            "scores": {
+              "relevance": 4,
+              "appeal": 4,
+              "narrative": 3,
+              "readability": 4
+            },
+            "reason": "备选生成概念图可提供视觉锚点，但不能替代精确字段、日期或阶段条件。"
+          },
+          {
+            "id": "diagram",
+            "uses_image": false,
+            "gates": {
+              "facts": true,
+              "source": true,
+              "layout": true,
+              "execution": true
+            },
+            "scores": {
+              "relevance": 5,
+              "appeal": 4,
+              "narrative": 5,
+              "readability": 5
+            },
+            "reason": "沿用剧本指定的计划能力文字卡，不生成虚构游戏界面；三幕连续图文已复查，无需增加无证据的游戏场景。"
+          }
+        ]
+      },
+      "image": "assets/J-RULES.png",
+      "editorial_summary": "计划能力：借用期限、到期规则、属性冻结。应用效果需实际验证。",
+      "data_source": "来源 E04/E05 · 变更记录与治理提案 · 计划能力，非已交付游戏",
+      "editorial_kind": "hero",
+      "editorial_image_fit": "contain"
+    },
+    {
+      "chapter": "WEB3 要闻 / 2026.11.11 / 02 链升级 / 3",
+      "headline": "先检查签名兼容性",
+      "center_text": "待执行检查 · 切换以激活为条件 · 未独立查询链上执行或测试具体项目",
+      "mode": "product_image",
+      "background": "dark",
+      "visual_note": "三步待执行检查的顺序更适合箭头图；图片无法说明依赖核对与激活后核验的协作边界。",
+      "visual_direction": "依据J-CHECK原创图解，由Remotion原生节点与箭头重绘；这是检查建议，不是已通过结果。",
+      "background_direction": "原创资料示意，非现场照片；石墨与琥珀强调状态差异。",
+      "image_prompt": "无需生成，使用指定原创SVG或后期文字卡。",
+      "negative_prompt": "虚构现场、品牌界面、无依据的已完成状态、字幕遮挡。",
+      "video_prompt": "静态拓扑加轻微推近；不声称对象真的运动。",
+      "segments": [
+        {
+          "text": "接入团队更需要检查签名兼容性。",
+          "spoken": "接入团队更需要检查签名兼容性。"
+        },
+        {
+          "text": "官方提案要求，",
+          "spoken": "官方提案要求，"
+        },
+        {
+          "text": "硬编码交易版本的Matrixchain接入，",
+          "spoken": "硬编码交易版本的矩阵链接入，"
+        },
+        {
+          "text": "在激活时从12切到14。",
+          "spoken": "在激活时从十二切到十四。"
+        },
+        {
+          "text": "先核对依赖和锁文件中的实际SDK版本，",
+          "spoken": "先核对依赖和锁文件中的实际开发工具包版本，"
+        },
+        {
+          "text": "再回归签名流程。",
+          "spoken": "再回归签名流程。"
+        },
+        {
+          "text": "本期未独立查询链上执行，",
+          "spoken": "本期未独立查询链上执行，"
+        },
+        {
+          "text": "也未测试具体项目。",
+          "spoken": "也未测试具体项目。"
+        }
+      ],
+      "visual_selection": {
+        "goal": "先检查签名兼容性",
+        "selected": "diagram",
+        "candidates": [
+          {
+            "id": "image",
+            "uses_image": true,
+            "gates": {
+              "facts": true,
+              "source": true,
+              "layout": true,
+              "execution": true
+            },
+            "scores": {
+              "relevance": 4,
+              "appeal": 4,
+              "narrative": 3,
+              "readability": 4
+            },
+            "reason": "备选生成概念图可提供视觉锚点，但不能替代精确字段、日期或阶段条件。"
+          },
+          {
+            "id": "diagram",
+            "uses_image": false,
+            "gates": {
+              "facts": true,
+              "source": true,
+              "layout": true,
+              "execution": true
+            },
+            "scores": {
+              "relevance": 5,
+              "appeal": 4,
+              "narrative": 5,
+              "readability": 5
+            },
+            "reason": "三步待执行检查的顺序更适合箭头图；图片无法说明依赖核对与激活后核验的协作边界。"
+          }
+        ]
+      },
+      "image": "assets/J-CHECK.png",
+      "editorial_summary": "硬编码接入在激活时从 transaction version 12 切到 14。",
+      "data_source": "来源 E05 · 官方治理提案 · 流程为编辑建议，待执行检查",
+      "editorial_kind": "flow",
+      "editorial_image_fit": "contain",
+      "editorial_nodes": [
+        {
+          "title": "核对实际依赖",
+          "detail": "SDK版本与锁文件"
+        },
+        {
+          "title": "隔离签名回归",
+          "detail": "待执行的兼容性检查"
+        },
+        {
+          "title": "激活后核验",
+          "detail": "交易版本 12 → 14"
+        }
+      ]
+    }
+  ],
+  "editorial": {
+    "width": 1920,
+    "height": 1080,
+    "fps": 24,
+    "captions": "bottom_rail"
+  }
+}

@@ -1,0 +1,106 @@
+{
+  "version": 1,
+  "checked_at_utc": "2026-11-04T02:05:32.610634+00:00",
+  "cost": "zero purchase or subscription cost; attribution required",
+  "default_style": "business",
+  "selection_mode": "random",
+  "random_track_ids": [
+    "voice-over-under",
+    "tech-live",
+    "inspired"
+  ],
+  "license_evidence": [
+    "evidence/official-licensing.html",
+    "evidence/cc-by-4.0-deed.html",
+    "evidence/official-pieces.json"
+  ],
+  "selection_basis": "Official author descriptions and instrumentation; not human listening approval.",
+  "tracks": [
+    {
+      "id": "voice-over-under",
+      "styles": [
+        "news",
+        "business"
+      ],
+      "selection_reason": "作者明确为大量口播的新闻或评测设计，并说明便于循环。",
+      "title": "Voice Over Under",
+      "artist": "Kevin MacLeod",
+      "file": "voice-over-under.mp3",
+      "source_url": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1600001",
+      "download_url": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Voice%20Over%20Under.mp3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "\"Voice Over Under\" Kevin MacLeod (incompetech.com)\nLicensed under Creative Commons: By Attribution 4.0 License\nhttps://creativecommons.org/licenses/by/4.0/\nSource: https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1600001",
+      "sha256": "11662d206275949f8fcd3555b8448c00c9c952cf5eb9c0698a853a23b0e78265",
+      "bytes": 6319297,
+      "duration_catalog": "00:03:17",
+      "bpm_catalog": "135",
+      "instruments_catalog": "Synths, Percussion",
+      "author_description": "This is a piece of music classified as \"GNDN\". Goes Nowhere. Does Nothing. It sort of sits there and just repeats mild variants. There isn't even an ending.  Yet, this was all on purpose. This piece was designed for keeping energy in news reports or review segments where there is a lot of talking. There is no end so it is easy to loop to any length. There will come a time in your editing career where you will need this piece. Best to download it now.",
+      "isrc": "USUAN1600001",
+      "start_seconds": 0,
+      "requires_attribution": true,
+      "full_decode_passed": true,
+      "human_listening_review": "not_performed",
+      "changes_notice": "Add an accurate changes notice when excerpting or mixing this original track.",
+      "duration_seconds": 197.41
+    },
+    {
+      "id": "tech-live",
+      "styles": [
+        "news"
+      ],
+      "selection_reason": "作者明确定位为采访和评测段落的有节奏铺底。",
+      "title": "Tech Live",
+      "artist": "Kevin MacLeod",
+      "file": "tech-live.mp3",
+      "source_url": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1700030",
+      "download_url": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Tech%20Live.mp3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "\"Tech Live\" Kevin MacLeod (incompetech.com)\nLicensed under Creative Commons: By Attribution 4.0 License\nhttps://creativecommons.org/licenses/by/4.0/\nSource: https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1700030",
+      "sha256": "3fee678a805937e736449fe98347bbf3497258f6387b5569e49c97bae4c1072e",
+      "bytes": 7312334,
+      "duration_catalog": "00:03:48",
+      "bpm_catalog": "124",
+      "instruments_catalog": "Synths, Percussion",
+      "author_description": "Interview-Mania! This piece does nothing and goes nowhere. Perfect for an energetic backdrop to your review or interview segments!",
+      "isrc": "USUAN1700030",
+      "start_seconds": 0,
+      "requires_attribution": true,
+      "full_decode_passed": true,
+      "human_listening_review": "not_performed",
+      "changes_notice": "Add an accurate changes notice when excerpting or mixing this original track.",
+      "duration_seconds": 228.44
+    },
+    {
+      "id": "inspired",
+      "styles": [
+        "business",
+        "documentary"
+      ],
+      "selection_reason": "作者列举企业片和精密工业流程为适用场景。",
+      "title": "Inspired",
+      "artist": "Kevin MacLeod",
+      "file": "inspired.mp3",
+      "source_url": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1600022",
+      "download_url": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Inspired.mp3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "\"Inspired\" Kevin MacLeod (incompetech.com)\nLicensed under Creative Commons: By Attribution 4.0 License\nhttps://creativecommons.org/licenses/by/4.0/\nSource: https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1600022",
+      "sha256": "40b1af74145cedac77814d060155ad4658e04efa14d1b649decedc98fbb25f69",
+      "bytes": 9156393,
+      "duration_catalog": "00:04:46",
+      "bpm_catalog": "120",
+      "instruments_catalog": "Guitar, Synths, Percussion",
+      "author_description": "Quite a broad piece. Could be used for corporate films of intricate industrial processes, or a flashback scene to the time at the lake a few summers ago. Maybe good background to your cousin's magic show at the last family reunion. Or a film where you do \"industrial processes\" at the \"lake\" with your \"cousin\". It is really quite versatile!",
+      "isrc": "USUAN1600022",
+      "start_seconds": 0,
+      "requires_attribution": true,
+      "full_decode_passed": true,
+      "human_listening_review": "not_performed",
+      "changes_notice": "Add an accurate changes notice when excerpting or mixing this original track.",
+      "duration_seconds": 286.07
+    }
+  ]
+}

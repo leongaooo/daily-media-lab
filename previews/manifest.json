@@ -1,0 +1,39 @@
+{
+  "sample": "Archived Web3 daily production, 2026-11-11",
+  "source_video_sha256": "0a8aab541208dac796f21b957481a4de2bb8f7fe673777e4522883d3d69365bd",
+  "original_duration_seconds": 93.29166666666667,
+  "original_engine": "remotion_editorial",
+  "original_size": [
+    1920,
+    1080
+  ],
+  "silent_montage": {
+    "scene_starts": [
+      0.5,
+      15.116693693693694,
+      31.084804054054054,
+      46.62499774774775,
+      60.55531644144145,
+      74.66213513513514
+    ],
+    "seconds_per_scene": 3,
+    "audio": false
+  },
+  "music": {
+    "title": "Voice Over Under",
+    "artist": "Kevin MacLeod",
+    "license": "CC BY 4.0",
+    "changes": "20s excerpt, fades, MP3 encoding"
+  },
+  "voice_review": {
+    "directory": "local-review (Git ignored)",
+    "excerpt_start": 0,
+    "excerpt_end": 20.155494369369368,
+    "publication_rights": "unconfirmed; excluded from Git"
+  },
+  "limits": [
+    "No new reporting or chain verification",
+    "No human listening review in this run",
+    "Image publication rights and final project license need confirmation"
+  ]
+}

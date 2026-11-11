@@ -1,0 +1,17 @@
+[mp3 @ 0000018d485752c0] Estimating duration from bitrate, this may be inaccurate
+Input #0, mp3, from './skills/news-to-video\assets\music-pool\voice-over-under.mp3':
+  Metadata:
+    title           : Voice Over Under
+    artist          : Kevin MacLeod
+    TCM             : Kevin MacLeod
+    iTunSMPB        :  00000000 00000210 00000AB0 000000000084C9C0 00000000 006049CC 00000000 00000000 00000000 00000000 00000000 00000000
+    TBP             : 135
+    genre           : Electronica
+    comment         : ISRC: USUAN1600001 at incompetech.com
+    iTunPGAP        : 0
+    encoded_by      : iTunes 12.3.2.35
+    iTunNORM        :  00000325 00000315 00001DBC 00002075 0000B2E0 000272BC 00008077 00008064 00022D58 0002A34E
+    date            : 2016
+  Duration: 00:03:17.41, start: 0.000000, bitrate: 256 kb/s
+  Stream #0:0: Audio: mp3 (mp3float), 44100 Hz, stereo, fltp, 256 kb/s
+At least one output file must be specified

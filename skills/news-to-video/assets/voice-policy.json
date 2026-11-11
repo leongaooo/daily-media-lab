@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "voice_id": "b-male-v1",
+  "label": "B版男声（用户于2026-11-04选定，唯一启用声音）",
+  "reference_sha256": "c19890f7bb26a4b5dd89e6d2c321bc14891031c49be2e543c3c0f02f39dba948",
+  "reference_text_sha256": "253f5854b78210d7924dd8ea1c8258da69ed902bec28a1c408fbde9a9890d36e",
+  "accepted_preview_sha256": "5ef1b204f69206ab8eb48db9d3b223eeb02a1eb03231ecbc57464d162017ab16",
+  "model": "Qwen/Qwen3-TTS-12Hz-1.7B-Base",
+  "revision": "fd4b254389122332181a7c3db7f27e918eec64e3",
+  "settings": {
+    "seed": 2026,
+    "temperature": 0.75,
+    "top_p": 0.95,
+    "repetition_penalty": 1.05,
+    "max_new_tokens": 1200
+  },
+  "mode": "reference-conditioned ICL; no fine-tuning; no alternate voice or fallback"
+}

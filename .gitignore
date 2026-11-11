@@ -1,0 +1,16 @@
+__pycache__/
+*.pyc
+node_modules/
+.cache/
+.env
+.env.*
+!.env.example
+**/api-key.local.json
+**/connection.json
+**/runtime.json
+**/profile.json
+**/reference.wav
+**/reference-text.txt
+local-review/
+outputs/
+*.log

@@ -1,0 +1,9 @@
+* text=auto eol=lf
+*.mp3 binary
+*.mp4 binary
+*.wav binary
+*.png binary
+*.jpg binary
+*.gif binary
+# Preserve captured third-party evidence without applying source formatting rules.
+skills/news-to-video/assets/music-pool/evidence/** -text -whitespace

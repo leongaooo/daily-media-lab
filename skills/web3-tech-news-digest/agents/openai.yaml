@@ -1,0 +1,6 @@
+interface:
+  display_name: "Web3技术与行业资讯"
+  short_description: "核验区块链、智能合约、DApp和技术路线进展，交付近期中文要闻剧本"
+  default_prompt: "使用 $web3-tech-news-digest，核验近期有价值的Web3技术与行业变化，交付有来源的中文分幕剧本。"
+policy:
+  allow_implicit_invocation: true

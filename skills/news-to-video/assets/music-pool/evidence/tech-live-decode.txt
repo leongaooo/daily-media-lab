@@ -1,0 +1,17 @@
+[mp3 @ 00000211d01d5280] Estimating duration from bitrate, this may be inaccurate
+Input #0, mp3, from './skills/news-to-video\assets\music-pool\tech-live.mp3':
+  Metadata:
+    title           : Tech Live
+    artist          : Kevin MacLeod
+    TCM             : Kevin MacLeod
+    iTunSMPB        :  00000000 00000210 00000731 000000000099AF3F 00000000 006F70FB 00000000 00000000 00000000 00000000 00000000 00000000
+    TBP             : 124
+    genre           : Soundtrack
+    comment         : ISRC: USUAN1700030
+    iTunPGAP        : 0
+    encoded_by      : iTunes 12.5.5.5
+    iTunNORM        :  000000AF 000000A3 000010E9 0000102A 00023CA7 00023CA7 00005792 00005808 0001CB49 00027739
+    date            : 2017
+  Duration: 00:03:48.44, start: 0.000000, bitrate: 256 kb/s
+  Stream #0:0: Audio: mp3 (mp3float), 44100 Hz, stereo, fltp, 256 kb/s
+At least one output file must be specified

@@ -1,0 +1,17 @@
+[mp3 @ 0000029e0f6b5280] Estimating duration from bitrate, this may be inaccurate
+Input #0, mp3, from './skills/news-to-video\assets\music-pool\inspired.mp3':
+  Metadata:
+    title           : Inspired
+    artist          : Kevin MacLeod
+    TCM             : Kevin MacLeod
+    iTunSMPB        :  00000000 00000210 00000978 0000000000C073F8 00000000 008B943F 00000000 00000000 00000000 00000000 00000000 00000000
+    TBP             : 120
+    genre           : Electronica
+    comment         : ISRC: USUAN1600022 incompetech.com
+    iTunPGAP        : 0
+    encoded_by      : iTunes 12.3.3.17
+    iTunNORM        :  000002C5 000002C4 00001703 00001D8D 000007C1 00037343 00007E8B 00007E6F 000278C1 00006D49
+    date            : 2016
+  Duration: 00:04:46.07, start: 0.000000, bitrate: 256 kb/s
+  Stream #0:0: Audio: mp3 (mp3float), 44100 Hz, stereo, fltp, 256 kb/s
+At least one output file must be specified

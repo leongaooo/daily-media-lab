@@ -1,0 +1,56 @@
+{
+  "title": "行业观察｜制作示例",
+  "art_direction": "冷静编辑构图，少量节点与大字；不代表真实新闻或现场。",
+  "editorial": {
+    "width": 1920,
+    "height": 1080,
+    "fps": 24,
+    "captions": "bottom_rail"
+  },
+  "voice": {
+    "id": "b-male-v1",
+    "speed": 1.15
+  },
+  "music": {
+    "mode": "pool",
+    "style": "business",
+    "relative_db": -19,
+    "duck_db": 2
+  },
+  "sources": [],
+  "scenes": [
+    {
+      "chapter": "01 / 示例",
+      "editorial_kind": "hero",
+      "headline": "从具体问题开始",
+      "center_text": "先明确事实与边界",
+      "editorial_summary": "此为制作示例，不是已核验新闻。",
+      "segments": [
+        {
+          "text": "先明确事实，再解释它影响谁。"
+        }
+      ]
+    },
+    {
+      "chapter": "02 / 检查",
+      "editorial_kind": "flow",
+      "headline": "检查顺序需要依据",
+      "center_text": "示例流程，非真实操作规程",
+      "editorial_nodes": [
+        {
+          "title": "核对材料",
+          "detail": "来源与日期"
+        },
+        {
+          "title": "明确边界",
+          "detail": "事实与判断分开"
+        }
+      ],
+      "segments": [
+        {
+          "text": "每一个判断，都保留来源和适用边界。"
+        }
+      ]
+    }
+  ]
+}
