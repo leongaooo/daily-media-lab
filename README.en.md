@@ -63,6 +63,8 @@ Primary sources → verification → scene script + image briefs
 
 Web3 is the first editorial topic. The production skill can also accept existing product materials or narration scripts. Other editorial topics are future contributions. Script-only requests do not invoke image generation, speech synthesis or rendering. One daily script produces one project, one continuous timeline and one final video by default.
 
+Production now covers general news in a single 1920×1080 landscape mode with a fixed bottom caption rail. Approved narration and voice identity stay intact while images, SVGs and animation follow a coherent story world and measured captions. Each episode allows up to 10 paid image attempts; cache reuse does not count. Reusable asset manifests and production records accompany the project. See the [visual director contract](skills/news-to-video/references/visual-director.md). Existing previews have not been remade; the new visuals still need finished-video review.
+
 ## Give images and sound a purpose
 
 **Images should earn their place.** Each scene has one understanding goal. Choose verified materials, generated illustrations, original SVGs, charts or text accordingly. Use scene images for context and visual memory; keep numbers, arrows and factual relationships controllable. Generated illustrations are never evidence of a real deployment or event.

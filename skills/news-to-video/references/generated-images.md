@@ -4,11 +4,11 @@
 
 先按[逐幕视觉评分](visual-selection.md)评估并记录候选，再决定是否生成。图片承担观赏、环境和记忆价值，数字/关系仍独立合成；不可因需要SVG而排除场景图。
 
-收到已有剧本时按[剧本接入](script-handoff.md)逐张执行指定图片需求，保留asset_id对应关系。将image_prompt与negative_prompt合并至image_generation.prompt后发送，当前接口没有自动读取独立负向字段。同一asset_id只建立一个生成任务，复用幕绑定同一本地路径；失败、缺配置或不合格时明确标记缺口，不静默回退为文字并声称完成。
+收到已有剧本时按[剧本接入](script-handoff.md)逐张执行指定图片需求，保留asset_id对应关系。每期最多10张新的付费生成图片；10张是上限，不是必须用满的配额。将image_prompt与negative_prompt合并至image_generation.prompt后发送，当前接口没有自动读取独立负向字段。同一asset_id只建立一个生成任务，复用幕绑定同一本地路径；失败、缺配置或不合格时明确标记缺口，不静默回退为文字并声称完成。
 
 ## 逐幕判断
 
-先写清“观众这一幕要理解或感受到什么”，再选择视觉：
+先写清“观众这一幕要理解或感受到什么”，再选择视觉；同时声明该素材属于哪个`story_world`，保证同一新闻内的环境、角色、对象、色彩和镜头方向连续：
 
 | 内容 | 图片目标 | 形式 |
 | --- | --- | --- |
@@ -25,7 +25,7 @@
 
 以Editorial 1920×1080构图为准，底部y904—1080是独立字幕轨。根据hero图片槽与叙事选择接口支持的横向或方形尺寸，不把成片画幅当API保证。完整对象与图解默认contain，场景图可显式cover；记录实际返回尺寸、裁切余量和轮廓检查。背景图在当前模板中同样进入单一图像槽，不声称自动全屏铺底、透明度或多图叠加。文字、数字、Logo与精确关系由代码独立绘制；图片不能侵占字幕轨。
 
-提示词先规定主体位置、完整轮廓、裁切余量、留白、与口播对应的单个动作、风格、光线和非现场性质。仅写“科技感”或“好看”不够。文字、Logo、数字和数据关系由后期绘制。泛用示意不能冒充某厂商产品，单张轻推近不声称物体真的运动。
+提示词先规定story_world、主体位置、完整轮廓、裁切余量、留白、与口播对应的单个动作、风格、光线和非现场性质。仅写“科技感”或“好看”不够。文字、Logo、数字和数据关系由后期绘制。泛用示意不能冒充某厂商产品，单张轻推近不声称物体真的运动。连续图片必须复用同一世界的角色、对象和光线设定，不得为了丰富画面随机切换视觉世界。
 
 ## 接口与独立密钥
 
@@ -66,13 +66,13 @@ connection.json示例（不含密钥）：
 ```powershell
 # 只检查和规划，不读取Key、不联网
 & $runtime.python "$skill/scripts/generate_images.py" project.json --connection "$skill/config/image-generation/connection.json" --output assets/generated
-# 用户已授权生成时才执行；默认最多3张新图，串行单次请求
-& $runtime.python "$skill/scripts/generate_images.py" project.json --connection "$skill/config/image-generation/connection.json" --credentials "$skill/config/image-generation/api-key.local.json" --output assets/generated --generate --max-new-images 3
+# 用户已授权生成时执行；每期最多10张新图，串行单次请求
+& $runtime.python "$skill/scripts/generate_images.py" project.json --connection "$skill/config/image-generation/connection.json" --credentials "$skill/config/image-generation/api-key.local.json" --output assets/generated --generate --max-new-images 10
 ```
 
 生成后读取generation-report.json并逐张看图，检查口播对应、异常结构/手指、品牌、文字、水印、误导性关系和裁切。标注sidecar reviewed=true及检查意见。失败或超时不自动重试；保留submitted标记，先检查上游任务和账单，再人工决定是否清除标记重新提交。
 
-缓存按端点、模型、提示词、尺寸和质量指纹保存，并校验图片SHA256。重复执行命中缓存不计费请求。脚本默认仅规划；--generate为显式执行开关。现有会话已经授权的图片生成无需反复问同一权限。
+缓存按端点、模型、提示词、尺寸和质量指纹保存，并校验图片SHA256。重复执行命中缓存不计费请求。每期沿用同一生成目录，`paid-image-attempts.json`在发请求前累计次数，失败/未确认也计入10张上限；本地计划预检和已核验缓存不计数。不得拆目录、并行写同一目录或清账规避预算。账单仍以上游为准；迁移旧目录先核对历史报告，不把本地新计数冒充完整账单。脚本默认仅规划；--generate为显式执行开关。现有会话已经授权的图片生成无需反复问同一权限。
 
 ## 合成和交付
 

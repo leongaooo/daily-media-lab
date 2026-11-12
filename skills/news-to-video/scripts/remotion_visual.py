@@ -29,6 +29,40 @@ def _kind(scene):
     )
 
 
+def _story_shots(scene, base, public, index, cues, start_frame, fps):
+    """Bind shot focus to measured caption cues, never an arbitrary eight seconds."""
+    shots = []
+    planned = scene.get("shots", [])
+    for shot_index, shot in enumerate(planned):
+        item = dict(shot)
+        if "segment_start" in shot or "segment_end" in shot:
+            first = shot.get("segment_start", 0)
+            last = shot.get("segment_end", first)
+            if (
+                type(first) is not int
+                or type(last) is not int
+                or not 0 <= first <= last < len(cues)
+            ):
+                raise ValueError("Story shot segment indices must reference this scene")
+            item["start"] = (round(cues[first]["start"] * fps) - start_frame) / fps
+            item["end"] = (round(cues[last]["end"] * fps) - start_frame) / fps
+        elif "start" not in shot and "end" not in shot:
+            # Legacy plans get a duration-based distribution; authored bindings win.
+            duration = (round(cues[-1]["end"] * fps) - start_frame) / fps
+            item["start"] = duration * shot_index / len(planned)
+            item["end"] = duration * (shot_index + 1) / len(planned)
+        if shot.get("image"):
+            item["image"] = _copy_asset(
+                base,
+                shot["image"],
+                public,
+                index,
+                f"shot-{shot_index}",
+            )
+        shots.append(item)
+    return shots
+
+
 def preflight(project, base, runtime):
     """Resolve the sole renderer and independent FFprobe before audio work."""
     editorial = project.get("editorial", {})
@@ -66,6 +100,15 @@ def preflight(project, base, runtime):
                 raise ValueError(
                     f"Scene {index + 1}: flow nodes require a title and text detail"
                 )
+        if _kind(scene) == "story":
+            shots = scene.get("shots", [])
+            if not 2 <= len(shots) <= 4:
+                raise ValueError(f"Scene {index + 1}: story requires 2–4 shots")
+            if any(
+                not isinstance(shot, dict) or not str(shot.get("title", "")).strip()
+                for shot in shots
+            ):
+                raise ValueError(f"Scene {index + 1}: story shots require titles")
         if scene.get("editorial_image_fit", "contain") not in ("contain", "cover"):
             raise ValueError(f"Scene {index + 1}: unsupported editorial_image_fit")
         for key in ("image", "background_image"):
@@ -157,6 +200,21 @@ def stage(project, cues, duration, base, folder, font):
             nodes=scene.get("editorial_nodes", []),
             image_fit=scene.get("editorial_image_fit", "contain"),
             summary=scene.get("editorial_summary", ""),
+            visual_strategy=scene.get("visual_strategy", ""),
+            motion_plan=scene.get("motion_plan", {}),
+            shots=(
+                _story_shots(
+                    scene,
+                    base,
+                    public / "assets",
+                    index,
+                    scene_cues,
+                    start_frame,
+                    editorial_fps,
+                )
+                if _kind(scene) == "story"
+                else []
+            ),
         )
         scene_payload.append(item)
     payload = dict(

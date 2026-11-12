@@ -1,6 +1,6 @@
 # Remotion Editorial 制作方案
 
-这是news-to-video唯一的视频生成方案。它把文稿转换成多个编辑式镜头，默认且当前只支持横屏1920×1080、24fps；镜头拥有自己的构图、文字、图形、图片和动画。镜头根据文稿自由构图，并保留固定底部字幕轨。SRT 仍然独立交付；视频内字幕也可以显式关闭。素材和动画必须避开该区域。
+这是news-to-video唯一的视频生成方案。它把文稿转换成一个`daily_editorial`横屏节目，固定1920×1080、24fps和底部字幕轨；镜头拥有自己的构图、文字、图形、图片和动画。字幕和配音是主时间轴，镜头根据字幕语义自由构图，并保留固定底部字幕轨。SRT 仍然独立交付；视频内字幕也可以显式关闭。素材和动画必须避开该区域。
 
 ## 运行
 
@@ -11,7 +11,7 @@ $install = Join-Path $HOME '.cache/news-to-video/remotion-editorial'
 npm.cmd install --prefix $install --no-audit --no-fund '@remotion/cli@4.0.542' 'remotion@4.0.542' 'react@19.3.1' 'react-dom@19.3.1'
 
 $runtime = Get-Content "$HOME/.cache/news-to-video/runtime.json" -Raw | ConvertFrom-Json
-& $runtime.python "./skills/news-to-video/scripts/render.py" "项目.json" --output "成片目录"
+& $runtime.python "C:/Users/xc_sc/.agents/skills/news-to-video/scripts/render.py" "项目.json" --output "成片目录"
 ```
 
 runtime.json 可以用 remotion_install 指向独立安装目录。渲染器使用现有本地 FFmpeg 合成配音和音乐，不调用 Remotion 云端服务。
@@ -51,7 +51,7 @@ runtime.json 可以用 remotion_install 指向独立安装目录。渲染器使�
 }
 ```
 
-目前提供 hero、flow、chart 三种可读镜头语法。底部字幕轨固定占用 y=904..1080；镜头内容必须结束在 y=904 之前，字幕按实际语义时间线替换。设置 `captions` 为 `off` 时仍输出 SRT，但视频不烧录字幕。省略 editorial_kind 时由场景模式和视觉要求作有限推断；复杂稿件应由制作代理显式选择。之后可以增加 timeline、quote、map 和 device，不改变声音接口。
+目前提供 hero、flow、chart 和 story 四种底层镜头组件。AI可以自由组合它们，不把组件当成固定栏目模板；story包含2—4个带语义标题的连续shots，必须属于同一个story_world。`motion_plan`中的entrance、emphasis和camera由组件实际消费；不支持的动效字段必须在报告中说明。底部字幕轨固定占用 y=904..1080；镜头内容必须结束在 y=904 之前，字幕按实际语义时间线替换。设置 `captions` 为 `off` 时仍输出 SRT，但视频不烧录字幕。省略 editorial_kind 时由场景模式和视觉要求作有限推断；复杂稿件应由制作代理显式选择。之后可以增加 timeline、quote、map 和 device，不改变声音接口。
 
 代码生成素材优先于图片：流程节点、箭头、图表、数字、网格、路径、抽象设备和 UI 结构由 Remotion 组件生成。需要环境质感、真实对象或视觉隐喻时，沿用 image_generation 与 generate_images.py，生成结果仍写入项目资产清单后再渲染。不能使用生成图替代事实图表、真实产品或现场证据。
 

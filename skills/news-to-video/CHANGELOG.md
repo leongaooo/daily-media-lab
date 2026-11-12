@@ -52,3 +52,20 @@ User requested removing the image-generation dependency on the temporary Codex i
 ## 2026-11-05 — Approved mild B denoise enabled
 
 User adopted the audition. Enable fixed afftdn nr8/nf-35/tn0/gs6 after tempo, with 600-sample delay compensation, exact length, active-RMS matching and peak guard. Preserve raw synthesis/reference identity, isolate cleanup caches and report actual cleanup in validation. Sole B default1.15 and approved music -16/2 remain. Existing deliverables are not regenerated.
+
+
+## 2026-11-12
+
+- Added Editorial `story` scenes with 2–4 semantic shots and relative timing.
+- Added consumed `motion_plan` presets for entrance, node stagger and camera push.
+- Added `visual_strategy`, `motion-report.json`, and story shot validation.
+- Kept Remotion Editorial as the only final renderer; SVG and generated images remain separate evidence/scene asset paths.
+
+## 2026-11-12 · 通用日更导演契约
+
+- 用户确认单一横屏模式；固定底部字幕和B声系统，其他区域按主题创意，不再以AIDC或固定顶部/卡片布局约束所有视频。
+- 增加视觉导演参考、故事世界与逐幕理解目标、长期资产候选清单及人工连续性审查。
+- 新制作使用director_contract_version=1；故事规划预检与报告接入生图/渲染，旧项目标为未评估。
+- 付费新图上限改为10；同一生成目录持久记录尝试次数，缓存不计，失败/未确认计入；其他本地制作能力不设成本配额。
+- 同目录重做画面时检查口播/声音/时长身份；保留固定声音、既有配音缓存与字幕主时间轴。
+- 不宣称新增任意外部音频导入、自动资产数据库、所有动效预设或图片连续性自动识别；生产质量仍需真实出图/渲染验收。

@@ -149,6 +149,14 @@ def apply_assets(project, base, jobs, folder):
 def run(args):
     project_path = Path(args.project).resolve()
     project = read_json(project_path)
+    # Reject over-budget plans and inconsistent worlds before reading credentials.
+    from director_contract import assess
+
+    director = assess(project)
+    if director["errors"]:
+        raise ValueError("Director contract: " + "; ".join(director["errors"]))
+    if not 0 <= args.max_new_images <= 10:
+        raise ValueError("--max-new-images must be between 0 and 10")
     if "visual_selection_version" in project:
         from score_visuals import assess
 
@@ -184,6 +192,16 @@ def run(args):
         raise ValueError(
             f"{len(pending)} new images exceed --max-new-images={args.max_new_images}"
         )
+    # Keep paid attempts across reruns, including failed or unconfirmed requests.
+    # The output directory is the episode's single serial generation workspace.
+    budget_path = folder / "paid-image-attempts.json"
+    attempts = read_json(budget_path) if budget_path.exists() else []
+    if not isinstance(attempts, list):
+        raise ValueError(
+            "Invalid paid-image-attempts.json; do not reset billing history"
+        )
+    if len(attempts) + len(pending) > 10:
+        raise ValueError("Episode exceeds 10 paid image attempts including prior runs")
     report = dict(
         stage="generate" if args.generate else "plan-only",
         api_requests=0,
@@ -225,6 +243,10 @@ def run(args):
                 marker,
                 dict(fingerprint=job["fingerprint"], status="submitted-or-unconfirmed"),
             )
+            attempts.append(
+                {"asset_id": job["asset_id"], "fingerprint": job["fingerprint"]}
+            )
+            save_json(budget_path, attempts)
             request = urllib.request.Request(
                 job["endpoint"],
                 data=json.dumps(job["payload"]).encode(),
@@ -315,7 +337,7 @@ if __name__ == "__main__":
     parser.add_argument("--credentials")
     parser.add_argument("--output", required=True)
     parser.add_argument("--generate", action="store_true")
-    parser.add_argument("--max-new-images", type=int, default=3)
+    parser.add_argument("--max-new-images", type=int, default=10)
     try:
         raise SystemExit(run(parser.parse_args()))
     except (ValueError, KeyError, OSError) as exc:

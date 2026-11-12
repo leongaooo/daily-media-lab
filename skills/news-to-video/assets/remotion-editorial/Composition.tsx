@@ -11,6 +11,19 @@ import {
 
 type Bar = {label: string; value: number};
 type FlowNode = {title: string; detail?: string};
+type MotionPlan = {
+  entrance?: 'fade_up' | 'wipe' | 'zoom' | 'none';
+  emphasis?: 'draw_line' | 'node_stagger' | 'count_up' | 'highlight_hold' | 'none';
+  camera?: 'slow_push' | 'parallax_hint' | 'none';
+};
+type StoryShot = {
+  title: string;
+  detail?: string;
+  start?: number;
+  end?: number;
+  image?: string | null;
+  role?: string;
+};
 type SceneData = {
   kind: string;
   duration: number;
@@ -26,6 +39,9 @@ type SceneData = {
   nodes: FlowNode[];
   image_fit: string;
   summary: string;
+  visual_strategy: string;
+  motion_plan: MotionPlan;
+  shots: StoryShot[];
 };
 type CaptionData = {text: string; start: number; end: number};
 type Props = {
@@ -82,7 +98,10 @@ const Shell: React.FC<{
   dark?: boolean;
 }> = ({children, scene, dark = true}) => {
   const frame = useCurrentFrame();
-  const entrance = spring({frame, fps: 24, config: {damping: 180}});
+  const entrance =
+    scene.motion_plan?.entrance === 'none'
+      ? 1
+      : spring({frame, fps: 24, config: {damping: 180}});
   return (
     <AbsoluteFill style={{fontFamily: '"Microsoft YaHei", sans-serif'}}>
       <AbsoluteFill
@@ -115,7 +134,8 @@ const Shell: React.FC<{
 
 const Hero: React.FC<{scene: SceneData}> = ({scene}) => {
   const frame = useCurrentFrame();
-  const zoom = interpolate(frame, [0, 220], [1.13, 1], {
+  const camera = scene.motion_plan?.camera === 'slow_push';
+  const zoom = interpolate(frame, [0, 220], [camera ? 1.13 : 1, 1], {
     extrapolateRight: 'clamp',
   });
   return (
@@ -131,6 +151,12 @@ const Hero: React.FC<{scene: SceneData}> = ({scene}) => {
               lineHeight: 1.15,
               letterSpacing: -3,
               whiteSpace: 'pre-line',
+              transform:
+                scene.motion_plan?.entrance === 'fade_up'
+                  ? `translateY(${interpolate(frame, [0, 24], [26, 0], {
+                      extrapolateRight: 'clamp',
+                    })}px)`
+                  : undefined,
             }}
           >
             {scene.headline || scene.center_text}
@@ -163,7 +189,7 @@ const Hero: React.FC<{scene: SceneData}> = ({scene}) => {
                 height: '100%',
                 objectFit: scene.image_fit === 'cover' ? 'cover' : 'contain',
                 transform:
-                  scene.image_fit === 'cover'
+                  scene.image_fit === 'cover' && camera
                     ? 'scale(' + zoom + ')'
                     : undefined,
               }}
@@ -224,33 +250,113 @@ const Flow: React.FC<{scene: SceneData}> = ({scene}) => {
       <div
         style={{display: 'flex', alignItems: 'center', gap: 28, marginTop: 80}}
       >
-        {nodes.map(({title, detail}, index) => (
-          <React.Fragment key={title}>
-            <div
-              style={{
-                width: 400,
-                height: 260,
-                padding: 32,
-                borderRadius: 28,
-                background: ['#25465a', '#20645e', colors.plum][index],
-                transform:
-                  'translateY(' +
-                  (index === Math.floor(pulse) ? -18 : 0) +
-                  'px)',
-              }}
-            >
-              <div style={{fontSize: 48, fontWeight: 750}}>{title}</div>
-              <div style={{fontSize: 28, color: '#d7ebe7', marginTop: 35}}>
-                {detail}
+        {nodes.map(({title, detail}, index) => {
+          const stagger =
+            scene.motion_plan?.emphasis === 'node_stagger'
+              ? interpolate(frame, [index * 14, index * 14 + 18], [0, 1], {
+                  extrapolateLeft: 'clamp',
+                  extrapolateRight: 'clamp',
+                })
+              : 1;
+          return (
+            <React.Fragment key={title}>
+              <div
+                style={{
+                  width: 400,
+                  height: 260,
+                  padding: 32,
+                  borderRadius: 28,
+                  background: ['#25465a', '#20645e', colors.plum][index],
+                  transform:
+                    'translateY(' +
+                    (index === Math.floor(pulse) ? -18 : 0) +
+                    'px)',
+                  opacity: stagger,
+                }}
+              >
+                <div style={{fontSize: 48, fontWeight: 750}}>{title}</div>
+                <div style={{fontSize: 28, color: '#d7ebe7', marginTop: 35}}>
+                  {detail}
+                </div>
               </div>
-            </div>
-            {index < nodes.length - 1 ? (
-              <div style={{fontSize: 68, color: colors.gold}}>→</div>
-            ) : null}
-          </React.Fragment>
-        ))}
+              {index < nodes.length - 1 ? (
+                <div style={{fontSize: 68, color: colors.gold}}>→</div>
+              ) : null}
+            </React.Fragment>
+          );
+        })}
       </div>
       <div style={{fontSize: 31, marginTop: 70, color: '#b7c9d8'}}>
+        {scene.center_text || scene.segments[0]}
+      </div>
+      <div
+        style={{
+          position: 'absolute',
+          left: 86,
+          bottom: 195,
+          fontSize: 23,
+          color: '#adbfca',
+        }}
+      >
+        {scene.source}
+      </div>
+    </Shell>
+  );
+};
+
+const Story: React.FC<{scene: SceneData}> = ({scene}) => {
+  const frame = useCurrentFrame();
+  const seconds = frame / 24;
+  const shots = scene.shots.length ? scene.shots : [{title: scene.headline}];
+  const found = shots.findIndex((shot, index) => {
+    const start = shot.start ?? (index * 8) / shots.length;
+    const end = shot.end ?? ((index + 1) * 8) / shots.length;
+    return seconds >= start && seconds < end;
+  });
+  const active = found < 0 ? shots.length - 1 : found;
+  return (
+    <Shell scene={scene}>
+      <div style={{fontSize: 88, fontWeight: 800, marginTop: 70}}>
+        {scene.headline || scene.center_text}
+      </div>
+      <div style={{display: 'flex', gap: 26, marginTop: 66}}>
+        {shots.map((shot, index) => {
+          const focus = index === active;
+          return (
+            <div
+              key={`${shot.title}-${index}`}
+              style={{
+                width: 500,
+                height: 430,
+                padding: 26,
+                borderRadius: 28,
+                background: focus ? '#20645e' : '#25465a',
+                opacity: index <= active ? 1 : 0.42,
+                transform: `translateY(${focus ? -18 : 0}px)`,
+              }}
+            >
+              {shot.image || scene.image ? (
+                <Img
+                  src={staticFile(shot.image || scene.image || '')}
+                  style={{
+                    width: '100%',
+                    height: 230,
+                    objectFit: 'cover',
+                    borderRadius: 18,
+                  }}
+                />
+              ) : null}
+              <div style={{fontSize: 38, fontWeight: 750, marginTop: 18}}>
+                {shot.title}
+              </div>
+              <div style={{fontSize: 24, color: '#d7ebe7', marginTop: 12}}>
+                {shot.detail}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+      <div style={{fontSize: 28, marginTop: 48, color: '#b7c9d8'}}>
         {scene.center_text || scene.segments[0]}
       </div>
       <div
@@ -343,6 +449,7 @@ const Chart: React.FC<{scene: SceneData}> = ({scene}) => {
 };
 
 const Scene: React.FC<{scene: SceneData}> = ({scene}) => {
+  if (scene.kind === 'story') return <Story scene={scene} />;
   if (scene.kind === 'chart') return <Chart scene={scene} />;
   if (scene.kind === 'flow') return <Flow scene={scene} />;
   return <Hero scene={scene} />;

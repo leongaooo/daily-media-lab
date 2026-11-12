@@ -16,6 +16,7 @@ import soundfile as sf
 from music_bed import DEFAULT_MUSIC, mix_audio, validate_music, write_attribution
 from voice_backend import DEFAULT_SPEED, VOICE_ID, make_voice, validate_voice
 import remotion_visual
+from director_contract import assess as assess_director, narration_identity
 
 ENGINE = "remotion_editorial"
 DIMENSIONS = {"width": 1920, "height": 1080, "fps": 24}
@@ -92,6 +93,9 @@ def validate(project):
     """Reject unsupported projects before reading voice references or synthesizing."""
     if not project.get("title") or not project.get("scenes"):
         raise ValueError("Project requires title and scenes")
+    director = assess_director(project)
+    if director["errors"]:
+        raise ValueError("Director contract: " + "; ".join(director["errors"]))
     if project.get("visual_engine", ENGINE) != ENGINE:
         raise ValueError("Only remotion_editorial is supported")
     editorial = project.get("editorial", {})
@@ -122,8 +126,8 @@ def validate(project):
     validate_music(project.get("music", {}))
     for scene in project["scenes"]:
         kind = remotion_visual._kind(scene)
-        if kind not in ("hero", "flow", "chart"):
-            raise ValueError("editorial_kind must be hero, flow or chart")
+        if kind not in ("hero", "flow", "chart", "story"):
+            raise ValueError("editorial_kind must be hero, flow, chart or story")
         if not scene.get("segments"):
             raise ValueError("Each scene needs semantic narration segments")
         for segment in scene["segments"]:
@@ -145,6 +149,15 @@ def validate(project):
                 for row in rows
             ):
                 raise ValueError("chart values must be finite and nonnegative")
+        if kind == "story":
+            shots = scene.get("shots", [])
+            if not 2 <= len(shots) <= 4:
+                raise ValueError("story needs 2..4 semantic shots")
+            if any(
+                not isinstance(shot, dict) or not shot.get("title", "").strip()
+                for shot in shots
+            ):
+                raise ValueError("story shots need non-empty titles")
 
 
 def production_plan(project, cues, payload, output):
@@ -171,6 +184,8 @@ def production_plan(project, cues, payload, output):
                 f"口播：{' '.join(segment.get('spoken', segment['text']) for segment in scene['segments'])}",
                 "",
                 f"画面：{scene.get('visual_direction', '按本幕语义设计编辑式构图。')}",
+                "",
+                f"视觉策略：{scene.get('visual_strategy', '未指定')}；动效计划：{json.dumps(scene.get('motion_plan', {}), ensure_ascii=False)}",
                 "",
                 f"素材：{scene.get('image') or scene.get('background_image') or '原生文字/图形'}；完整包含：{actual['image_fit']}",
                 "",
@@ -230,6 +245,15 @@ def run(args):
     project["music"] = {**DEFAULT_MUSIC, **project.get("music", {})}
     output = Path(args.output).resolve()
     output.mkdir(parents=True, exist_ok=True)
+    save_json(output / "story-world-report.json", assess_director(project))
+    previous_path = output / "project.json"
+    if "director_contract_version" in project and previous_path.is_file():
+        previous = json.loads(previous_path.read_text(encoding="utf-8-sig"))
+        if narration_identity(previous) != narration_identity(project):
+            raise ValueError(
+                "Narration is frozen for this output; keep spoken/voice/duration "
+                "unchanged. For an explicitly authorized rewrite use a new output."
+            )
     if "visual_selection_version" in project:
         from score_visuals import assess
 
@@ -254,6 +278,24 @@ def run(args):
     sf.write(output / "mix.wav", mixed, items[0]["sr"], subtype="PCM_16")
     save_json(output / "timeline.json", cues)
     save_json(output / "project.json", project)
+    save_json(
+        output / "motion-report.json",
+        {
+            "version": 1,
+            "engine": ENGINE,
+            "scenes": [
+                {
+                    "scene": index,
+                    "kind": remotion_visual._kind(scene),
+                    "visual_strategy": scene.get("visual_strategy", ""),
+                    "motion_plan": scene.get("motion_plan", {}),
+                    "shot_count": len(scene.get("shots", [])),
+                    "content_ends_before_y": 904,
+                }
+                for index, scene in enumerate(project["scenes"])
+            ],
+        },
+    )
     (output / "captions.srt").write_text(
         "\n".join(
             f"{index + 1}\n{stamp(cue['start'])} --> {stamp(cue['end'])}\n{cue['text']}\n"

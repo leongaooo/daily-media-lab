@@ -312,6 +312,42 @@
       "prompt": "显式传入pillow或hyperframes，或项目仍带旧布局字段。",
       "expected_output": "CLI拒绝退休引擎，旧布局在读取私有声音或TTS前报错，要求明确迁移；没有备用实现。",
       "files": []
+    },
+    {
+      "id": 53,
+      "prompt": "将这篇食品溯源资讯做成横屏视频，其他画面由AI自由设计。",
+      "expected_output": "使用通用daily_editorial，固定底部字幕与B声；定义食品场景story_world，不套机房或Web3模板。",
+      "files": []
+    },
+    {
+      "id": 54,
+      "prompt": "用这份已确认配音重做画面，声音不要变，镜头根据字幕安排。",
+      "expected_output": "保持spoken、声音参数与缓存；按字幕索引绑定镜头，不为开场或动效改稿、拉速或重录。",
+      "files": []
+    },
+    {
+      "id": 55,
+      "prompt": "这期三条新闻，最多10张付费图，其他本地制作不限制成本。",
+      "expected_output": "一期一片合计最多10次付费尝试，失败/重做计入；缓存不计；不机械用满或新增多个用户档位。",
+      "files": []
+    },
+    {
+      "id": 56,
+      "prompt": "同一段故事从城市街道到调度室，不要随机换一套人物和车辆。",
+      "expected_output": "同一story_world保持角色、对象、色彩、空间关系；真实看图核验连续性，不把元数据校验冒充识图。",
+      "files": []
+    },
+    {
+      "id": 57,
+      "prompt": "保存这期可复用的画面元素，下期继续用。",
+      "expected_output": "编制有实际路径、来源/授权、world_id、review_status及适用边界的reusable-assets.json；不复制过期数字或擅自写记忆。",
+      "files": []
+    },
+    {
+      "id": 58,
+      "prompt": "今天的天文资讯，先只给新闻摘要。",
+      "expected_output": "不触发制作，不生图、不启动配音；通用主题范围不吞并纯资讯检索。",
+      "files": []
     }
   ]
 }

@@ -1,5 +1,7 @@
 {
   "title": "行业观察｜制作示例",
+  "production_mode": "daily_editorial",
+  "director_contract_version": 1,
   "art_direction": "冷静编辑构图，少量节点与大字；不代表真实新闻或现场。",
   "editorial": {
     "width": 1920,
@@ -21,6 +23,13 @@
   "scenes": [
     {
       "chapter": "01 / 示例",
+      "story_world": {
+        "id": "editorial-workbench-example",
+        "setting": "同一张资讯编辑工作台，从材料核验推进到判断边界。",
+        "continuity_notes": "两个场景保持相同的材料对象、冷静色彩和阅读方向。",
+        "facts_boundary": "抽象制作示例，不对应真实新闻、人物或现场。"
+      },
+      "visual_goal": "以材料与问题的关系引出核验任务。",
       "editorial_kind": "hero",
       "headline": "从具体问题开始",
       "center_text": "先明确事实与边界",
@@ -33,6 +42,13 @@
     },
     {
       "chapter": "02 / 检查",
+      "story_world": {
+        "id": "editorial-workbench-example",
+        "setting": "同一张资讯编辑工作台，从材料核验推进到判断边界。",
+        "continuity_notes": "两个场景保持相同的材料对象、冷静色彩和阅读方向。",
+        "facts_boundary": "抽象制作示例，不对应真实新闻、人物或现场。"
+      },
+      "visual_goal": "承接上一场材料，呈现来源核对与判断边界的顺序。",
       "editorial_kind": "flow",
       "headline": "检查顺序需要依据",
       "center_text": "示例流程，非真实操作规程",

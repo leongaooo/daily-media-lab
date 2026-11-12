@@ -318,7 +318,9 @@ class MusicBehaviorTests(unittest.TestCase):
         allowed = {"voice-over-under", "tech-live", "inspired"}
         runtime = {
             "music_manifest": str(
-                Path(__file__).resolve().parents[1] / "assets/music-pool/manifest.json"
+                Path(
+                    r"C:\Users\xc_sc\.agents\skills\news-to-video\assets\music-pool\manifest.json"
+                )
             )
         }
         selected = {

@@ -34,6 +34,22 @@ class Response:
 
 
 class GeneratedImageTests(unittest.TestCase):
+    def test_paid_limit_is_checked_before_credentials_and_network(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            args = self.fixture(root)
+            args.generate = True
+            args.credentials = str(root / "missing-secret.json")
+            args.max_new_images = 11
+            with self.assertRaisesRegex(ValueError, "between 0 and 10"):
+                g.run(args)
+            args.max_new_images = 10
+            assets = Path(args.output)
+            assets.mkdir()
+            g.save_json(assets / "paid-image-attempts.json", [{}] * 10)
+            with self.assertRaisesRegex(ValueError, "including prior runs"):
+                g.run(args)
+
     def fixture(self, path):
         p = dict(
             title="测试",
