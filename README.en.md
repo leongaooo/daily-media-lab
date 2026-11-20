@@ -36,7 +36,7 @@ Music: “Voice Over Under” by Kevin MacLeod, [source](https://incompetech.com
 
 **Technical work needs a way to be understood.** A repository URL rarely explains who a project helps or why an engineering decision matters. We want maintainers and small teams to communicate their work clearly. We do not promise reach, growth, or commercial results.
 
-**An API key is a starting point, not a production workflow.** Research, image composition, pronunciation, caption timing and music levels still need to fit together. Here, the instructions, scripts and intermediate artifacts live together so a generation can become something inspectable and editable. Today, a key alone is insufficient: image generation uses a compatible Images API, narration requires local Qwen3-TTS and CUDA, with an explicitly selectable public built-in speaker that needs no private recording, and video uses local Remotion and FFmpeg.
+**An API key is a starting point, not a production workflow.** Research, image composition, pronunciation, caption timing and music levels still need to fit together. Here, the instructions, scripts and intermediate artifacts live together so a generation can become something inspectable and editable. Today, a key alone is insufficient: image generation uses a compatible Images API, narration requires local Qwen3-TTS and CUDA, with an explicitly selectable public built-in speaker that needs no private recording, Blender creates narrative shots, and Remotion plus FFmpeg compose the result. A licensed final dry vocal with accurate cues can use external_final without TTS or repeated voice processing.
 
 **Limited time belongs with editorial judgment.** Reusable assets and readable configuration can reduce repeated tool work. Creators should have more time to ask whether a claim is true, whether it matters, and whether the explanation is understandable. Failures should leave useful intermediate results and a clear reason.
 
@@ -44,54 +44,57 @@ Music: “Voice Over Under” by Kevin MacLeod, [source](https://incompetech.com
 
 **More people should be able to contribute.** Editing, illustration, audio, translation and accessibility all improve technical communication. Contributions in these areas belong alongside code.
 
-## Two skills, one handoff
+## Three skills, one video entry point
 
-| Skill | Responsibility | Output |
+| Skill | Responsibility | Delivery boundary |
 | --- | --- | --- |
-| [`web3-tech-news-digest`](skills/web3-tech-news-digest/SKILL.md) | Research, primary-source checks, dates and deployment states, seven-day deduplication, scene writing | Narration, on-screen text, evidence IDs, asset IDs and image prompts |
-| [`news-to-video`](skills/news-to-video/SKILL.md) | Script intake, images and SVGs, narration, music mixing, caption timing and local rendering | MP4, SRT, dry voice, mixed audio, storyboard and production/validation records |
+| [`news-to-video`](skills/news-to-video/SKILL.md) | Domain coordination, episode editing, narrative direction, frozen speech, Blender shots and composition | A recent IDC/Web3 video request continues to an MP4; confirmed scripts and final vocals can enter directly |
+| [`idc-compute-news-digest`](skills/idc-compute-news-digest/SKILL.md) | Primary-source verification, construction/power/cooling/compute boundaries and seven-day deduplication | Standalone script or explicit text; an evidence package when delegated by the video entry point |
+| [`web3-tech-news-digest`](skills/web3-tech-news-digest/SKILL.md) | Protocol/version/trust/application evidence, deduplication and roadmap tracking | Standalone script or explicit text; an evidence package when delegated |
 
 ```text
-Primary sources → verification → scene script + image briefs
-                                            ↓
-                          images / diagrams / local narration
-                                            ↓
-                             music + captions + editorial shots
-                                            ↓
-                           one episode + editable project + checks
+Recent IDC/Web3 video request → domain evidence package → edited and locked script
+                                                          ↓
+                                  generate and freeze speech / reuse a final dry vocal
+                                                          ↓
+                     reference/design review → joint animatic → Blender masters → Remotion composition
+                                                          ↓
+                           checks and actual delivery → one MP4 → idempotent adoption
 ```
 
-Web3 is the first editorial topic. The production skill can also accept existing product materials or narration scripts. Other editorial topics are future contributions. Script-only requests do not invoke image generation, speech synthesis or rendering. One daily script produces one project, one continuous timeline and one final video by default.
+The user no longer carries intermediate scripts between skills. Load only the relevant domain; mixed episodes use both and retain independent story worlds without invented causality. New internal drafts remain editable until lock. Confirmed scripts and final speech preserve their identities. Explicit text/script/plan/image-only requests stop at that output; discussing examples does not execute them.
 
-Production now covers general news in a single 1920×1080 landscape mode with a fixed bottom caption rail. Approved narration and voice identity stay intact while images, SVGs and animation follow a coherent story world and measured captions. Each episode allows up to 10 paid image attempts; cache reuse does not count. Reusable asset manifests and production records accompany the project. See the [visual director contract](skills/news-to-video/references/visual-director.md). Existing previews have not been remade; the new visuals still need finished-video review.
+The current repair adds [design consumption before modeling](skills/news-to-video/references/visual-director.md#建模前参考与设计消费) and a [project joint-direction entry](skills/news-to-video/references/blender-handoff.md#项目联合导演接入): verify recognizable objects and the actual text composition, then share frames and semantic events across camera, graphics and sound, with camera projections where needed. `narrative_directing` currently targets two concrete project panels; it is not a general automatic director. Consumer tests and actual animatic review remain separate. See the [repair record](docs/progress/2026-11-20-joint-directing-v3.md) for executed and unverified work; archived previews do not validate this repair.
+
+The format remains 1920×1080 at 24fps with a fixed y904—1080 caption rail. Full Blender shots keep their aspect ratio and bypass old object-stage slots; legacy diagrams remain compatible. Images are optional, with at most 10 new paid attempts per episode. See the [workflow](docs/WORKFLOW.md), [minimal synthetic example](examples/three-media-minimal/README.md) and [current integration evidence](docs/progress/2026-11-20-three-media-blender.md). The archived preview above is not evidence of the new Blender route.
 
 ## Give images and sound a purpose
 
-**Images should earn their place.** Each scene has one understanding goal. Choose verified materials, generated illustrations, original SVGs, charts or text accordingly. Use scene images for context and visual memory; keep numbers, arrows and factual relationships controllable. Generated illustrations are never evidence of a real deployment or event.
+**Visuals should tell the story.** Combine observation, explanation and metaphor through space, materials, light, camera and motion. Extruding icons is not a substitute for narrative direction. Use verified materials, generated illustrations, SVGs, charts or text where they serve the content, without an image quota. Generated illustrations are never evidence of a real deployment or event.
 
-**Narration needs more than readable text.** Caption text and `spoken` text can differ to handle acronyms, numbers and pronunciation. The current B male voice uses reference-conditioned local generation, 1.15× pitch-preserving playback and mild noise reduction. Captions follow the processed audio. The private reference is not distributed. An explicit public built-in voice, `qwen-uncle-fu-v1`, has a [separate setup](skills/news-to-video/references/public-voice.md). Neither voice acts as an automatic fallback.
+**Narration needs more than readable text.** Public synthesis examples explicitly choose `qwen-uncle-fu-v1` with its [separate setup](skills/news-to-video/references/public-voice.md), without a private reference. Licensed final dry vocals can use `external_final`: verify the hash, sample metadata, completed processing identity and accurate cues, keep playback at 1.0, and skip TTS, tempo/noise processing and segment restitching. The private B voice remains excluded; neither voice is an automatic fallback.
 
-**Mixing should protect the speaker.** The current default pool selects among three tracks. Music is balanced against speech-active RMS, normally 19 dB below speech with another 2 dB of ducking. Fades and attribution are part of the output. These checks do not replace listening on headphones and a phone.
+**Mixing should protect speech.** Select a track and its entry/exit for the story, including silence. Speech-active RMS balance, an initial -19dB relative level and 2dB ducking are starting points; fades, attribution and actual listening still matter.
 
-**Sound effects are an invitation to build.** Narration, music and mixing exist today. A separate transition, notification or foley event track does not. We welcome licensed assets, restrained event design, level policies and audible before/after examples.
+**Ambience and effects need restraint.** Independent `sound_tracks` identify source, license, content hash, timing, level and purpose. Designed sound must not pose as site recording. Code and timeline checks are separate from continuous viewing, headphone/speaker listening and user approval.
 
 ## Start small
 
 1. Watch the preview and decide whether the format suits your material.
-2. Ask a local-skill-capable agent to read the two `SKILL.md` files. Use the repository as the workspace and retain `news/` and its audit documents.
+2. Ask a local-skill-capable agent to read `news-to-video` and load the IDC or Web3 skill only when needed. Use the repository as the workspace and retain `news/` and its audit documents.
 3. Start with a script or image plan; configure the full runtime only when you need video. See [setup](docs/GETTING_STARTED.md).
 
 Example request:
 
-> Use web3-tech-news-digest to prepare one episode about recent changes that matter to DApp developers. Keep primary sources, deployment states, scene IDs and actionable image briefs. Do not produce media yet.
+> Use web3-tech-news-digest to prepare one episode about recent changes that matter to DApp developers. Keep primary sources, deployment states, paragraph/evidence IDs and necessary material constraints. Do not produce media yet.
 
-> Use news-to-video to produce one video from the approved script. Preserve narration, evidence IDs and asset IDs. Label generated illustrations and deliver captions, dry voice, the mix and validation records.
+> Use news-to-video to research and produce one recent IDC/Web3 episode. Continue to a finished video and explicitly select qwen-uncle-fu-v1 for public synthesis. Preserve confirmed scripts or final vocals when supplied.
 
 ## Build the next episode with us
 
 Start with a pronunciation correction, an awkward caption, a stronger source, a better diagram, or the first issue you encounter on a fresh machine. Concrete examples and honest feedback are welcome.
 
-Priorities include fresh-machine installation, a complete Web3 example, sound-effect events, bilingual production and more editorial topics. These are plans, not implemented features. [Contribute](CONTRIBUTING.md) · [Roadmap](ROADMAP.md).
+Priorities include fresh-machine installation, a complete public real-domain example, narrative reuse across topics, full listening review, bilingual production and more domains. The current integration record states which layers were actually tested; code presence does not establish perceptual quality or a clean-machine install. [Contribute](CONTRIBUTING.md) · [Roadmap](ROADMAP.md).
 
 ## Pick a first contribution
 
@@ -109,6 +112,8 @@ Public built-in voice: [accepted default sample and native-speed comparison](exa
 
 ## Status and licensing
 
-This is an experimental snapshot of a working local workflow. Fresh-machine end-to-end installation is unverified. The legacy B voice still pins private reference hashes. A separate public built-in voice configuration and smoke project are available; the maintainer accepted the overall sound of the current default-speed sample (REP-01), while new scripts still need listening review.
+This is an experimental snapshot of a working local workflow. Fresh-machine end-to-end installation is unverified. The user rejected both Blender candidates for viewing quality; the [current repair](docs/progress/2026-11-20-joint-directing-v3.md) addresses those findings while retaining the [earlier technical evidence](docs/progress/2026-11-20-three-media-blender.md). Successful composition or playerended does not overturn that rejection. The user listened but gave no separate finding on this batch's voice. Private voice materials remain excluded. The earlier REP-01 public voice approval applies only to that short sample; new scripts still need listening review.
+
+Before any new batch changes to the three media skills, ask whether to sync the maintainer-configured public copy. Reuse an explicit answer within that batch; ordinary research or production adds no such prompt. See the [maintenance contract](skills/news-to-video/references/media-maintenance.md).
 
 Project-owned code and documentation use the [MIT License](LICENSE). The maintainer has confirmed public distribution of the existing preview images; private voice materials and voiced samples remain excluded. Music, models, Remotion, fonts and other third-party materials retain their own terms. [Release preparation](docs/RELEASE_PREPARATION.md).

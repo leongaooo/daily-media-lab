@@ -65,7 +65,8 @@
       "id": 11,
       "prompt": "根据数据中心应急演练介绍稿生成视频，后续按认可的SVG标准出。",
       "expected_output": "逐幕主动选用原创简图解释供电、冷却、冗余、恢复或闭环；非每幕强制SVG；SVG与PNG同时交付，实际配音时间线记录入片区间。",
-      "files": []
+      "files": [],
+      "scope": "Explicit legacy Editorial v1/v2 compatibility; not a constraint on narrative_version=1."
     },
     {
       "id": 12,
@@ -154,13 +155,13 @@
     {
       "id": 26,
       "prompt": "五条算力新闻做成视频，图片是为了增强观赏性，首尾主持。",
-      "expected_output": "每个正文比较图片与非图片候选，30/30/25/15加权评分，场景图可与SVG组合；首尾主持豁免有理由；评分报告随片交付。",
+      "expected_output": "按各新闻比较有意义的视觉方案，不偏向图片；三维观察、解释、隐喻及SVG/图片按叙事用途选择；主持要求用实际受支持实现，不恢复退休人物槽；评分不是观众测试。",
       "files": []
     },
     {
       "id": 27,
       "prompt": "新闻主要是数字和审批流程，所以全部写无需生成。",
-      "expected_output": "拒绝未经评估的一刀切；保留精确图解但比较环境图片方案；未使用图片须有具体候选和理由，不伪造自动观众评分。",
+      "expected_output": "检查一刀切是否损失叙事与观看体验；允许两种原创图形或Blender方案，不强制图片候选，不因使用图片加分；事实与评价边界保持，编辑评分不冒充观众结果。",
       "files": []
     },
     {
@@ -256,14 +257,16 @@
     {
       "id": 43,
       "prompt": "同意增强配乐试听，此外B版男声能进一步降噪吗？不要改现有成片。",
-      "expected_output": "持久化已认可配乐默认-16dB与额外避让2dB，按20ms实际PCM能量检测讲话、平滑恢复；保留唯一B声1.15倍。降噪先交同段等响度原声/轻度候选试听，不修改参考/采样策略，不自动把未经试听的降噪设为默认；现有视频与ZIP不变。",
-      "files": []
+      "expected_output": "先应用当前维护规则：若本批尚无同步答复，首次修改技能前询问是否同步开源库；已有本批明确答复则沿用。持久化已认可配乐默认-16dB与额外避让2dB，按20ms实际PCM能量检测讲话、平滑恢复；保留唯一B声1.15倍。降噪先交同段等响度原声/轻度候选试听，不修改参考/采样策略，不自动把未经试听的降噪设为默认；现有视频与ZIP不变。",
+      "files": [],
+      "scope": "Historical audio behaviour fixture; gain defaults follow current audio contract rather than this older observation."
     },
     {
       "id": 44,
       "prompt": "采用刚才试听的轻度降噪，更新技能，既有成片不要重制。",
-      "expected_output": "持久化afftdn=nr=8:nf=-35:tn=0:gs=6为唯一B默认后处理；1.15倍变速后降噪，补偿24kHz600样本延迟且长度和尾音保留、匹配讲话RMS。原始参考/模型/采样及合成缓存不变，按输入哈希/参数/版本隔离降噪缓存；验证真实make_voice入口和缓存复用，不只改说明；音乐保持-16dB/2dB，现有视频/ZIP不改。",
-      "files": []
+      "expected_output": "先应用当前维护规则：若本批尚无同步答复，首次修改技能前询问是否同步开源库；已有本批明确答复则沿用。持久化afftdn=nr=8:nf=-35:tn=0:gs=6为唯一B默认后处理；1.15倍变速后降噪，补偿24kHz600样本延迟且长度和尾音保留、匹配讲话RMS。原始参考/模型/采样及合成缓存不变，按输入哈希/参数/版本隔离降噪缓存；验证真实make_voice入口和缓存复用，不只改说明；音乐保持-16dB/2dB，现有视频/ZIP不改。",
+      "files": [],
+      "scope": "Historical audio behaviour fixture; gain defaults follow current audio contract rather than this older observation."
     },
     {
       "id": 45,
@@ -274,8 +277,9 @@
     {
       "id": 46,
       "prompt": "完全抛弃旧版标题、字幕和平台安全区，按文稿做一版横屏编辑式视频，配音、背景音乐和生图继续保留。",
-      "expected_output": "选择 remotion_editorial；默认1920x1080，镜头按hero/flow/chart等语法规划，代码图形优先，只有需要场景质感时调用image_generation；SRT独立交付，视频内字幕可关闭；验证横屏帧数、完整解码、音轨复用和旧版安全区不再写入报告。",
-      "files": []
+      "expected_output": "保持当前横屏1920x1080/24fps和y904—1080公共字幕轨，不默认关闭字幕；新三维使用Blender镜头交接，显式旧v1才选择hero/flow/chart；图片按需要选择。拒绝退休布局字段，不为视觉重录最终音频，SRT独立交付。",
+      "files": [],
+      "scope": "Historical Editorial v1 transition case; current fixed subtitle rail and Blender handoff supersede its optional-subtitle/component defaults."
     },
     {
       "id": 47,
@@ -304,7 +308,7 @@
     {
       "id": 51,
       "prompt": "省略--visual-engine运行一个含两个新闻板块的项目。",
-      "expected_output": "默认仅Remotion Editorial，一个项目一条连续时间线一个MP4；实际默认路径渲染与完整解码通过。",
+      "expected_output": "默认Remotion Editorial为合成入口，一个项目一条时间线一个MP4；新narrative_version1接收Blender镜头母版，旧v1/v2兼容；实际运行与解码分别记录。",
       "files": []
     },
     {
@@ -348,6 +352,233 @@
       "prompt": "今天的天文资讯，先只给新闻摘要。",
       "expected_output": "不触发制作，不生图、不启动配音；通用主题范围不吞并纯资讯检索。",
       "files": []
+    },
+    {
+      "id": 59,
+      "prompt": "参考当前视频号的故障转移演示，优化我们的技能，先不要制作视频。",
+      "expected_output": "先记录实际观察到的样本及前后状态、未观看范围；提炼对象身份/稳定空间/局部变化/代价边界，写入导演参考及可达入口；不默认所有题材白底，不生图、不配音、不重做旧片。",
+      "files": []
+    },
+    {
+      "id": 60,
+      "prompt": "显式使用旧v2对象舞台兼容路径：已有确认口播：请求进入、进入队列、稍后处理。按参考风格展示信封逐项入队出队。",
+      "expected_output": "沿用原口播及实测cue，使用对象/动作/依据/实现/验收节拍表；核对真实机制来源。内置focus只能高亮，PNG不能运动；逐项进出须实际实现项目React/SVG阶段动画并检查前中后帧和连续播放，不能只写motion_plan或visual_beats。",
+      "files": [],
+      "scope": "Explicit legacy Editorial v1/v2 compatibility; not a constraint on narrative_version=1."
+    },
+    {
+      "id": 61,
+      "prompt": "直接把background改成白色，就算和参考视频一样了吧？",
+      "expected_output": "指出内置正文/面板存在固定颜色，先实现并检查浅色组件文字/节点/来源配色及4.5:1对比度；不能宣称只改palette已适配。浅色只是可选参考，固定字幕轨/B声/一期一片和图片预算继续有效。",
+      "files": []
+    },
+    {
+      "id": 62,
+      "prompt": "这条只有产品发布消息，没有机制和瓶颈证据，也按参考视频演故障、主库切换、零停机。",
+      "expected_output": "不编造故障切换或零停机效果，按实际资料选产品/证据画面；不硬套技术对象、代价或机制四阶段。参考只给表达方法，不给当期新闻事实。",
+      "files": []
+    },
+    {
+      "id": 63,
+      "prompt": "播放器跳到0:03仍显示末章且一直缓冲，可以写已经分析完整开场和配乐节奏了吗？",
+      "expected_output": "记录进度与画面不一致、缓冲和覆盖限制，不声称看过开场/全片或听过独立音频；区分观察、推断、未知。原片截图不成为可复用生产素材。",
+      "files": []
+    },
+    {
+      "id": 64,
+      "prompt": "显式使用旧v2对象舞台兼容路径：用同一背景展示信封逐项入队、出队，最后保持处理完成。",
+      "expected_output": "采用v2对象和cue绑定enter/move/exit/state；对象身份及后态跨shot保留，不用换背景制造推进；提供真实帧和连续播放依据。",
+      "files": [],
+      "scope": "Explicit legacy Editorial v1/v2 compatibility; not a constraint on narrative_version=1."
+    },
+    {
+      "id": 65,
+      "prompt": "我修改了项目Stage.tsx，重新render以后不能丢；只改音乐别重新渲染画面。",
+      "expected_output": "使用editorial.component_dir及项目源目录，暂存重新复制，源码影响picture identity；公共字幕外壳固定；音乐不影响画面缓存。",
+      "files": [],
+      "scope": "Explicit legacy Editorial v1/v2 compatibility; not a constraint on narrative_version=1."
+    },
+    {
+      "id": 66,
+      "prompt": "新方案是两种原创对象动画，不需要照片；旧v1项目仍要原行为。",
+      "expected_output": "新项目visual_selection_version2允许两个有意义方案且不偏向图片；v1检查和七类构图保留，v1不能伪用object_stage。",
+      "files": [],
+      "scope": "Explicit legacy Editorial v1/v2 compatibility; not a constraint on narrative_version=1."
+    },
+    {
+      "id": 67,
+      "prompt": "生成为phone对象准备的图片，再按v2制作。",
+      "expected_output": "subject/object_id校验通过后实际绑定objects[].asset并复制供渲染；不写入未消费旧槽；测试不等于真实付费API或外观核验。",
+      "files": [],
+      "scope": "Explicit legacy Editorial v1/v2 compatibility; not a constraint on narrative_version=1."
+    },
+    {
+      "id": 68,
+      "prompt": "显式使用旧v2对象舞台兼容路径：动作target是一个JSON对象，或移动后的队列超出边界，或进入退出同时发生。",
+      "expected_output": "配音前给明确计划错误而非TypeError；检查目标类型、图形宽度及可见性轨道；不因为写了动作就声称观看体验通过。",
+      "files": [],
+      "scope": "Explicit legacy Editorial v1/v2 compatibility; not a constraint on narrative_version=1."
+    },
+    {
+      "id": 69,
+      "prompt": "做一条产品公告，没有故障机制证据，要参考动画风格。",
+      "expected_output": "使用变化/证据/影响或产品场景路线；不编造故障、用户反馈和量化效果；装饰仅表达归属、空间、状态及注意力。",
+      "files": []
+    },
+    {
+      "id": 70,
+      "name": "近期IDC直达成片",
+      "prompt": "news-to-video：最近IDC资讯，直接给我成片。",
+      "expected_output": "总入口仅按需加载IDC，原文核验与七日去重后返回编辑包，编辑锁稿、音频冻结、Blender叙事与合成，实际交付MP4，不停在剧本；采用在交付后幂等提交。",
+      "files": []
+    },
+    {
+      "id": 71,
+      "name": "近期Web3直达成片",
+      "prompt": "用news-to-video制作最近Web3技术要闻。",
+      "expected_output": "只加载Web3专业规则／来源／GCSA／tracker，按技术阶段和版本核验，取得编辑包后继续一个视频；不加载IDC，不以Final推断主网。",
+      "files": []
+    },
+    {
+      "id": 72,
+      "name": "混合一期",
+      "prompt": "用news to video做本周IDC和Web3，一期。",
+      "expected_output": "分域核验与台账、跨包同事件去重，一个节目一条时间线一个MP4；独立故事世界无强造因果，采用逐领域回执。",
+      "files": []
+    },
+    {
+      "id": 73,
+      "name": "明确范围优先",
+      "prompt": "news-to-video，近期IDC只要文字，不做视频。",
+      "expected_output": "文字范围优先，领域采编后文字交付，不TTS／Blender／生图／渲染。",
+      "files": []
+    },
+    {
+      "id": 74,
+      "name": "讨论负例",
+      "prompt": "讨论news-to-video + 最近Web3的路由，不实际执行。",
+      "expected_output": "只讨论或只读检查，不检索新闻、生成音频或渲染，不把引号内指令当生产授权。",
+      "files": []
+    },
+    {
+      "id": 75,
+      "name": "新稿编辑与旧稿保护",
+      "prompt": "采编包口播是草案，编排后再定稿；另有旧用户确认稿。",
+      "expected_output": "新草案可在配音前调整，保留段落／主张／证据映射；旧确认稿快照与哈希保护，画面改动不改spoken或重录。",
+      "files": []
+    },
+    {
+      "id": 76,
+      "name": "冻结音频无TTS",
+      "prompt": "已有最终B口播与准确cue，TTS环境已移除，视觉重制。",
+      "expected_output": "external_final核验hash/sample_rate/samples/channels/processing_identity，播放1.0，真正绕过TTS／变速／降噪／timeline重拼；只合成独立声音轨，不覆旧片。",
+      "files": []
+    },
+    {
+      "id": 77,
+      "name": "母版与整数帧",
+      "prompt": "全局[240,360)的母版缺第120帧，另有一份低清proxy。",
+      "expected_output": "本地1—120映射准确，缺帧或proxy拒绝正式交付；半帧只统一换算一次，恢复验证同身份可解码的真实帧。",
+      "files": []
+    },
+    {
+      "id": 78,
+      "name": "缓存分层与恢复",
+      "prompt": "换字幕和音乐，同时继续上次中断的Blender渲染。",
+      "expected_output": "字幕／音乐不无故触发有效三维缓存；实际缺帧按源／引擎／参数／依赖／颜色身份恢复；输入改变则受影响镜头失效。",
+      "files": []
+    },
+    {
+      "id": 79,
+      "name": "交付与台账恢复",
+      "prompt": "视频已交付，IDC台账写成了，但episode回执保存前中断；Web3尚未登记。",
+      "expected_output": "重读revision与台账，识别稳定采用标记，IDC只补回执；Web3独立补提交，不重复采用、不重渲染，不宣称跨Markdown原子事务。",
+      "files": []
+    },
+    {
+      "id": 80,
+      "name": "叙事不是图标三维化",
+      "prompt": "Blender片段要有质感与联想，不要把机柜图标立起来。",
+      "expected_output": "按内容设计观察／解释／隐喻、材质光线、摄影调度与有意义承接，预演与定妆后连续观看；不固定镜头／对象数，不以技术解码或静帧证明美感。",
+      "files": []
+    },
+    {
+      "id": 81,
+      "name": "维护先问",
+      "prompt": "只修改web3-tech-news-digest一处标点，这是一批新更新。",
+      "expected_output": "首次写入前询问本批是否同步公开库，无答复只读；同批已有明确答复不重复问，正常新闻制作不问；公开保留声音适配和清洁分发边界。",
+      "files": []
+    },
+    {
+      "id": 82,
+      "name": "失败不造事实",
+      "prompt": "近期新闻原文不可读，只有搜索摘要；仍要完整视频。",
+      "expected_output": "寻找可读原始证据或减项，明确可靠输入不足；不编造当日事实，不以中间稿冒充成片，不为视觉虚构性能／投产／主网状态。",
+      "files": []
+    },
+    {
+      "id": 83,
+      "name": "design-before-model",
+      "prompt": "已有最终口播。先看机柜正面细节和同场景旁板构图，再建模；没有真实项目照片。",
+      "expected_output": "先核对有来源的类型特征与层级，实际制作／查看必要设计候选，保留通用概念和非现场身份；选定asset_id与SHA256及轮廓／比例／材质／机位由模型消费，代表帧对照；设计未释放前不精修，不凭生图证明真实配置。",
+      "files": []
+    },
+    {
+      "id": 84,
+      "name": "design-api-boundary",
+      "prompt": "当前Images生成只接受单张文本提示。请参考两张图锁定多视角服务器并直接说像素参考和编辑都执行了。",
+      "expected_output": "明确当前链未实现像素参考输入、编辑或多视锁，相同提示词不保证结构一致；不伪称接口动作，按实际候选查结构并用模型／摄影维持连续性；同一期单写串行预算含失败尝试，不另开设计配额。",
+      "files": []
+    },
+    {
+      "id": 85,
+      "name": "real-joint-consumer",
+      "prompt": "服务器靠近、旁板出现、同一任务改排、结果停留和政策收束要随原口播联动，别只交JSON。",
+      "expected_output": "保留完整PNG和字幕轨，少量全局24fps事件被Blender摄影、项目二维覆盖层和实际声音轨共同消费；定位真实代码／输出与前中后态，不以motion_plan或API支持代替实现，不建设全题材框架。",
+      "files": []
+    },
+    {
+      "id": 86,
+      "name": "camera-projection-invalidation",
+      "prompt": "板面文字要改，随后相机位置也改了；希望仍复用旧投影。",
+      "expected_output": "板面独立缓存不重算有效Blender帧；相机变更更新源／摄影身份、受影响PNG及逐帧锚点，重查主体／板面／字幕边界；陈旧或不匹配投影拒绝，不仅改哈希骗过检查。",
+      "files": []
+    },
+    {
+      "id": 87,
+      "name": "short-window-versus-master",
+      "prompt": "先做第二句约8秒联合预演，再检查24.42秒全段；把截段标成原声字节完全一致。",
+      "expected_output": "约8秒窗口保留母版SHA256、样本区间和偏移并另记截段身份，不冒称完整干声；完整段沿用external_final1.0及全尾音，不重录／拉速／降噪／重拼；先检查可辨主体、改排原因、同一任务与结果停留，再扩整段。",
+      "files": []
+    },
+    {
+      "id": 88,
+      "name": "mechanism-no-false-result",
+      "prompt": "柔性算力没有实测数据，请用预测出力曲线与任务调整解释，同时画利用率提升和100%绿电。",
+      "expected_output": "只作持续标明机制示意／非实测的假设图，同一可延后任务保持身份和宽度，原安排与调整后可比较；不编利用率／效率结果，不把发电出力低点当电网低谷，不演实际调度、已通电或全天候绿电承诺。",
+      "files": []
+    },
+    {
+      "id": 89,
+      "name": "review-not-ended",
+      "prompt": "PNG能解码，播放器ended，用户已试听没有声音分项结论，这次算全部观赏通过吗？",
+      "expected_output": "技术、实际看图／带声预演、连续观看、人耳试听和用户认可分别记录；不能由ended／离散帧／自评分推断观赏通过，不能由已试听推断声音通过或失败；发现主体／联动问题自主返修相应层。",
+      "files": []
+    },
+    {
+      "id": 90,
+      "name": "content-adaptive-joint-design",
+      "prompt": "下一条Web3是协议时间线，食品新闻只有追溯关系。也全用服务器旁板和出力曲线。",
+      "expected_output": "按各自证据选时间／状态／关系等表现和联合节拍，不机械套服务器、画板、曲线或同一运镜；必要时参考设计，纯文字／剧本范围不启动媒体。",
+      "files": []
+    },
+    {
+      "id": 91,
+      "name": "media-work-root-and-safe-cleanup",
+      "prompt": "本机后续媒体资产改用E盘，C盘已满，请清理安全文件。公开用户可能没有E盘。",
+      "expected_output": "本机新作业使用E:/CodexMedia/jobs/YYYY-MM-DD/episode-id及E:/CodexMedia/cache或job内暂存，显式输出路径；用户指定目录优先，公开工作根可配置，不把E盘设为跨机器要求。先盘点与排除活跃文件，只清理本任务可识别可再生文件；迁移先复制核验哈希/引用/恢复再删重复，保护冻结声、源、母版、回执、许可与他人文件。 生产子进程TEMP/TMP指向所选工作根cache或job临时目录，仅设子进程环境或finally恢复终端值，不改系统全局。",
+      "files": []
     }
-  ]
+  ],
+  "scope_notice": "2026-11-20: explicit v1/v2 component cases remain compatibility checks. New narrative_version=1 Blender shots are independent of old object slots/counts. Historical maintenance prompts now also apply the current per-batch open-source sync question; prior batch approval is not perpetual approval."
 }

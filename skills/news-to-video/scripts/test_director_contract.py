@@ -10,18 +10,16 @@ from remotion_visual import _story_shots
 def project():
     return {
         "director_contract_version": 1,
-        "scenes": [
-            {
-                "visual_goal": "理解食品追溯链路",
-                "story_world": {
-                    "id": "food",
-                    "setting": "同一批产品从生产到门店",
-                    "continuity_notes": "相同产品外观与流向",
-                    "facts_boundary": "原创示意，不证明真实产线",
-                },
-                "segments": [{"text": "字幕", "spoken": "原配音"}],
-            }
-        ],
+        "scenes": [{
+            "visual_goal": "理解食品追溯链路",
+            "story_world": {
+                "id": "food",
+                "setting": "同一批产品从生产到门店",
+                "continuity_notes": "相同产品外观与流向",
+                "facts_boundary": "原创示意，不证明真实产线",
+            },
+            "segments": [{"text": "字幕", "spoken": "原配音"}],
+        }],
     }
 
 
@@ -58,15 +56,11 @@ class DirectorTests(unittest.TestCase):
         self.assertTrue(assess(value)["errors"])
 
     def test_shot_times_follow_measured_caption_boundaries(self):
-        scene = {
-            "shots": [
-                {
-                    "title": "结果",
-                    "segment_start": 1,
-                    "segment_end": 1,
-                }
-            ]
-        }
+        scene = {"shots": [{
+            "title": "结果",
+            "segment_start": 1,
+            "segment_end": 1,
+        }]}
         cues = [{"start": 5, "end": 7}, {"start": 7, "end": 12.5}]
         shots = _story_shots(scene, None, None, 0, cues, 120, 24)
         self.assertEqual((shots[0]["start"], shots[0]["end"]), (2, 7.5))

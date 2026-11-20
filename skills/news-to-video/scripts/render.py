@@ -7,6 +7,10 @@ import os
 from pathlib import Path
 import re
 import subprocess
+import shutil
+
+from frozen_audio import external_mode, validate_config, load_final, frame_at
+from narrative_media import read_json as read_narrative, validate_manifest
 
 import imageio_ffmpeg
 import numpy as np
@@ -16,6 +20,7 @@ import soundfile as sf
 from music_bed import DEFAULT_MUSIC, mix_audio, validate_music, write_attribution
 from voice_backend import DEFAULT_SPEED, VOICE_ID, make_voice, validate_voice
 import remotion_visual
+from visual_contract import GRAMMARS, require_valid
 from director_contract import assess as assess_director, narration_identity
 
 ENGINE = "remotion_editorial"
@@ -93,6 +98,18 @@ def validate(project):
     """Reject unsupported projects before reading voice references or synthesizing."""
     if not project.get("title") or not project.get("scenes"):
         raise ValueError("Project requires title and scenes")
+    narrative = project.get("narrative_version") == 1
+    if "narrative_version" in project and not narrative:
+        raise ValueError("narrative_version must be 1")
+    if narrative:
+        if not project.get("narrative_manifest"):
+            raise ValueError("Narrative project requires narrative_manifest")
+        if project.get("visual_contract_version") is not None:
+            raise ValueError(
+                "Narrative v1 is separate from legacy visual_contract_version"
+            )
+    else:
+        require_valid(project)
     director = assess_director(project)
     if director["errors"]:
         raise ValueError("Director contract: " + "; ".join(director["errors"]))
@@ -122,12 +139,22 @@ def validate(project):
     target = project.get("duration")
     if target is not None and (not math.isfinite(target) or target <= 0):
         raise ValueError("duration must be positive or omitted")
-    validate_voice(project)
+    if external_mode(project):
+        validate_config(project["voice"])
+    else:
+        validate_voice(project)
     validate_music(project.get("music", {}))
+    if narrative and project.get("music", {}).get("mode", "pool") == "pool":
+        if not project.get("music", {}).get("track_id") or not project.get(
+            "music", {}
+        ).get("selection_reason"):
+            raise ValueError(
+                "Narrative music requires explicit track_id and selection_reason, or mode=off"
+            )
     for scene in project["scenes"]:
         kind = remotion_visual._kind(scene)
-        if kind not in ("hero", "flow", "chart", "story"):
-            raise ValueError("editorial_kind must be hero, flow, chart or story")
+        if not narrative and kind not in GRAMMARS:
+            raise ValueError("Unsupported editorial visual grammar")
         if not scene.get("segments"):
             raise ValueError("Each scene needs semantic narration segments")
         for segment in scene["segments"]:
@@ -136,9 +163,11 @@ def validate(project):
                 or not segment.get("spoken", segment["text"]).strip()
             ):
                 raise ValueError("Empty caption or narration")
-            if re.search(r"[A-Za-z]", segment.get("spoken", segment["text"])):
+            if not external_mode(project) and re.search(
+                r"[A-Za-z]", segment.get("spoken", segment["text"])
+            ):
                 raise ValueError("Supply Chinese pronunciation in spoken for acronyms")
-        if kind == "chart":
+        if not narrative and kind == "chart":
             rows = scene.get("data", [])
             if not rows or len(rows) > 5 or not scene.get("data_source"):
                 raise ValueError("chart needs 1..5 rows and data_source")
@@ -149,7 +178,7 @@ def validate(project):
                 for row in rows
             ):
                 raise ValueError("chart values must be finite and nonnegative")
-        if kind == "story":
+        if not narrative and kind == "story":
             shots = scene.get("shots", [])
             if not 2 <= len(shots) <= 4:
                 raise ValueError("story needs 2..4 semantic shots")
@@ -197,11 +226,31 @@ def production_plan(project, cues, payload, output):
                 "",
             ]
         )
+        if actual.get("object_stage"):
+            lines.extend(
+                ["| 字幕索引 | 对象动作 | 实测帧区间 | 依据 |", "|---|---|---|---|"]
+            )
+            for action in actual["object_stage"]["actions"]:
+                lines.append(
+                    f"| {action['segment']} | {action['target']} / {action['type']} "
+                    f"| {action['start_frame']}—{action['end_frame']} | {action['evidence']} |"
+                )
+            lines.extend(
+                [
+                    "",
+                    "上述为实际编译的动作；连续播放与审美验收另记，不能由帧表代替。",
+                    "",
+                ]
+            )
     lines.extend(
         [
             "## 配音与音乐",
             "",
-            f"显式音色 {project['voice']['id']}，{project['voice']['speed']}倍保留音高变速及轻度降噪；音乐原速，听感另行验收。",
+            (
+                "已冻结最终口播：逐字节保留，播放倍率1.0，无TTS/变速/降噪/重拼。"
+                if external_mode(project)
+                else f"显式声音 {project['voice']['id']}，{project['voice']['speed']}倍保留音高变速及已认可轻度降噪；音乐原速。"
+            ),
             "",
             (output / "音乐署名.txt").read_text(encoding="utf-8"),
             "",
@@ -213,6 +262,26 @@ def production_plan(project, cues, payload, output):
     (output / "production-plan.md").write_text("\n".join(lines), encoding="utf-8")
 
 
+def prepare_narration(project, runtime, cache, base, output, fps):
+    """唯一人声分流边界；最终音频不触碰合成、处理及分段时间线。"""
+    if external_mode(project):
+        duration, voice, gate, cues, sample_rate, models, original_voice = load_final(
+            project, base
+        )
+        # Preserve the exact frozen file bytes; the stereo mix is a separate work product.
+        if original_voice.resolve() != (output / "voice.wav").resolve():
+            shutil.copyfile(original_voice, output / "voice.wav")
+    else:
+        items, models = make_voice(project, runtime, cache)
+        duration, voice, gate, cues = timeline(items, project.get("duration"), fps)
+        sample_rate = items[0]["sr"]
+        for cue in cues:
+            cue["start_frame"] = frame_at(cue["start"])
+            cue["end_frame"] = frame_at(cue["end"])
+        sf.write(output / "voice.wav", voice, sample_rate, subtype="PCM_16")
+    return duration, voice, gate, cues, sample_rate, models
+
+
 def run(args):
     """Render one project as one continuous program using the sole visual engine."""
     if args.visual_engine != ENGINE:
@@ -221,6 +290,40 @@ def run(args):
     project = json.loads(project_path.read_text(encoding="utf-8-sig"))
     validate(project)
     base = project_path.parent
+    pending_images = any(
+        scene.get("image_generation", {}).get("enabled", True)
+        and scene.get("image_generation")
+        and not scene["image_generation"].get("resolved_sha256")
+        for news in project["scenes"]
+        for scene in [news, *news.get("shots", [])]
+    )
+    if pending_images:
+        if not getattr(args, "image_connection", None):
+            raise ValueError(
+                "Enabled image_generation requires --image-connection; image_prompt alone never submits a paid request"
+            )
+        from generate_images import run as generate_images
+        from types import SimpleNamespace
+
+        generated = Path(args.output).resolve() / "generated-assets"
+        status = generate_images(
+            SimpleNamespace(
+                project=str(project_path),
+                connection=args.image_connection,
+                credentials=getattr(args, "image_credentials", None),
+                output=str(generated),
+                generate=True,
+                max_new_images=10,
+            )
+        )
+        if status:
+            raise ValueError(
+                "Image generation failed; see generated-assets/generation-report.json"
+            )
+        project = json.loads(
+            (generated / "resolved-project.json").read_text(encoding="utf-8")
+        )
+        validate(project)
     runtime_path = Path(
         args.runtime
         or os.environ.get(
@@ -238,16 +341,21 @@ def run(args):
         **project.get("editorial", {}),
     }
     project.update(visual_engine=ENGINE, width=width, height=height, fps=fps)
-    project["voice"] = {
-        "id": project.get("voice", {}).get("id", VOICE_ID),
-        "speed": project.get("voice", {}).get("speed", DEFAULT_SPEED),
-    }
+    if not external_mode(project):
+        project["voice"] = {
+            "id": project.get("voice", {}).get("id", VOICE_ID),
+            "speed": project.get("voice", {}).get("speed", DEFAULT_SPEED),
+        }
     project["music"] = {**DEFAULT_MUSIC, **project.get("music", {})}
     output = Path(args.output).resolve()
     output.mkdir(parents=True, exist_ok=True)
     save_json(output / "story-world-report.json", assess_director(project))
+    if project.get("narrative_version") != 1:
+        save_json(output / "visual-diversity-report.json", require_valid(project, base))
     previous_path = output / "project.json"
-    if "director_contract_version" in project and previous_path.is_file():
+    if (
+        "director_contract_version" in project or external_mode(project)
+    ) and previous_path.is_file():
         previous = json.loads(previous_path.read_text(encoding="utf-8-sig"))
         if narration_identity(previous) != narration_identity(project):
             raise ValueError(
@@ -268,34 +376,40 @@ def run(args):
         raise ValueError("Configure a readable Chinese font file")
     cache = output / ".cache"
     cache.mkdir(exist_ok=True)
-    items, models = make_voice(project, runtime, cache)
-    duration, voice, gate, cues = timeline(items, project.get("duration"), fps)
-    mixed, metrics, track = mix_audio(
-        voice, gate, items[0]["sr"], project["music"], runtime, project["title"]
+    duration, voice, gate, cues, sample_rate, models = prepare_narration(
+        project, runtime, cache, base, output, fps
     )
+    if project.get("narrative_version") == 1:
+        manifest_path = (base / project["narrative_manifest"]).resolve()
+        validate_manifest(
+            read_narrative(manifest_path), manifest_path.parent, round(duration * fps)
+        )
+    mixed, metrics, track = mix_audio(
+        voice, gate, sample_rate, project["music"], runtime, project["title"]
+    )
+    from sound_tracks import add_tracks, resolve_event_tracks
+
+    sound_tracks = project.get("sound_tracks", [])
+    if project.get("narrative_directing"):
+        from joint_directing import load_directing
+
+        directing = load_directing(project, base, total_frames=round(duration * fps))
+        sound_tracks = resolve_event_tracks(sound_tracks, directing["events"], fps)
+    mixed, track_metrics = add_tracks(mixed, voice, sample_rate, sound_tracks, base)
+    metrics["sound_tracks"] = track_metrics
+    # Report the final mix, including independent ambience/effects added above.
+    metrics["peak"] = float(np.max(np.abs(mixed)))
+    metrics["peak_scope"] = "final mix including sound_tracks"
     write_attribution(output, track)
-    sf.write(output / "voice.wav", voice, items[0]["sr"], subtype="PCM_16")
-    sf.write(output / "mix.wav", mixed, items[0]["sr"], subtype="PCM_16")
+    if track_metrics:
+        with (output / "音乐署名.txt").open("a", encoding="utf-8") as attribution:
+            for sound in track_metrics:
+                attribution.write(
+                    f"\n{sound['track_id']}：{sound['attribution']}；{sound['source_url']}；{sound['license']}；设计声音，非新闻现场录音。\n"
+                )
+    sf.write(output / "mix.wav", mixed, sample_rate, subtype="PCM_16")
     save_json(output / "timeline.json", cues)
     save_json(output / "project.json", project)
-    save_json(
-        output / "motion-report.json",
-        {
-            "version": 1,
-            "engine": ENGINE,
-            "scenes": [
-                {
-                    "scene": index,
-                    "kind": remotion_visual._kind(scene),
-                    "visual_strategy": scene.get("visual_strategy", ""),
-                    "motion_plan": scene.get("motion_plan", {}),
-                    "shot_count": len(scene.get("shots", [])),
-                    "content_ends_before_y": 904,
-                }
-                for index, scene in enumerate(project["scenes"])
-            ],
-        },
-    )
     (output / "captions.srt").write_text(
         "\n".join(
             f"{index + 1}\n{stamp(cue['start'])} --> {stamp(cue['end'])}\n{cue['text']}\n"
@@ -313,15 +427,51 @@ def run(args):
     )
     folder = output / "remotion"
     payload = remotion_visual.stage(project, cues, duration, base, folder, font)
+    save_json(
+        output / "motion-report.json",
+        {
+            "version": "narrative-1" if project.get("narrative_version") == 1 else 2,
+            "narrative_shots": payload.get("narrative_shots", []),
+            "engine": ENGINE,
+            "status": "staged-awaiting-render",
+            "review_status": "requires-continuous-review",
+            "scenes": [
+                {
+                    "scene": index,
+                    "kind": scene["kind"],
+                    "shots": scene["shots"],
+                    "actions": scene.get("object_stage", {}).get("actions", []),
+                    "content_ends_before_y": 904,
+                }
+                for index, scene in enumerate(payload["scenes"])
+            ],
+        },
+    )
     production_plan(project, cues, payload, output)
     silent = cache / f"{remotion_visual.render_key(folder, payload)}.mp4"
-    reused = silent.is_file()
-    if not reused:
-        remotion_visual.render(
-            install, cli, folder, silent, payload, output / "render.log"
-        )
     frames = round(duration * fps)
-    remotion_visual.verify(silent, probe, width, height, fps, frames)
+    reused = silent.is_file()
+    if reused:
+        try:
+            remotion_visual.verify(silent, probe, width, height, fps, frames)
+        except (ValueError, subprocess.CalledProcessError, json.JSONDecodeError):
+            # This content-addressed file belongs to this renderer, never a user master.
+            silent.unlink()
+            reused = False
+    if not reused:
+        temporary_picture = silent.with_suffix(".partial.mp4")
+        try:
+            remotion_visual.render(
+                install, cli, folder, temporary_picture, payload, output / "render.log"
+            )
+            remotion_visual.verify(temporary_picture, probe, width, height, fps, frames)
+            temporary_picture.replace(silent)
+        finally:
+            temporary_picture.unlink(missing_ok=True)
+    motion_path = output / "motion-report.json"
+    motion = json.loads(motion_path.read_text(encoding="utf-8"))
+    motion.update(status="rendered", picture_key=silent.stem, frame_count=frames)
+    save_json(motion_path, motion)
     ffmpeg = imageio_ffmpeg.get_ffmpeg_exe()
     previews = [
         remotion_visual.preview_frame(
@@ -357,6 +507,14 @@ def run(args):
             "192k",
             "-t",
             str(duration),
+            "-color_primaries",
+            "bt709",
+            "-color_trc",
+            "bt709",
+            "-colorspace",
+            "bt709",
+            "-color_range",
+            "tv",
             "-movflags",
             "+faststart",
             str(result),
@@ -387,16 +545,21 @@ def run(args):
         full_decode_passed=True,
         audio=metrics,
         warnings=[],
-        model_sha256=models,
+        model_sha256=models if not external_mode(project) else {},
+        frozen_audio=models if external_mode(project) else None,
         voice=project["voice"],
         sources=project.get("sources", []),
         encoded_metadata={
             key: actual[key] for key in ("size", "fps", "duration", "codec", "pix_fmt")
         },
         layout_contract="Editorial composition with a reserved bottom caption rail",
-        alignment="Measured synthesized semantic clips; not ASR word-level forced alignment",
+        alignment=(
+            "Frozen sample timeline with supplied measured cues; not word-level forced alignment"
+            if external_mode(project)
+            else "Measured synthesized semantic clips; not ASR word-level forced alignment"
+        ),
         remotion_editorial={
-            "version": "remotion-editorial-v1",
+            "version": f"remotion-editorial-v{project.get('visual_contract_version', 1)}",
             "composition": "Editorial",
             "picture_frame_count": frames,
             "captions_in_video": project["editorial"]["captions"],
@@ -415,6 +578,8 @@ def argument_parser():
     parser.add_argument("project")
     parser.add_argument("--output", required=True)
     parser.add_argument("--runtime")
+    parser.add_argument("--image-connection")
+    parser.add_argument("--image-credentials")
     parser.add_argument("--visual-engine", choices=(ENGINE,), default=ENGINE)
     return parser
 

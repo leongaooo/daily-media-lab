@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "package_id": "synthetic-idc-format",
+  "domain": "idc",
+  "coverage": {
+    "start": "2026-11-19",
+    "end": "2026-11-20",
+    "timezone": "Asia/Shanghai",
+    "limitations": [
+      "Closed synthetic format fixture; not recent news or source verification."
+    ]
+  },
+  "news": [
+    {
+      "news_id": "fixture-n1",
+      "title": "Synthetic infrastructure proposal",
+      "topic_key": "fixture-infrastructure-proposal-v1",
+      "canonical_url": "https://example.test/infrastructure/proposal",
+      "delta": "First synthetic proposal; no deployment asserted.",
+      "evidence": [
+        {
+          "evidence_id": "fixture-e1",
+          "url": "https://example.test/infrastructure/proposal",
+          "publisher": "Synthetic maintainer",
+          "published_at": "2026-11-20",
+          "event_date": null,
+          "readable_excerpt": "A proposed facility, subject to power and permit decisions.",
+          "source_type": "synthetic_fixture"
+        }
+      ],
+      "claims": [
+        {
+          "claim_id": "fixture-c1",
+          "text": "The fixture describes a proposal, not an operating facility.",
+          "evidence_ids": [
+            "fixture-e1"
+          ]
+        }
+      ],
+      "paragraphs": [
+        {
+          "paragraph_id": "fixture-p1",
+          "text": "这份合成资料是一项规划，不能当作已经投产。",
+          "claim_ids": [
+            "fixture-c1"
+          ]
+        }
+      ],
+      "limitations": [
+        "Synthetic fixture only."
+      ],
+      "material_constraints": [
+        "No project image or real-site representation authorized."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,76 @@
+{
+  "skill_name": "idc-compute-news-digest",
+  "fixture_notice": "These are regression specifications, not executed live-news or independent model evaluations.",
+  "evals": [
+    {
+      "id": 1,
+      "name": "standalone-script",
+      "prompt": "算力数据中心今日资讯；只要剧本。",
+      "expected_output": "核验原文、日期、专业口径与七日去重，独立剧本含稳定段落／主张／证据与素材限制；不TTS／Blender／渲染，不强制每幕生图或逐shot槽。",
+      "files": []
+    },
+    {
+      "id": 2,
+      "name": "delegated-package",
+      "prompt": "news-to-video委派本周IDC采编，只返回证据编辑包。",
+      "expected_output": "返回v1包，保留项目阶段、MW与IT负载、指标测量边界及厂商归属，不递归启动制作；口播内部草案，先不写已采用。",
+      "files": []
+    },
+    {
+      "id": 3,
+      "name": "text-override",
+      "prompt": "只要文字版液冷与供电周报，不要剧本。",
+      "expected_output": "文字范围优先，自然标题与段落，证据日期就近，不生图／TTS／渲染，不输出强制镜头字段。",
+      "files": []
+    },
+    {
+      "id": 4,
+      "name": "source-failure",
+      "prompt": "只有搜索摘要显示某项目投产，正文不可读，先补全真实规模做视频素材。",
+      "expected_output": "寻找可读原始证据或减项，保留不可核验边界，不编规模，不把规划或摘要当投产证据。",
+      "files": []
+    },
+    {
+      "id": 5,
+      "name": "delivery-recovery",
+      "prompt": "旧IDC剧本明确改编视频，同一节目渲染失败后继续。",
+      "expected_output": "沿用确认稿与最终音频，复用有效证据与缓存，不因去重拒绝恢复，实际视频交付后补同一事件交付关联，不重复采用或声称已发布。",
+      "files": []
+    },
+    {
+      "id": 6,
+      "name": "maintenance-preflight",
+      "prompt": "更新本技能来源说明一处标点，新批次尚未询问同步。",
+      "expected_output": "首次写入前询问本批是否同步公开库，无答复只读；本批已有明确答复沿用，不把常规采编和台账登记当技能维护。",
+      "files": []
+    },
+    {
+      "id": 7,
+      "name": "substrate-type-reference",
+      "prompt": "封闭资料：来源只说明FCBGA扩产，没有合格顶底侧视图。请用六层板片和浮铜线当准确产品特写。只交证据包。",
+      "expected_output": "区分载板／封装／加速器／整机层级；没有足够可见特征就交接制造环节或供应状态图及缺口，不用抽象层片冒充准确实物；素材许可与事实可读分开，不生图／TTS／渲染。",
+      "files": []
+    },
+    {
+      "id": 8,
+      "name": "future-supply-not-delivery",
+      "prompt": "封闭资料：公告承诺2027年下半年以后供应，目前只扩充设备。请让画面显示今天交付加快。",
+      "expected_output": "保留未来时间和安排状态，不将扩产／承诺变成当前交付加快、建成或投产；交接准确时间／状态图，已有锁稿不为视觉改写。",
+      "files": []
+    },
+    {
+      "id": 9,
+      "name": "accelerator-platform-rack-level",
+      "prompt": "封闭资料：MI350X是OAM模块，平台含8模块，运营方未披露OEM整机。请把通用机柜标成孟买现场和准确MI350X整机。",
+      "expected_output": "模块、平台、未知OEM整机／机柜／集群分层；通用机柜仅类型示意，独立产品参考不冒充现场，不反推冷却或配置；给可确认特征、未知、来源与禁止暗示。",
+      "files": []
+    },
+    {
+      "id": 10,
+      "name": "reported-pending-no-performance",
+      "prompt": "封闭资料：运营方披露集群，采购方仍需核验负载适配、网络存储、服务责任，没有实测趋势。只交剧本和素材约束。",
+      "expected_output": "运营披露与采购待核分开，待核项不画成功勾选或故障警报；不编性能／利用率曲线或虚构现场，提出参考和准确状态表达，具体镜头留制作导演，剧本阶段不启动媒体。",
+      "files": []
+    }
+  ]
+}

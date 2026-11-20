@@ -1,6 +1,10 @@
 # Editorial项目格式
 
-唯一画面方案为Remotion Editorial，详见[镜头与运行](remotion-editorial.md)。使用UTF-8 JSON，相对图片路径基于输入文件所在目录。`assets/example-project.json`为可改写示例。输出目录与源素材分开；输出project.json是快照，移动时必须带走素材并修正相对路径。
+新三维叙事使用 `narrative_version:1`、`narrative_manifest`，字段与可运行命令见 [Blender镜头及最终音频](blender-handoff.md)。不同时声明旧 `visual_contract_version`。本页下方对象舞台与图片槽仅描述显式旧v1/v2兼容项目，不限制新镜头的构图、数量或对象。节目证据与锁定状态见 [采编交接](editorial-handoff.md)。
+
+显式旧图解项目可采用[对象舞台v2](object-stage-v2.md)：visual_contract_version=2、visual_selection_version=2、composition=object_stage。下述旧版镜头字段表为v1兼容说明；v2对象、动作及素材字段以链接协议为准。director_contract_version保持1。项目只有一个Remotion入口。
+
+共享合成方案为Remotion Editorial，详见[镜头与运行](remotion-editorial.md)。使用UTF-8 JSON，相对图片路径基于输入文件所在目录。`assets/example-project.json`为可改写示例。输出目录与源素材分开；输出project.json是快照，移动时必须带走素材并修正相对路径。
 
 一期默认一份项目，多条新闻为有独立证据的scenes板块，一次生成一个MP4。已有剧本先按[接入规则](script-handoff.md)记录幕号、片段、资产与来源映射。
 
@@ -9,15 +13,15 @@
 | title / date_label | 节目名与日期类型元数据；需要片内日期时写入chapter/headline |
 | production_mode | 当前只接受`daily_editorial`；用户不选择其他制作模式 |
 | director_contract_version | 新制作设1；预检故事世界、视觉目标和固定声音参数；旧项目未设置时标为legacy-not-assessed |
-| editorial | width=1920、height=1080、fps=24；captions默认bottom_rail，新导演契约固定bottom_rail，旧项目可显式off；SRT总是独立输出 |
+| editorial | width=1920、height=1080、fps=24；captions默认bottom_rail，可显式off；SRT总是独立输出 |
 | width / height / fps | 可省略；写出时必须与1920/1080/24一致 |
 | visual_engine | 可省略；只接受remotion_editorial |
 | duration | 可省略，按实测配音定长；硬性目标不足时报错，不截音 |
-| voice | 默认b-male-v1；仓库扩展允许显式qwen-uncle-fu-v1且必须匹配runtime；speed默认1.15，新导演契约固定1.15，旧项目接受0.5—2.0有限数值；变速后默认轻度降噪 |
-| music | mode=pool/off；style=business/news/documentary；relative_db=-19、duck_db=2；省略track_id时从核验的三首随机选择；start_seconds可选 |
+| voice | 公开新合成显式id=qwen-uncle-fu-v1、speed默认1.15，并匹配独立runtime；b-male-v1仅为合法私人历史兼容，身份不匹配时停止。已有最终干声用external_final完整字段，播放1.0且绕过处理；见Blender交接与public-voice |
+| music | mode=pool/off；style=business/news/documentary；relative_db=-19、duck_db=2；叙事项目显式track_id及selection_reason；旧项目缺省稳定选择；start_seconds可选 |
 | font | 可选中文字体文件；优先于运行环境字体 |
 | art_direction / sources / footer | 制作意图、证据/素材来源、必要披露；不自动成为画面层 |
-| visual_selection_version | 新制作设1；每幕visual_selection按视觉评分规范填写 |
+| visual_selection_version | 显式旧图解v2设2、旧v1可设1；新Blender不强制此字段 |
 | scenes | 按顺序排列的镜头，同一新闻可有多幕 |
 
 每幕实际支持：
@@ -41,7 +45,7 @@
 | shots | story镜头的2—4个连续节拍；新契约每项必须含segment_start、segment_end（本幕字幕索引，从0起，闭区间），实际起止由实测字幕换算；另可含title、detail、image、role |
 | image_budget | 可选的项目预算记录；`max_paid_generated_images`固定不超过10，10是上限而非生成配额 |
 
-`mode=product_image/theme_text/chart`仅作素材分类与缺省镜头推断，不是其他渲染方案。SVG先经svg_to_png.py转PNG，绑定image并使用hero/contain；简单顺序可用flow原生节点重绘。`motion_assets`、主题色等额外元数据不会自动成为动画或配色，不得报告为已执行；当前已消费的动效字段是`motion_plan`，故事镜头字段是`shots`。`story_world`用于故事连续性、图片提示词和制作报告；不自动改变组件布局，除非组件明确消费其字段。
+`mode=product_image/theme_text/chart`仅作素材分类与缺省镜头推断，不是其他渲染方案。SVG先经svg_to_png.py转PNG，绑定image并使用hero/contain；简单顺序可用flow原生节点重绘。`motion_assets`、主题色等额外元数据不会自动成为动画或配色，不得报告为已执行；v1动效字段为`motion_plan`、镜头字段为`shots`；v2实际对象动作必须写入`object_stage.actions`，不能只写导演元数据。`story_world`用于故事连续性、图片提示词和制作报告；不自动改变组件布局，除非组件明确消费其字段。
 
 字幕轨y904—1080；镜头、来源与运动结束在y904之前。人物、复杂设备动画等需在本项目Editorial组件中明确实现并验证，当前内置模板无自动人物层。长文本需通过抽帧检查，不承诺任意长度自动适配。
 

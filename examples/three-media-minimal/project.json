@@ -1,0 +1,43 @@
+{
+  "title": "合成格式样例｜规划不是投产",
+  "example_notice": "合成说明文案，不是新闻；仅格式输入，未随示例合成音频或视频。",
+  "date_label": "格式样例",
+  "voice": {
+    "id": "qwen-uncle-fu-v1",
+    "speed": 1.15
+  },
+  "music": {
+    "mode": "off"
+  },
+  "sources": [
+    {
+      "evidence_id": "fixture-e1",
+      "url": "https://example.test/infrastructure/proposal",
+      "type": "synthetic_fixture_not_news"
+    }
+  ],
+  "editorial": {
+    "width": 1920,
+    "height": 1080,
+    "fps": 24,
+    "captions": "bottom_rail"
+  },
+  "scenes": [
+    {
+      "editorial_kind": "hero",
+      "headline": "规划不等于投产",
+      "center_text": "合成资料 · 非新闻",
+      "summary": "示意画面不能证明实际部署。",
+      "segments": [
+        {
+          "paragraph_id": "fixture-p1",
+          "claim_ids": [
+            "fixture-c1"
+          ],
+          "text": "这份资料是格式样例。规划不能当作已经投产，示意画面也不能代替事实证据。",
+          "spoken": "这份资料是格式样例。规划不能当作已经投产，示意画面也不能代替事实证据。"
+        }
+      ]
+    }
+  ]
+}

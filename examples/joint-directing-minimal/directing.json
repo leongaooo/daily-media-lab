@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "fps": 24,
+  "width": 1920,
+  "height": 1080,
+  "projection": "projection.json",
+  "camera_events": ["approach"],
+  "events": {
+    "approach": {"start_frame": 0, "end_frame": 6},
+    "panel": {"start_frame": 4, "end_frame": 8},
+    "prediction": {"start_frame": 8, "end_frame": 12},
+    "reschedule": {"start_frame": 12, "end_frame": 18},
+    "result": {"start_frame": 18, "end_frame": 24}
+  },
+  "overlays": [
+    {
+      "overlay_id": "technical-task",
+      "kind": "cavern-flex-v3",
+      "start_frame": 4,
+      "end_frame": 24,
+      "panel": [900, 180, 910, 640],
+      "title": "联合事件测试",
+      "identity": "机制示意 · 非实测",
+      "event_names": {
+        "panel": "panel",
+        "prediction": "prediction",
+        "reschedule": "reschedule",
+        "result": "result"
+      },
+      "task": {
+        "id": "technical-task-A",
+        "label": "测试任务 A",
+        "from": 0.12,
+        "to": 0.65,
+        "width": 0.22
+      }
+    }
+  ]
+}

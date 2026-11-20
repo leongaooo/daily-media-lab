@@ -1,0 +1,13 @@
+# Generated media belong in outputs/ or outside the repository, never in this example.
+*.blend
+*.blend1
+*.png
+*.wav
+*.mp4
+shots.json
+patches.json
+cues.json
+project.json
+roundtrip-report.json
+frames/
+receipts/

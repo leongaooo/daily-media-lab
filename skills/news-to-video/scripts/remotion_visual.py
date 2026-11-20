@@ -7,14 +7,25 @@ from pathlib import Path
 import shutil
 import subprocess
 
-from PIL import Image
+from frozen_audio import frame_at
+from narrative_media import (
+    stage_manifest,
+    read_json as read_manifest,
+    validate_manifest,
+)
 
+from PIL import Image
+from visual_contract import ASSET_KEYS, palette_for, require_valid
+from object_contract import measured_stage
+from joint_directing import load_directing, stage_directing
 
 TEMPLATE = Path(__file__).resolve().parents[1] / "assets/remotion-editorial"
 
 
 def _kind(scene):
     """Choose a visual grammar from the scene's meaning, with explicit overrides."""
+    if scene.get("composition"):
+        return scene["composition"]
     if scene.get("editorial_kind"):
         return scene["editorial_kind"]
     mode = scene.get("mode", "theme_text")
@@ -51,6 +62,11 @@ def _story_shots(scene, base, public, index, cues, start_frame, fps):
             duration = (round(cues[-1]["end"] * fps) - start_frame) / fps
             item["start"] = duration * shot_index / len(planned)
             item["end"] = duration * (shot_index + 1) / len(planned)
+        for key in ASSET_KEYS:
+            if shot.get(key):
+                item[key] = _copy_asset(
+                    base, shot[key], public, index, f"shot-{shot_index}-{key}"
+                )
         if shot.get("image"):
             item["image"] = _copy_asset(
                 base,
@@ -65,6 +81,13 @@ def _story_shots(scene, base, public, index, cues, start_frame, fps):
 
 def preflight(project, base, runtime):
     """Resolve the sole renderer and independent FFprobe before audio work."""
+    require_valid(project, base)
+    _component_source(project, base)
+    if project.get("narrative_version") == 1:
+        manifest_path = (base / project["narrative_manifest"]).resolve()
+        manifest = read_manifest(manifest_path)
+        validate_manifest(manifest, manifest_path.parent)
+        load_directing(project, base, manifest=manifest)
     editorial = project.get("editorial", {})
     width = editorial.get("width", 1920)
     height = editorial.get("height", 1080)
@@ -84,6 +107,9 @@ def preflight(project, base, runtime):
             "Remotion editorial runtime is missing; see references/remotion-editorial.md"
         )
     for index, scene in enumerate(project["scenes"]):
+        if project.get("narrative_version") == 1:
+            # The sealed full-frame master owns its visuals; legacy node/slot rules do not apply.
+            continue
         if _kind(scene) == "flow":
             nodes = scene.get("editorial_nodes", [])
             if not isinstance(nodes, list) or not 2 <= len(nodes) <= 3:
@@ -141,8 +167,13 @@ def _copy_asset(base, source, public, index, role):
             else ".png"
         )
         target = public / f"scene-{index}-{role}{extension}"
-        image.convert("RGBA").save(target)
+        image.convert("RGB" if extension in (".jpg", ".jpeg") else "RGBA").save(target)
     return f"assets/{target.name}"
+
+
+def _cue_frame(cue, boundary):
+    key = boundary + "_frame"
+    return cue[key] if key in cue else frame_at(cue[boundary])
 
 
 def stage(project, cues, duration, base, folder, font):
@@ -158,6 +189,7 @@ def stage(project, cues, duration, base, folder, font):
     shutil.copyfile(TEMPLATE / "tsconfig.json", folder / "tsconfig.json")
     (public / "assets").mkdir(exist_ok=True)
     shutil.copyfile(font, public / f"font{font.suffix}")
+    require_valid(project, base)
     scene_payload = []
     caption_mode = project.get("editorial", {}).get("captions", "bottom_rail")
     editorial_fps = project.get("editorial", {}).get("fps", 24)
@@ -166,10 +198,26 @@ def stage(project, cues, duration, base, folder, font):
         if not scene_cues:
             continue
         # Share rounded absolute boundaries to prevent cumulative scene drift.
-        start_frame = round(scene_cues[0]["start"] * editorial_fps)
-        end_frame = round(scene_cues[-1]["end"] * editorial_fps)
+        start_frame = _cue_frame(scene_cues[0], "start")
+        end_frame = _cue_frame(scene_cues[-1], "end")
         item = dict(
-            kind=_kind(scene),
+            kind="narrative" if project.get("narrative_version") == 1 else _kind(scene),
+            composition=(
+                "narrative" if project.get("narrative_version") == 1 else _kind(scene)
+            ),
+            palette=palette_for(scene),
+            story_world=scene.get("story_world", {}),
+            background_style=scene.get("background_style", "plain"),
+            camera_language=scene.get(
+                "camera_language",
+                {"slow_push": "slow-push", "slow-push": "slow-push"}.get(
+                    scene.get("motion_plan", {}).get("camera"), "none"
+                ),
+            ),
+            **{
+                key: _copy_asset(base, scene.get(key), public / "assets", index, key)
+                for key in ASSET_KEYS
+            },
             duration=end_frame - start_frame,
             headline=scene.get("headline", ""),
             center_text=scene.get("center_text", ""),
@@ -179,8 +227,8 @@ def stage(project, cues, duration, base, folder, font):
                 [
                     {
                         "text": cue["text"],
-                        "start": round(cue["start"] * editorial_fps) - start_frame,
-                        "end": round(cue["end"] * editorial_fps) - start_frame,
+                        "start": _cue_frame(cue, "start") - start_frame,
+                        "end": _cue_frame(cue, "end") - start_frame,
                     }
                     for cue in scene_cues
                 ]
@@ -212,22 +260,129 @@ def stage(project, cues, duration, base, folder, font):
                     start_frame,
                     editorial_fps,
                 )
-                if _kind(scene) == "story"
+                if scene.get("shots")
                 else []
             ),
         )
+        if scene.get("object_stage"):
+            item["object_stage"] = measured_stage(
+                scene, scene_cues, start_frame, editorial_fps
+            )
+            for object_index, obj in enumerate(item["object_stage"]["objects"]):
+                if obj.get("asset"):
+                    obj["asset"] = _copy_asset(
+                        base,
+                        obj["asset"],
+                        public / "assets",
+                        index,
+                        f"object-{object_index}",
+                    )
+        shots = item["shots"]
+        if project.get("visual_contract_version"):
+            boundaries = [
+                (
+                    round(shot["start"] * editorial_fps),
+                    round(shot["end"] * editorial_fps),
+                )
+                for shot in shots
+            ]
+            if (
+                not boundaries
+                or boundaries[0][0] != 0
+                or boundaries[-1][1] != item["duration"]
+                or any(end <= start for start, end in boundaries)
+                or any(
+                    left[1] != right[0]
+                    for left, right in zip(boundaries, boundaries[1:])
+                )
+            ):
+                raise ValueError(
+                    "Shot frame boundaries must cover the measured scene continuously"
+                )
         scene_payload.append(item)
     payload = dict(
+        font_asset=f"font{font.suffix}",
         scenes=scene_payload,
         width=project.get("editorial", {}).get("width", 1920),
         height=project.get("editorial", {}).get("height", 1080),
         fps=project.get("editorial", {}).get("fps", 24),
     )
+    if project.get("narrative_version") == 1:
+        payload["narrative_shots"] = stage_manifest(
+            project, base, public, round(duration * editorial_fps)
+        )
+        payload["narrative_cues"] = cues
+        payload["narrative_version"] = 1
+        if project.get("narrative_directing"):
+            payload["narrative_directing"] = stage_directing(
+                project, base, public, round(duration * editorial_fps)
+            )
     (src / "data.json").write_text(
         json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8"
     )
+    (folder / "visual-diversity-report.json").write_text(
+        json.dumps(require_valid(project, base), ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
     shutil.copyfile(TEMPLATE / "Composition.tsx", src / "Composition.tsx")
+    shutil.copyfile(TEMPLATE / "caption-layout.ts", src / "caption-layout.ts")
+    shutil.copyfile(TEMPLATE / "JointOverlay.tsx", src / "JointOverlay.tsx")
+    shutil.copyfile(TEMPLATE / "ObjectStage.tsx", src / "ObjectStage.tsx")
+    custom = _component_source(project, base)
+    custom_path = src / "custom"
+    custom_target = custom_path.resolve()
+    if (
+        custom_target.parent != src.resolve()
+        or custom_path.is_symlink()
+        or custom_path.is_junction()
+    ):
+        raise ValueError(
+            "Generated custom directory must be a real child of the stage src"
+        )
+    if custom and (
+        custom == custom_target
+        or custom_target in custom.parents
+        or custom in custom_target.parents
+    ):
+        raise ValueError(
+            "Custom source and generated custom directory must be separate"
+        )
+    if custom_target.exists():
+        # Only this renderer-owned child is cleared; no user source is ever removed.
+        shutil.rmtree(custom_target)
+    if custom:
+        # A project may author its visual stage; the shared wrapper still owns captions.
+        # Re-stage from source on every run, never rely on edits to generated output.
+        for path in custom.rglob("*"):
+            if path.is_file() and path.suffix in (".tsx", ".ts", ".css"):
+                relative = path.relative_to(custom)
+                if any(part in ("node_modules", ".git") for part in relative.parts):
+                    continue
+                destination = src / "custom" / relative
+                destination.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copyfile(path, destination)
+    (src / "ProjectStage.tsx").write_text(
+        (
+            'export {default} from "./custom/Stage";\n'
+            if custom
+            else 'export {ObjectStage as default} from "./ObjectStage";\n'
+        ),
+        encoding="utf-8",
+    )
     return payload
+
+
+def _component_source(project, base):
+    """Resolve explicit trusted local source, independent of the generated checkout."""
+    value = project.get("editorial", {}).get("component_dir")
+    if value is None:
+        return None
+    if not isinstance(value, str) or not value.strip():
+        raise ValueError("editorial.component_dir must name a local source directory")
+    source = (base / value).resolve()
+    if not source.is_dir() or not (source / "Stage.tsx").is_file():
+        raise ValueError("Custom component directory requires Stage.tsx default export")
+    return source
 
 
 def render(install, cli, folder, silent, payload, log):
@@ -246,11 +401,21 @@ def render(install, cli, folder, silent, payload, log):
         str(props_file),
         "--codec",
         "h264",
+        "--color-space",
+        "bt709",
         "--concurrency",
         "2",
         "--log",
         "verbose",
     ]
+    if payload.get("narrative_version") == 1:
+        command.extend(["--image-format", "png"])
+    browser = environment.get("NEWS_TO_VIDEO_BROWSER")
+    if browser:
+        if not Path(browser).is_file():
+            raise ValueError("NEWS_TO_VIDEO_BROWSER must point to an existing browser")
+        # The explicit CLI override also works when the global CLI resolves config elsewhere.
+        command.extend(["--browser-executable", browser])
     with log.open("w", encoding="utf-8") as stream:
         result = subprocess.run(
             command,
@@ -294,10 +459,20 @@ def verify(path, ffprobe, width, height, fps, frames):
 
 
 def render_key(folder, payload, version="remotion-editorial-v1"):
+    # Retain prior immutable sequence versions for recovery without hashing unused versions.
+    live_frames = {
+        "public/" + frame
+        for shot in payload.get("narrative_shots", [])
+        for frame in shot["frames"]
+    }
     files = {
         str(file.relative_to(folder)): hashlib.sha256(file.read_bytes()).hexdigest()
         for file in folder.rglob("*")
         if file.is_file()
+        and (
+            not file.relative_to(folder).as_posix().startswith("public/narrative/")
+            or file.relative_to(folder).as_posix() in live_frames
+        )
         and file.name not in ("props.json", "mix.wav")
         and "node_modules" not in file.parts
         and ".remotion" not in file.parts

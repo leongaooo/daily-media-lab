@@ -1,4 +1,4 @@
-"""检查渲染环境与显式配置的配音后端，不选择备用声音。"""
+"""检查渲染与所选声音分支；冻结音频不依赖TTS，显式公开声音保留独立身份。"""
 
 import argparse
 import json
@@ -14,11 +14,37 @@ from PIL import ImageFont
 from music_bed import select_track
 from voice_backend import load_profile, read_json
 from remotion_visual import preflight
+from frozen_audio import external_mode, load_final
 
 
-def check(runtime_path):
+def check(runtime_path, project_path=None):
     runtime = read_json(runtime_path)
-    preflight({"scenes": []}, Path(runtime_path).parent, runtime)
+    project = read_json(project_path) if project_path else {"scenes": []}
+    preflight(
+        project,
+        (
+            Path(project_path).resolve().parent
+            if project_path
+            else Path(runtime_path).parent
+        ),
+        runtime,
+    )
+    if external_mode(project):
+        _, _, _, _, _, identity, _ = load_final(
+            project, Path(project_path).resolve().parent
+        )
+        ImageFont.truetype(runtime["font"], 40)
+        print(
+            json.dumps(
+                {
+                    "ok": True,
+                    "mode": "external_final",
+                    "tts_invoked": False,
+                    "sha256": identity["sha256"],
+                }
+            )
+        )
+        return
     _, identity = load_profile(runtime)
     ImageFont.truetype(runtime["font"], 40)
     subprocess.run(
@@ -67,5 +93,8 @@ if __name__ == "__main__":
             str(Path.home() / ".cache/news-to-video/runtime.json"),
         ),
     )
+    parser.add_argument(
+        "--project", help="Check final-audio project without a TTS environment"
+    )
     args = parser.parse_args()
-    check(args.runtime)
+    check(args.runtime, args.project)

@@ -314,19 +314,17 @@ class MusicBehaviorTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "checksum"):
                 select_track({}, runtime, "title")
 
-    def test_default_selection_is_restricted_random_pool(self):
+    def test_legacy_default_selection_is_stable_and_restricted(self):
         allowed = {"voice-over-under", "tech-live", "inspired"}
         runtime = {
             "music_manifest": str(
-                Path(
-                    r"C:\Users\xc_sc\.agents\skills\news-to-video\assets\music-pool\manifest.json"
-                )
+                Path(__file__).resolve().parents[1] / "assets/music-pool/manifest.json"
             )
         }
         selected = {
             select_track({}, runtime, f"title-{index}")[1]["id"] for index in range(12)
         }
-        self.assertTrue(selected)
+        self.assertEqual(len(selected), 1)
         self.assertTrue(selected <= allowed)
 
     def test_short_pause_holds_duck_and_long_pause_releases(self):

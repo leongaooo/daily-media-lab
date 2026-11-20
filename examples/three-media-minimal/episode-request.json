@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "episode_id": "public-synthetic-format-v1",
+  "request": "合成格式检查：证据包与节目编排；不检索新闻、不合成声音、不渲染、不登记采用。",
+  "package_paths": [
+    "evidence.json"
+  ],
+  "example_kind": "portable_input_spec_not_a_completed_episode_receipt",
+  "render_scope": "not_requested",
+  "delivery_scope": "no_user_media_delivery_or_adoption_claim"
+}

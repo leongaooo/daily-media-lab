@@ -4,12 +4,10 @@ import json
 import hashlib
 import math
 from pathlib import Path
-import secrets
 import subprocess
 
 import imageio_ffmpeg
 import numpy as np
-
 
 SKILL = Path(__file__).resolve().parent.parent
 DEFAULT_MUSIC = {
@@ -23,7 +21,15 @@ DEFAULT_MUSIC = {
 def validate_music(config):
     if not isinstance(config, dict):
         raise ValueError("music must be an object")
-    allowed = {"mode", "style", "track_id", "relative_db", "duck_db", "start_seconds"}
+    allowed = {
+        "mode",
+        "style",
+        "track_id",
+        "relative_db",
+        "duck_db",
+        "start_seconds",
+        "selection_reason",
+    }
     if set(config) - allowed:
         raise ValueError(
             "Legacy music gain/tempo is retired; run migrate_audio.py first"
@@ -48,7 +54,7 @@ def validate_music(config):
 
 
 def select_track(config, runtime, title):
-    """随机选择受限音乐池中的曲目；显式曲目仍保持完全确定。"""
+    """显式叙事选曲优先；旧项目缺省按风格稳定选择，不再随机换曲。"""
     manifest_path = Path(
         runtime.get("music_manifest", SKILL / "assets/music-pool/manifest.json")
     )
@@ -74,11 +80,7 @@ def select_track(config, runtime, title):
             "No matching licensed music; select a known track or explicitly use mode=off"
         )
     candidates.sort(key=lambda track: track["id"])
-    track = dict(
-        candidates[0]
-        if config.get("track_id")
-        else secrets.SystemRandom().choice(candidates)
-    )
+    track = dict(candidates[0] if config.get("track_id") else candidates[0])
     required = ("source_url", "license_url", "attribution", "sha256", "artist", "title")
     if track.get("license") != "CC BY 4.0" or any(
         not track.get(key) for key in required

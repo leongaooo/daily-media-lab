@@ -1,0 +1,702 @@
+{
+  "title": "对象叙事与动画能力演示",
+  "production_mode": "daily_editorial",
+  "director_contract_version": 1,
+  "visual_contract_version": 2,
+  "visual_selection_version": 2,
+  "voice": {
+    "id": "qwen-uncle-fu-v1",
+    "speed": 1.15
+  },
+  "music": {
+    "mode": "pool",
+    "track_id": "voice-over-under",
+    "relative_db": -19,
+    "duck_db": 2
+  },
+  "art_direction": "原创教学演示；验证机制、数据、证据三类表达，不是今日资讯",
+  "sources": [
+    {
+      "id": "E-DEMO",
+      "type": "original_illustration",
+      "description": "合成教学情境，无外部新闻主张"
+    }
+  ],
+  "scenes": [
+    {
+      "composition": "object_stage",
+      "chapter": "01 机制演示",
+      "headline": "任务如何沿路径推进",
+      "visual_goal": "任务如何沿路径推进",
+      "story_world": {
+        "id": "01 机制演示",
+        "setting": "原创编辑示意空间",
+        "continuity_notes": "对象身份及方位在整个段落持续保留",
+        "facts_boundary": "教学示意，不是真实项目、指标或部署证据"
+      },
+      "segments": [
+        {
+          "text": "先认识画面中的三个对象：左侧是提交端，中间是缓冲区，右侧是处理端。",
+          "spoken": "先认识画面中的三个对象：左侧是提交端，中间是缓冲区，右侧是处理端。"
+        },
+        {
+          "text": "任务沿路径进入缓冲区，再继续交给处理端。画面保留原来的对象和位置。",
+          "spoken": "任务沿路径进入缓冲区，再继续交给处理端。画面保留原来的对象和位置。"
+        },
+        {
+          "text": "处理端改变状态，任务得到结果。这里的移动用于解释过程，不代表真实运行速度。",
+          "spoken": "处理端改变状态，任务得到结果。这里的移动用于解释过程，不代表真实运行速度。"
+        },
+        {
+          "text": "最后保留一个边界：接收完成和处理完成是两个状态，不能只凭回执判断结果。",
+          "spoken": "最后保留一个边界：接收完成和处理完成是两个状态，不能只凭回执判断结果。"
+        }
+      ],
+      "object_stage": {
+        "objects": [
+          {
+            "id": "phone",
+            "kind": "phone",
+            "label": "提交端",
+            "x": 240,
+            "y": 265
+          },
+          {
+            "id": "queue",
+            "kind": "queue",
+            "label": "缓冲区",
+            "x": 800,
+            "y": 265
+          },
+          {
+            "id": "worker",
+            "kind": "server",
+            "label": "处理端",
+            "x": 1360,
+            "y": 265
+          },
+          {
+            "id": "receipt",
+            "kind": "document",
+            "label": "接收回执",
+            "x": 1090,
+            "y": 110
+          },
+          {
+            "id": "task1",
+            "kind": "message",
+            "label": "任务一",
+            "x": 410,
+            "y": 265,
+            "scale": 0.55,
+            "tone": "accent"
+          },
+          {
+            "id": "task2",
+            "kind": "message",
+            "label": "任务二",
+            "x": 410,
+            "y": 265,
+            "scale": 0.55,
+            "tone": "accent"
+          }
+        ],
+        "actions": [
+          {
+            "type": "enter",
+            "target": "phone",
+            "segment": 0,
+            "at": 0.04,
+            "until": 0.24,
+            "evidence": "E-DEMO：原创教学示意，不描述真实新闻/产品"
+          },
+          {
+            "type": "enter",
+            "target": "queue",
+            "segment": 0,
+            "at": 0.27999999999999997,
+            "until": 0.48,
+            "evidence": "E-DEMO：原创教学示意，不描述真实新闻/产品"
+          },
+          {
+            "type": "enter",
+            "target": "worker",
+            "segment": 0,
+            "at": 0.52,
+            "until": 0.72,
+            "evidence": "E-DEMO：原创教学示意，不描述真实新闻/产品"
+          },
+          {
+            "type": "state",
+            "target": "worker",
+            "segment": 2,
+            "at": 0.85,
+            "until": 0.98,
+            "evidence": "E-DEMO：原创教学示意，不描述真实新闻/产品",
+            "label": "处理完成",
+            "tone": "accent"
+          },
+          {
+            "type": "emphasize",
+            "target": "worker",
+            "segment": 2,
+            "at": 0.85,
+            "until": 0.98,
+            "evidence": "E-DEMO：原创教学示意，不描述真实新闻/产品"
+          },
+          {
+            "type": "enter",
+            "target": "receipt",
+            "segment": 3,
+            "at": 0.08,
+            "until": 0.72,
+            "evidence": "E-DEMO：原创教学示意，不描述真实新闻/产品"
+          },
+          {
+            "type": "state",
+            "target": "queue",
+            "segment": 3,
+            "at": 0.08,
+            "until": 0.72,
+            "evidence": "E-DEMO：原创教学示意，不描述真实新闻/产品",
+            "label": "已接收",
+            "tone": "accent"
+          },
+          {
+            "type": "enter",
+            "target": "task1",
+            "segment": 1,
+            "at": 0.01,
+            "until": 0.1,
+            "evidence": "E-DEMO：原创队列教学示意，非真实性能"
+          },
+          {
+            "type": "move",
+            "target": "task1",
+            "segment": 1,
+            "at": 0.1,
+            "until": 0.35,
+            "evidence": "E-DEMO：原创队列教学示意，非真实性能",
+            "x": 710,
+            "y": 265
+          },
+          {
+            "type": "enter",
+            "target": "task2",
+            "segment": 1,
+            "at": 0.38,
+            "until": 0.47,
+            "evidence": "E-DEMO：原创队列教学示意，非真实性能"
+          },
+          {
+            "type": "move",
+            "target": "task2",
+            "segment": 1,
+            "at": 0.47,
+            "until": 0.72,
+            "evidence": "E-DEMO：原创队列教学示意，非真实性能",
+            "x": 890,
+            "y": 265
+          },
+          {
+            "type": "move",
+            "target": "task1",
+            "segment": 2,
+            "at": 0.04,
+            "until": 0.4,
+            "evidence": "E-DEMO：原创队列教学示意，非真实性能",
+            "x": 1190,
+            "y": 265
+          },
+          {
+            "type": "exit",
+            "target": "task1",
+            "segment": 2,
+            "at": 0.4,
+            "until": 0.48,
+            "evidence": "E-DEMO：原创队列教学示意，非真实性能"
+          },
+          {
+            "type": "move",
+            "target": "task2",
+            "segment": 2,
+            "at": 0.5,
+            "until": 0.84,
+            "evidence": "E-DEMO：原创队列教学示意，非真实性能",
+            "x": 1190,
+            "y": 265
+          },
+          {
+            "type": "exit",
+            "target": "task2",
+            "segment": 2,
+            "at": 0.84,
+            "until": 0.98,
+            "evidence": "E-DEMO：原创队列教学示意，非真实性能"
+          }
+        ],
+        "groups": [
+          {
+            "x": 60,
+            "y": 30,
+            "width": 1480,
+            "height": 510,
+            "label": "对象保持不变，动作推动理解"
+          }
+        ],
+        "connections": [
+          {
+            "from": "phone",
+            "to": "queue",
+            "evidence": "E-DEMO示意路径"
+          },
+          {
+            "from": "queue",
+            "to": "worker",
+            "evidence": "E-DEMO示意路径"
+          }
+        ],
+        "shadow": true
+      },
+      "shots": [
+        {
+          "title": "建立对象，交代路径",
+          "segment_start": 0,
+          "segment_end": 1,
+          "progression": "从入口进入缓冲，再定位处理端"
+        },
+        {
+          "title": "看见结果，也看见边界",
+          "segment_start": 2,
+          "segment_end": 3,
+          "progression": "任务完成状态与接收回执分开"
+        }
+      ],
+      "data_source": "原创教学示意 · 不构成新闻事实",
+      "visual_direction": "对象与状态随语义推进；装饰建立分组、层次与阅读秩序",
+      "visual_selection": {
+        "goal": "任务如何沿路径推进",
+        "selected": "native",
+        "candidates": [
+          {
+            "id": "native",
+            "uses_image": false,
+            "gates": {
+              "facts": true,
+              "source": true,
+              "layout": true,
+              "execution": true
+            },
+            "scores": {
+              "relevance": 5,
+              "appeal": 4,
+              "narrative": 5,
+              "readability": 5
+            },
+            "reason": "精确对象、标签与状态需要可编辑原生图形"
+          },
+          {
+            "id": "photo",
+            "uses_image": true,
+            "gates": {
+              "facts": true,
+              "source": true,
+              "layout": true,
+              "execution": false
+            },
+            "scores": {
+              "relevance": 3,
+              "appeal": 4,
+              "narrative": 2,
+              "readability": 3
+            },
+            "reason": "无真实事件图片需求；整幅静态照片不能解释阶段动作"
+          }
+        ]
+      }
+    },
+    {
+      "composition": "object_stage",
+      "chapter": "02 数据表达",
+      "headline": "同口径比较，逐步揭示",
+      "visual_goal": "同口径比较，逐步揭示",
+      "story_world": {
+        "id": "02 数据表达",
+        "setting": "原创编辑示意空间",
+        "continuity_notes": "对象身份及方位在整个段落持续保留",
+        "facts_boundary": "教学示意，不是真实项目、指标或部署证据"
+      },
+      "segments": [
+        {
+          "text": "这两组数字只是教学示例。先保持相同单位和比例，再比较差异。",
+          "spoken": "这两组数字只是教学示例。先保持相同单位和比例，再比较差异。"
+        },
+        {
+          "text": "讲到差异时，柱形才发生变化。数字和标签独立绘制，保持清晰可读。",
+          "spoken": "讲到差异时，柱形才发生变化。数字和标签独立绘制，保持清晰可读。"
+        },
+        {
+          "text": "示例差异不能变成产品性能结论。换成真实报道时，还要保留来源和测试条件。",
+          "spoken": "示例差异不能变成产品性能结论。换成真实报道时，还要保留来源和测试条件。"
+        }
+      ],
+      "object_stage": {
+        "objects": [
+          {
+            "id": "before",
+            "kind": "bar",
+            "label": "示例甲",
+            "x": 500,
+            "y": 270,
+            "value": 20
+          },
+          {
+            "id": "after",
+            "kind": "bar",
+            "label": "示例乙",
+            "x": 1100,
+            "y": 270,
+            "value": 20
+          }
+        ],
+        "actions": [
+          {
+            "type": "enter",
+            "target": "before",
+            "segment": 0,
+            "at": 0.08,
+            "until": 0.72,
+            "evidence": "E-DEMO：原创教学示意，不描述真实新闻/产品"
+          },
+          {
+            "type": "enter",
+            "target": "after",
+            "segment": 0,
+            "at": 0.08,
+            "until": 0.72,
+            "evidence": "E-DEMO：原创教学示意，不描述真实新闻/产品"
+          },
+          {
+            "type": "value",
+            "target": "after",
+            "segment": 1,
+            "at": 0.08,
+            "until": 0.72,
+            "evidence": "E-DEMO：原创教学示意，不描述真实新闻/产品",
+            "value": 70
+          },
+          {
+            "type": "emphasize",
+            "target": "after",
+            "segment": 1,
+            "at": 0.08,
+            "until": 0.72,
+            "evidence": "E-DEMO：原创教学示意，不描述真实新闻/产品"
+          },
+          {
+            "type": "state",
+            "target": "before",
+            "segment": 2,
+            "at": 0.08,
+            "until": 0.72,
+            "evidence": "E-DEMO：原创教学示意，不描述真实新闻/产品",
+            "label": "相同单位",
+            "tone": "primary"
+          },
+          {
+            "type": "state",
+            "target": "after",
+            "segment": 2,
+            "at": 0.08,
+            "until": 0.72,
+            "evidence": "E-DEMO：原创教学示意，不描述真实新闻/产品",
+            "label": "仅为示例",
+            "tone": "warning"
+          }
+        ],
+        "groups": [
+          {
+            "x": 120,
+            "y": 40,
+            "width": 620,
+            "height": 480,
+            "label": "甲：初始示例值"
+          },
+          {
+            "x": 860,
+            "y": 40,
+            "width": 620,
+            "height": 480,
+            "label": "乙：变化后的示例值"
+          }
+        ],
+        "connections": [],
+        "shadow": true,
+        "ink": "#142333",
+        "surface": "#F4F1E9"
+      },
+      "shots": [
+        {
+          "title": "先交代比较口径",
+          "segment_start": 0,
+          "segment_end": 0,
+          "progression": "建立两组对象"
+        },
+        {
+          "title": "再揭示差异与限制",
+          "segment_start": 1,
+          "segment_end": 2,
+          "progression": "数值变化后标明示意边界",
+          "stage_view": [
+            80,
+            30,
+            1440,
+            520
+          ]
+        }
+      ],
+      "data_source": "原创教学示意 · 不构成新闻事实",
+      "visual_direction": "对象与状态随语义推进；装饰建立分组、层次与阅读秩序",
+      "visual_selection": {
+        "goal": "同口径比较，逐步揭示",
+        "selected": "native",
+        "candidates": [
+          {
+            "id": "native",
+            "uses_image": false,
+            "gates": {
+              "facts": true,
+              "source": true,
+              "layout": true,
+              "execution": true
+            },
+            "scores": {
+              "relevance": 5,
+              "appeal": 4,
+              "narrative": 5,
+              "readability": 5
+            },
+            "reason": "精确对象、标签与状态需要可编辑原生图形"
+          },
+          {
+            "id": "photo",
+            "uses_image": true,
+            "gates": {
+              "facts": true,
+              "source": true,
+              "layout": true,
+              "execution": false
+            },
+            "scores": {
+              "relevance": 3,
+              "appeal": 4,
+              "narrative": 2,
+              "readability": 3
+            },
+            "reason": "无真实事件图片需求；整幅静态照片不能解释阶段动作"
+          }
+        ]
+      },
+      "palette": {
+        "background": "#F4F1E9",
+        "primary": "#12466A",
+        "accent": "#704011",
+        "warning": "#9C2922",
+        "muted": "#495363"
+      }
+    },
+    {
+      "composition": "object_stage",
+      "chapter": "03 证据阶段",
+      "headline": "提案、发布与启用分开表达",
+      "visual_goal": "提案、发布与启用分开表达",
+      "story_world": {
+        "id": "03 证据阶段",
+        "setting": "原创编辑示意空间",
+        "continuity_notes": "对象身份及方位在整个段落持续保留",
+        "facts_boundary": "教学示意，不是真实项目、指标或部署证据"
+      },
+      "segments": [
+        {
+          "text": "提案、发布与启用是三个不同阶段。画面先建立对象，保留各自的位置。",
+          "spoken": "提案、发布与启用是三个不同阶段。画面先建立对象，保留各自的位置。"
+        },
+        {
+          "text": "讲到哪个阶段，就强调对应证据。连线表示示意顺序，不代表自动进入下一步。",
+          "spoken": "讲到哪个阶段，就强调对应证据。连线表示示意顺序，不代表自动进入下一步。"
+        },
+        {
+          "text": "没有启用证据时，最后一个对象仍标为待核实。视觉不能替报道补出结论。",
+          "spoken": "没有启用证据时，最后一个对象仍标为待核实。视觉不能替报道补出结论。"
+        }
+      ],
+      "object_stage": {
+        "objects": [
+          {
+            "id": "proposal",
+            "kind": "document",
+            "label": "提案",
+            "x": 330,
+            "y": 270
+          },
+          {
+            "id": "release",
+            "kind": "document",
+            "label": "发布",
+            "x": 820,
+            "y": 270
+          },
+          {
+            "id": "activation",
+            "kind": "server",
+            "label": "待核实",
+            "x": 1320,
+            "y": 340,
+            "tone": "muted"
+          }
+        ],
+        "actions": [
+          {
+            "type": "enter",
+            "target": "proposal",
+            "segment": 0,
+            "at": 0.08,
+            "until": 0.72,
+            "evidence": "E-DEMO：原创教学示意，不描述真实新闻/产品"
+          },
+          {
+            "type": "enter",
+            "target": "release",
+            "segment": 0,
+            "at": 0.08,
+            "until": 0.72,
+            "evidence": "E-DEMO：原创教学示意，不描述真实新闻/产品"
+          },
+          {
+            "type": "enter",
+            "target": "activation",
+            "segment": 0,
+            "at": 0.08,
+            "until": 0.72,
+            "evidence": "E-DEMO：原创教学示意，不描述真实新闻/产品"
+          },
+          {
+            "type": "emphasize",
+            "target": "release",
+            "segment": 1,
+            "at": 0.08,
+            "until": 0.72,
+            "evidence": "E-DEMO：原创教学示意，不描述真实新闻/产品"
+          },
+          {
+            "type": "transfer",
+            "target": "proposal",
+            "segment": 1,
+            "at": 0.08,
+            "until": 0.72,
+            "evidence": "E-DEMO：原创教学示意，不描述真实新闻/产品",
+            "to": "release"
+          },
+          {
+            "type": "state",
+            "target": "activation",
+            "segment": 2,
+            "at": 0.08,
+            "until": 0.72,
+            "evidence": "E-DEMO：原创教学示意，不描述真实新闻/产品",
+            "label": "启用待核实",
+            "tone": "warning"
+          },
+          {
+            "type": "emphasize",
+            "target": "activation",
+            "segment": 2,
+            "at": 0.08,
+            "until": 0.72,
+            "evidence": "E-DEMO：原创教学示意，不描述真实新闻/产品"
+          }
+        ],
+        "groups": [
+          {
+            "x": 120,
+            "y": 50,
+            "width": 950,
+            "height": 460,
+            "label": "已交代的阶段"
+          },
+          {
+            "x": 1130,
+            "y": 150,
+            "width": 390,
+            "height": 380,
+            "label": "尚缺对应证据"
+          }
+        ],
+        "connections": [
+          {
+            "from": "proposal",
+            "to": "release",
+            "evidence": "E-DEMO阶段示意"
+          }
+        ],
+        "shadow": true
+      },
+      "shots": [
+        {
+          "title": "建立三个不同阶段",
+          "segment_start": 0,
+          "segment_end": 0,
+          "progression": "同一世界保留不同对象"
+        },
+        {
+          "title": "强调证据，不替事实前进",
+          "segment_start": 1,
+          "segment_end": 2,
+          "progression": "定位已知阶段并标明未知"
+        }
+      ],
+      "data_source": "原创教学示意 · 不构成新闻事实",
+      "visual_direction": "对象与状态随语义推进；装饰建立分组、层次与阅读秩序",
+      "visual_selection": {
+        "goal": "提案、发布与启用分开表达",
+        "selected": "native",
+        "candidates": [
+          {
+            "id": "native",
+            "uses_image": false,
+            "gates": {
+              "facts": true,
+              "source": true,
+              "layout": true,
+              "execution": true
+            },
+            "scores": {
+              "relevance": 5,
+              "appeal": 4,
+              "narrative": 5,
+              "readability": 5
+            },
+            "reason": "精确对象、标签与状态需要可编辑原生图形"
+          },
+          {
+            "id": "photo",
+            "uses_image": true,
+            "gates": {
+              "facts": true,
+              "source": true,
+              "layout": true,
+              "execution": false
+            },
+            "scores": {
+              "relevance": 3,
+              "appeal": 4,
+              "narrative": 2,
+              "readability": 3
+            },
+            "reason": "无真实事件图片需求；整幅静态照片不能解释阶段动作"
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "package_id": "public-synthetic-idc-package-v1",
+  "domain": "idc",
+  "coverage": {
+    "start": "2026-11-19",
+    "end": "2026-11-20",
+    "timezone": "Asia/Shanghai",
+    "limitations": [
+      "Closed synthetic format fixture; not recent news or source verification."
+    ]
+  },
+  "news": [
+    {
+      "news_id": "fixture-n1",
+      "title": "合成格式样例：规划不是投产",
+      "topic_key": "fixture-infrastructure-proposal-v1",
+      "canonical_url": "https://example.test/infrastructure/proposal",
+      "delta": "First synthetic proposal; no deployment asserted.",
+      "evidence": [
+        {
+          "evidence_id": "fixture-e1",
+          "url": "https://example.test/infrastructure/proposal",
+          "publisher": "Synthetic maintainer",
+          "published_at": "2026-11-20",
+          "event_date": null,
+          "readable_excerpt": "A proposed facility, subject to power and permit decisions.",
+          "source_type": "synthetic_fixture"
+        }
+      ],
+      "claims": [
+        {
+          "claim_id": "fixture-c1",
+          "text": "The fixture describes a proposal, not an operating facility.",
+          "evidence_ids": [
+            "fixture-e1"
+          ]
+        }
+      ],
+      "paragraphs": [
+        {
+          "paragraph_id": "fixture-p1",
+          "text": "这份资料是格式样例。规划不能当作已经投产，示意画面也不能代替事实证据。",
+          "claim_ids": [
+            "fixture-c1"
+          ],
+          "spoken": "这份资料是格式样例。规划不能当作已经投产，示意画面也不能代替事实证据。"
+        }
+      ],
+      "limitations": [
+        "Synthetic fixture only."
+      ],
+      "material_constraints": [
+        "No project image or real-site representation authorized."
+      ]
+    }
+  ]
+}

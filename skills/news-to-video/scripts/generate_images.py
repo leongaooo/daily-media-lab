@@ -62,7 +62,7 @@ def decode_image(data):
         return im.convert("RGBA" if "A" in im.getbands() else "RGB")
 
 
-def jobs_for(project, connection):
+def _scene_jobs_for(project, connection):
     parsed = urllib.parse.urlsplit(connection["base_url"])
     if (
         parsed.scheme != "https"
@@ -95,6 +95,9 @@ def jobs_for(project, connection):
         prompt = spec.get("prompt", scene.get("image_prompt", ""))
         if not isinstance(prompt, str) or not prompt.strip() or prompt == "无需生成":
             raise ValueError("Enabled generation needs a deliberate prompt")
+        negative = scene.get("negative_prompt", "").strip()
+        if negative and negative not in prompt:
+            prompt += "\nAvoid: " + negative
         size = spec.get("size", "1536x1024")
         if size not in ("1024x1024", "1024x1536", "1536x1024"):
             raise ValueError("Use a verified size: 1024x1024, 1024x1536, 1536x1024")
@@ -120,23 +123,127 @@ def jobs_for(project, connection):
     return jobs
 
 
+def jobs_for(project, connection):
+    """Flatten scene and shot requests into the same serial episode budget/cache."""
+    owners = []
+    materialized = []
+    for scene_index, scene in enumerate(project["scenes"]):
+        for shot_index, owner in [(None, scene), *enumerate(scene.get("shots", []))]:
+            if (
+                not owner.get("image_generation")
+                or owner["image_generation"].get("enabled", True) is False
+            ):
+                continue
+            planned = {**scene, **owner}
+            spec = dict(owner["image_generation"])
+            if project.get("visual_contract_version") == 2:
+                object_ids = {
+                    obj["id"]
+                    for obj in scene.get("object_stage", {}).get("objects", [])
+                }
+                if (
+                    spec.get("role") != "subject"
+                    or spec.get("object_id") not in object_ids
+                ):
+                    raise ValueError(
+                        "v2 generation requires role subject and a valid object_id"
+                    )
+            spec.setdefault(
+                "asset_id",
+                f"scene-{scene_index + 1}-shot-{shot_index if shot_index is not None else 'base'}-{spec.get('role', 'subject')}",
+            )
+            prompt = spec.get("prompt", planned.get("image_prompt", ""))
+            if not isinstance(prompt, str) or not prompt.strip():
+                raise ValueError("Enabled generation needs a deliberate prompt")
+            world = scene.get("story_world", {})
+            if world:
+                prompt += "\nShared story world: " + json.dumps(
+                    {
+                        key: world.get(key)
+                        for key in (
+                            "id",
+                            "setting",
+                            "objects",
+                            "palette",
+                            "continuity_notes",
+                            "facts_boundary",
+                        )
+                    },
+                    ensure_ascii=False,
+                )
+            spec["prompt"] = prompt
+            planned["image_generation"] = spec
+            planned["negative_prompt"] = " / ".join(
+                dict.fromkeys(
+                    value
+                    for value in (
+                        scene.get("negative_prompt", ""),
+                        owner.get("negative_prompt", ""),
+                    )
+                    if value
+                )
+            )
+            materialized.append(planned)
+            owners.append((scene_index, shot_index))
+    jobs = _scene_jobs_for({**project, "scenes": materialized}, connection)
+    for job in jobs:
+        planned_spec = materialized[job["scene"]]["image_generation"]
+        if "object_id" in planned_spec:
+            job["object_id"] = planned_spec["object_id"]
+        scene_index, shot_index = owners[job["scene"]]
+        job["scene"] = scene_index
+        if shot_index is not None:
+            job["shot"] = shot_index
+    return jobs
+
+
 def apply_assets(project, base, jobs, folder):
     # Materialized project remains relocatable with its assets; existing local paths become absolute.
     result = json.loads(json.dumps(project))
     for scene in result["scenes"]:
-        for field in ("image", "background_image"):
+        for obj in scene.get("object_stage", {}).get("objects", []):
+            if obj.get("asset"):
+                obj["asset"] = str((base / obj["asset"]).resolve())
+        for field in (
+            "image",
+            "background_image",
+            "background_asset",
+            "subject_asset",
+            "supporting_asset",
+        ):
             if scene.get(field):
                 scene[field] = str((base / scene[field]).resolve())
+        for shot in scene.get("shots", []):
+            for field in (
+                "image",
+                "background_asset",
+                "subject_asset",
+                "supporting_asset",
+            ):
+                if shot.get(field):
+                    shot[field] = str((base / shot[field]).resolve())
     if result.get("presenter", {}).get("image"):
         result["presenter"]["image"] = str(
             (base / result["presenter"]["image"]).resolve()
         )
     for job in jobs:
         scene = result["scenes"][job["scene"]]
+        stage_owner = scene
+        if "shot" in job:
+            scene = scene["shots"][job["shot"]]
         path = folder / job["filename"]
-        if job["role"] == "background":
+        if "object_id" in job:
+            obj = next(
+                obj
+                for obj in stage_owner["object_stage"]["objects"]
+                if obj["id"] == job["object_id"]
+            )
+            obj["asset"] = str(path.resolve())
+        elif job["role"] == "background":
             scene["background_image"] = str(path.resolve())
+            scene["background_asset"] = str(path.resolve())
         else:
+            scene["subject_asset"] = str(path.resolve())
             scene.update(
                 mode="product_image",
                 image=str(path.resolve()),
