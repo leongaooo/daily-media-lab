@@ -578,6 +578,34 @@
       "prompt": "本机后续媒体资产改用E盘，C盘已满，请清理安全文件。公开用户可能没有E盘。",
       "expected_output": "本机新作业使用E:/CodexMedia/jobs/YYYY-MM-DD/episode-id及E:/CodexMedia/cache或job内暂存，显式输出路径；用户指定目录优先，公开工作根可配置，不把E盘设为跨机器要求。先盘点与排除活跃文件，只清理本任务可识别可再生文件；迁移先复制核验哈希/引用/恢复再删重复，保护冻结声、源、母版、回执、许可与他人文件。 生产子进程TEMP/TMP指向所选工作根cache或job临时目录，仅设子进程环境或finally恢复终端值，不改系统全局。",
       "files": []
+    },
+    {
+      "id": 92,
+      "name": "refinement-consolidation-no-remake",
+      "prompt": "这个21秒样片非常好，先落实精炼成果。不需要制作整片了，其他的都做。",
+      "expected_output": "记录对应样片方向认可并落实可复用组件、字段消费者、字幕与感知边界及检查流程；不渲染整片、不TTS、不生图；一般赞许不推定耳机或扬声器验收。",
+      "files": []
+    },
+    {
+      "id": 93,
+      "name": "material-richness-with-content",
+      "prompt": "画面素材太单一，要丰富，但没有案例实拍。",
+      "expected_output": "按内容需要组合可核对原页、许可及身份合适的对象资料、原创机制与检查项；不设素材或镜头数量配额，不把通用机房当案例现场，不以生成图增加事实确定性。",
+      "files": []
+    },
+    {
+      "id": 94,
+      "name": "legacy-content-consumers",
+      "prompt": "项目写了nodes、source、summary，计划说做两项标准对照和采购检查，但成片主图为空。",
+      "expected_output": "定位作者输入、编译载荷与真实消费者；兼容旧字段并追溯来源优先级，冲突节点和空对照／检查板拒绝；检查板保留全部项，对照标签不强造前后关系。",
+      "files": []
+    },
+    {
+      "id": 95,
+      "name": "review-window-and-bounded-render",
+      "prompt": "沿用冻结最终口播先取21秒审查窗口；Windows编码write EOF，不要动原声或别的任务。",
+      "expected_output": "按样本区间另存精确PCM窗口及母版/窗口身份，不TTS/变速/降噪；使用显式本次资源参数与现有作业暂存，有界恢复不改系统/杀其他进程，不将一次成功外推全部write EOF根因。",
+      "files": []
     }
   ],
   "scope_notice": "2026-11-20: explicit v1/v2 component cases remain compatibility checks. New narrative_version=1 Blender shots are independent of old object slots/counts. Historical maintenance prompts now also apply the current per-batch open-source sync question; prior batch approval is not perpetual approval."

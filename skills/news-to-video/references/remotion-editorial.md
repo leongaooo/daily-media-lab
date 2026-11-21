@@ -69,6 +69,8 @@ runtime.json 可以用 remotion_install 指向独立安装目录。渲染器使�
 
 flow必须提供2—3个editorial_nodes，每个节点包含非空title与可选detail；缺少节点预检报错，不复用示例题材。hero图片默认editorial_image_fit=contain，完整保留图解文字；仅无需精确边缘的场景图可显式使用cover，缩放被图片容器裁切，不扩张到字幕轨。editorial_summary可提供画面摘要，data_source显示本幕来源。场景与字幕使用全局时间取整的共享帧边界，避免多幕累计舍入漂移。
 
+旧字段`nodes/source/summary`按[精炼字段契约](refinement-workflow.md#作者字段必须进入实际显示组件)兼容，不能在暂存时丢失内容。comparison恰好两项，evidence_board一至四项；空节点及空shot覆盖预检拒绝。检查板显示全部条目，focus仅强调；`comparison_labels`可明确两项的业务角色，缺省标签为中性对照A／B。`editorial.render`支持本次子进程的concurrency、parallel_encoding、ffmpeg_threads、node_heap_mb，省略时保留原默认；参数范围与恢复边界见[有界执行](refinement-workflow.md#资源压力下的有界执行)。
+
 本机已有Chrome/Edge时，可设置NEWS_TO_VIDEO_BROWSER为其可执行文件的绝对路径；配置读取此路径，不必重复下载Headless Shell。未配置仍沿用Remotion默认浏览器策略。该路径是运行环境配置，不是项目素材；交付包不包含浏览器或node_modules。
 
 

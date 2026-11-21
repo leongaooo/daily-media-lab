@@ -3,6 +3,7 @@
  */
 import React from "react";
 import ProjectStage from "./ProjectStage";
+import { ComparisonPanel, EvidenceBoard } from "./EditorialPanels";
 import { JointOverlay, verifyJointLayout } from "./JointOverlay";
 import type { JointDirecting } from "./JointOverlay";
 import {
@@ -59,6 +60,7 @@ type Scene = {
   image: string | null;
   image_fit: string;
   nodes: Node[];
+  comparison_labels?: string[];
   segments: string[];
   captions: { text: string; start: number; end: number }[];
   shots: Shot[];
@@ -326,63 +328,22 @@ const VisualStage: React.FC<{
     );
   }
   if (grammar === "evidence_board") {
-    const node = scene.nodes[Math.min(focus, scene.nodes.length - 1)];
     return (
-      <div
-        style={{
-          padding: "20px 55px",
-          height: "100%",
-          borderLeft: `6px solid ${palette.accent}`,
-          boxSizing: "border-box",
-        }}
-      >
-        <div style={{ fontSize: 24, color: palette.muted, letterSpacing: 5 }}>
-          RELEASE NOTE / 证据与边界
-        </div>
-        <div style={{ fontSize: 56, color: palette.primary, marginTop: 40 }}>
-          {node?.title || shot.title}
-        </div>
-        <div style={{ fontSize: 33, marginTop: 26, lineHeight: 1.6 }}>
-          {node?.detail}
-        </div>
-        <div
-          style={{ height: 2, background: palette.muted, margin: "35px 0" }}
-        />
-        <div style={{ fontSize: 29, color: palette.accent, lineHeight: 1.6 }}>
-          {shot.detail}
-        </div>
-      </div>
+      <EvidenceBoard
+        nodes={shot.nodes ?? scene.nodes}
+        focus={shot.focus}
+        detail={shot.detail}
+        palette={palette}
+      />
     );
   }
   if (grammar === "comparison") {
     return (
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "1fr 1fr",
-          gap: 50,
-          height: "100%",
-          alignItems: "center",
-        }}
-      >
-        {(shot.nodes ?? scene.nodes).slice(0, 2).map((node, index) => (
-          <div
-            key={node.title}
-            style={{
-              borderTop: `4px solid ${index ? palette.primary : palette.warning}`,
-              padding: 28,
-            }}
-          >
-            <div style={{ fontSize: 24, color: palette.muted }}>
-              {index ? "变化后 / 目标" : "变化前 / 起点"}
-            </div>
-            <div style={{ fontSize: 48, marginTop: 30 }}>{node.title}</div>
-            <div style={{ fontSize: 29, marginTop: 25, color: palette.muted }}>
-              {node.detail}
-            </div>
-          </div>
-        ))}
-      </div>
+      <ComparisonPanel
+        nodes={shot.nodes ?? scene.nodes}
+        labels={scene.comparison_labels ?? ["对照 A", "对照 B"]}
+        palette={palette}
+      />
     );
   }
   if (grammar === "chart") {

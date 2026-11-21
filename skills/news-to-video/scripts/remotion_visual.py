@@ -22,6 +22,121 @@ from joint_directing import load_directing, stage_directing
 TEMPLATE = Path(__file__).resolve().parents[1] / "assets/remotion-editorial"
 
 
+def normalize_editorial(project):
+    """保留作者输入，解析旧字段并在声音处理前拒绝空主视觉。
+
+    data_source/editorial_summary 是权威字段；旧 source/summary 仅补缺，
+    同时存在的差异记入内部回执。两份节点冲突会改变事实，直接拒绝。
+    Blender完整镜头不受旧节点规则约束。
+    """
+    if project.get("narrative_version") == 1:
+        return project
+    scenes = []
+    for index, original in enumerate(project.get("scenes", [])):
+        scene = dict(original)
+        notes = list(scene.get("field_mapping_notes", []))
+        for canonical, alias, default in (
+            ("editorial_nodes", "nodes", []),
+            ("data_source", "source", ""),
+            ("editorial_summary", "summary", ""),
+        ):
+            if (
+                canonical in scene
+                and alias in scene
+                and scene[canonical] != scene[alias]
+            ):
+                if canonical == "editorial_nodes":
+                    raise ValueError(
+                        f"Scene {index + 1}: nodes conflicts with editorial_nodes"
+                    )
+                note = f"{canonical} takes precedence over differing {alias}"
+                if note not in notes:
+                    notes.append(note)
+            scene[canonical] = scene.get(canonical, scene.get(alias, default))
+        for field in ("data_source", "editorial_summary"):
+            if not isinstance(scene[field], str):
+                raise ValueError(f"Scene {index + 1}: {field} must be text")
+        nodes = scene["editorial_nodes"]
+        if not isinstance(nodes, list) or any(
+            not isinstance(node, dict)
+            or not isinstance(node.get("title"), str)
+            or not node["title"].strip()
+            or not isinstance(node.get("detail", ""), str)
+            for node in nodes
+        ):
+            raise ValueError(
+                f"Scene {index + 1}: editorial_nodes require a title and text detail"
+            )
+        kind = _kind(scene)
+        consumers = scene.get("shots") or [{}]
+        for shot in consumers:
+            effective_kind = shot.get("composition", kind)
+            effective_nodes = shot.get("nodes", nodes)
+            if not isinstance(effective_nodes, list) or any(
+                not isinstance(node, dict)
+                or not isinstance(node.get("title"), str)
+                or not node["title"].strip()
+                or not isinstance(node.get("detail", ""), str)
+                for node in effective_nodes
+            ):
+                raise ValueError(
+                    f"Scene {index + 1}: shot nodes require a title and text detail"
+                )
+            if effective_kind == "flow" and not 2 <= len(effective_nodes) <= 3:
+                raise ValueError(
+                    f"Scene {index + 1}: flow requires 2–3 editorial_nodes"
+                )
+            if effective_kind == "comparison" and len(effective_nodes) != 2:
+                raise ValueError(
+                    f"Scene {index + 1}: comparison requires exactly 2 editorial_nodes"
+                )
+            if (
+                effective_kind == "evidence_board"
+                and not 1 <= len(effective_nodes) <= 4
+            ):
+                raise ValueError(
+                    f"Scene {index + 1}: evidence_board requires 1–4 editorial_nodes"
+                )
+        labels = scene.get("comparison_labels")
+        if labels is not None and (
+            not isinstance(labels, list)
+            or len(labels) != 2
+            or any(not isinstance(label, str) or not label.strip() for label in labels)
+        ):
+            raise ValueError(
+                f"Scene {index + 1}: comparison_labels needs two nonempty labels"
+            )
+        if notes:
+            scene["field_mapping_notes"] = notes
+        scenes.append(scene)
+    return {**project, "scenes": scenes}
+
+
+def render_options(project):
+    """校验本次进程的资源设置；省略时保留原渲染默认值。"""
+    options = project.get("editorial", {}).get("render", {})
+    allowed = {"concurrency", "parallel_encoding", "ffmpeg_threads", "node_heap_mb"}
+    if not isinstance(options, dict) or set(options) - allowed:
+        raise ValueError("editorial.render contains unsupported options")
+    for key, minimum, maximum in (
+        ("concurrency", 1, 8),
+        ("ffmpeg_threads", 1, 64),
+        ("node_heap_mb", 128, 16384),
+    ):
+        if key in options and (
+            type(options[key]) is not int or not minimum <= options[key] <= maximum
+        ):
+            raise ValueError(
+                f"editorial.render.{key} must be an integer in {minimum}..{maximum}"
+            )
+    if (
+        "parallel_encoding" in options
+        and type(options["parallel_encoding"]) is not bool
+    ):
+        raise ValueError("editorial.render.parallel_encoding must be boolean")
+    return dict(options)
+
+
 def _kind(scene):
     """Choose a visual grammar from the scene's meaning, with explicit overrides."""
     if scene.get("composition"):
@@ -81,6 +196,8 @@ def _story_shots(scene, base, public, index, cues, start_frame, fps):
 
 def preflight(project, base, runtime):
     """Resolve the sole renderer and independent FFprobe before audio work."""
+    project = normalize_editorial(project)
+    render_options(project)
     require_valid(project, base)
     _component_source(project, base)
     if project.get("narrative_version") == 1:
@@ -178,6 +295,8 @@ def _cue_frame(cue, boundary):
 
 def stage(project, cues, duration, base, folder, font):
     """Create a self-contained project; the React template owns all layout decisions."""
+    project = normalize_editorial(project)
+    options = render_options(project)
     public = folder / "public"
     src = folder / "src"
     public.mkdir(parents=True, exist_ok=True)
@@ -246,6 +365,8 @@ def stage(project, cues, duration, base, folder, font):
             unit=scene.get("unit", ""),
             source=scene.get("data_source", ""),
             nodes=scene.get("editorial_nodes", []),
+            comparison_labels=scene.get("comparison_labels", ["对照 A", "对照 B"]),
+            field_mapping_notes=scene.get("field_mapping_notes", []),
             image_fit=scene.get("editorial_image_fit", "contain"),
             summary=scene.get("editorial_summary", ""),
             visual_strategy=scene.get("visual_strategy", ""),
@@ -307,6 +428,8 @@ def stage(project, cues, duration, base, folder, font):
         height=project.get("editorial", {}).get("height", 1080),
         fps=project.get("editorial", {}).get("fps", 24),
     )
+    if options:
+        payload["render_options"] = options
     if project.get("narrative_version") == 1:
         payload["narrative_shots"] = stage_manifest(
             project, base, public, round(duration * editorial_fps)
@@ -325,6 +448,7 @@ def stage(project, cues, duration, base, folder, font):
         encoding="utf-8",
     )
     shutil.copyfile(TEMPLATE / "Composition.tsx", src / "Composition.tsx")
+    shutil.copyfile(TEMPLATE / "EditorialPanels.tsx", src / "EditorialPanels.tsx")
     shutil.copyfile(TEMPLATE / "caption-layout.ts", src / "caption-layout.ts")
     shutil.copyfile(TEMPLATE / "JointOverlay.tsx", src / "JointOverlay.tsx")
     shutil.copyfile(TEMPLATE / "ObjectStage.tsx", src / "ObjectStage.tsx")
@@ -388,6 +512,25 @@ def _component_source(project, base):
 def render(install, cli, folder, silent, payload, log):
     """Render only pictures; audio is muxed by news-to-video after this step."""
     environment = {**os.environ, "REMOTION_DISABLE_TELEMETRY": "1"}
+    options = render_options(
+        {"editorial": {"render": payload.get("render_options", {})}}
+    )
+    if "node_heap_mb" in options:
+        environment["NODE_OPTIONS"] = (
+            environment.get("NODE_OPTIONS", "")
+            + f" --max-old-space-size={options['node_heap_mb']}"
+        ).strip()
+    if "ffmpeg_threads" in options:
+        # 只扩展本次生成工程的配置；不修改公共模板或系统全局设置。
+        config = folder / "remotion.config.ts"
+        threads = str(options["ffmpeg_threads"])
+        config.write_text(
+            config.read_text(encoding="utf-8")
+            + "\nConfig.overrideFfmpegCommand(({args}) => [...args.slice(0, -1), "
+            + f'"-threads", "{threads}", "-filter_threads", "1", '
+            + "args[args.length - 1]]);\n",
+            encoding="utf-8",
+        )
     props_file = folder / "props.json"
     props_file.write_text(json.dumps(payload, ensure_ascii=False), encoding="utf-8")
     command = [
@@ -404,10 +547,12 @@ def render(install, cli, folder, silent, payload, log):
         "--color-space",
         "bt709",
         "--concurrency",
-        "2",
+        str(options.get("concurrency", 2)),
         "--log",
         "verbose",
     ]
+    if options.get("parallel_encoding") is False:
+        command.append("--disallow-parallel-encoding")
     if payload.get("narrative_version") == 1:
         command.extend(["--image-format", "png"])
     browser = environment.get("NEWS_TO_VIDEO_BROWSER")

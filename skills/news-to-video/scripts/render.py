@@ -98,6 +98,8 @@ def validate(project):
     """Reject unsupported projects before reading voice references or synthesizing."""
     if not project.get("title") or not project.get("scenes"):
         raise ValueError("Project requires title and scenes")
+    project = remotion_visual.normalize_editorial(project)
+    remotion_visual.render_options(project)
     narrative = project.get("narrative_version") == 1
     if "narrative_version" in project and not narrative:
         raise ValueError("narrative_version must be 1")
@@ -287,7 +289,9 @@ def run(args):
     if args.visual_engine != ENGINE:
         raise ValueError("Only remotion_editorial is supported")
     project_path = Path(args.project).resolve()
-    project = json.loads(project_path.read_text(encoding="utf-8-sig"))
+    project = remotion_visual.normalize_editorial(
+        json.loads(project_path.read_text(encoding="utf-8-sig"))
+    )
     validate(project)
     base = project_path.parent
     pending_images = any(
@@ -320,8 +324,10 @@ def run(args):
             raise ValueError(
                 "Image generation failed; see generated-assets/generation-report.json"
             )
-        project = json.loads(
-            (generated / "resolved-project.json").read_text(encoding="utf-8")
+        project = remotion_visual.normalize_editorial(
+            json.loads(
+                (generated / "resolved-project.json").read_text(encoding="utf-8")
+            )
         )
         validate(project)
     runtime_path = Path(
