@@ -2,6 +2,10 @@
 
 更新：2026-11-20（Asia/Shanghai）。先读AGENTS和ROADMAP，任务状态仅在ROADMAP维护。
 
+## IDC 短段制作接续（2026-11-25）
+
+本期真实案例演练已产出 39.625 秒带声预演并获维护者整体认可。下期从选题开始计时，先用一个专业对象做带声联合预演，再扩展整期。复用本次的状态对照、路径高亮和字幕验收方式，单独补齐整期工时、实机读字和分设备试听。见[IDC 短段制作里程碑](progress/2026-11-25-idc-production-milestone.md)。
+
 ## 当前焦点
 
 PUB-07已由开源发布会话`01a1f8af-4350-76e3-9784-ba4b6839de72`完成并收口。提交`dc412bf087e1f67a5da32addb553a09495f4b5d2`已正常推送`origin/main`，远端 ref、关键文件、GitHub提交页／README／发布记录和技能入口已核验；详见[本轮发布收尾](progress/2026-11-20-open-source-publication.md)。第二部分PROD-01、第三部分OPS-01仅登记，暂不制作新片或启动新机环境。
