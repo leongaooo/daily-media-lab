@@ -30,6 +30,8 @@ License: https://creativecommons.org/licenses/by/4.0/
 
 预览画面来自已有 Web3 Editorial 工程。生成场景为示意，流程/状态关系由原创图解或组件表达；不是项目现场、真实设备或链上执行证明。记录见 [预览清单](previews/manifest.json)。维护者于 2026-11-11 明确确认现有预览图片可公开分发；这是本次发布的授权依据，不代表独立法律审查，也不自动适用于未来素材。私人声音仍不公开。
 
+2026-11-25 的 IDC 预览由本项目原创 Blender 场景及 Remotion 合成画面导出。维护者要求将这两条成果示意加入公开 README。公开文件为静音动图，包含原创示意标签、来源标注和字幕。具体文件与对应案例见 [IDC 里程碑](docs/progress/2026-11-25-idc-production-milestone.md#公开预览)。
+
 ## 运行依赖
 
 Qwen 模型、Remotion、FFmpeg、Python/Node 依赖与字体分别遵循其许可。当前仅导出技能自身的配置和实现，没有分发模型权重、浏览器、字体或 node_modules；正式发布时继续核对上游许可，不宣称整个生产工具链均为 MIT 或对所有团队均免费。

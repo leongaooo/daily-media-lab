@@ -16,6 +16,26 @@ If you want to make regular content for your project, team, or community, you ar
 
 ## See the work
 
+### Latest milestone · IDC production rehearsal
+
+The maintainer approved the overall result on November 25, 2026. Both silent animations come from the reviewed edit and show original 3D illustrations.
+
+#### Harwood data halls
+
+The camera moves from a rack aisle to a cutaway of three halls in one building. It shows 75 MW of completed base-building commissioning, then reveals the first 25 MW hall ready for service. The remaining 50 MW is pending fit-out and delivery.
+
+![Silent animation showing the rack aisle, three-hall cutaway and first hall fit-out](previews/idc-20261125-harwood.webp)
+
+#### Ohio transmission upgrade
+
+The shot highlights the proposed conductor replacement on the same transmission corridor. It shows Google's contracted 24 MW and the estimated two-year acceleration, subject to regulatory approval and construction completion.
+
+![Silent animation highlighting the proposed line work and showing the approval and completion conditions](previews/idc-20261125-ohio.webp)
+
+The reviewed edit runs **39.625 seconds**. Project setup through delivery checks took **23 minutes and 6 seconds** with topics already selected. See the case sources, production evidence and plan for timing a full episode. [Milestone record](docs/progress/2026-11-25-idc-production-milestone.md)
+
+### Archived preview · Web3 daily
+
 ![Actual Editorial production with generated illustrations, diagrams and captions](previews/editorial-preview.gif)
 
 **Images build intuition. Diagrams explain relationships. Sound carries the story forward.**
@@ -66,7 +86,7 @@ The user no longer carries intermediate scripts between skills. Load only the re
 
 The current repair adds [design consumption before modeling](skills/news-to-video/references/visual-director.md#建模前参考与设计消费) and a [project joint-direction entry](skills/news-to-video/references/blender-handoff.md#项目联合导演接入): verify recognizable objects and the actual text composition, then share frames and semantic events across camera, graphics and sound, with camera projections where needed. `narrative_directing` currently targets two concrete project panels; it is not a general automatic director. Consumer tests and actual animatic review remain separate. See the [repair record](docs/progress/2026-11-20-joint-directing-v3.md) for executed and unverified work; archived previews do not validate this repair.
 
-The format remains 1920×1080 at 24fps with a fixed y904—1080 caption rail. Full Blender shots keep their aspect ratio and bypass old object-stage slots; legacy diagrams remain compatible. Images are optional, with at most 10 new paid attempts per episode. See the [workflow](docs/WORKFLOW.md), [minimal synthetic example](examples/three-media-minimal/README.md) and [current integration evidence](docs/progress/2026-11-20-three-media-blender.md). The archived preview above is not evidence of the new Blender route.
+The format remains 1920×1080 at 24fps with a fixed y904—1080 caption rail. Full Blender shots keep their aspect ratio and bypass old object-stage slots; legacy diagrams remain compatible. Images are optional, with at most 10 new paid attempts per episode. See the [workflow](docs/WORKFLOW.md), [minimal synthetic example](examples/three-media-minimal/README.md) and [current integration evidence](docs/progress/2026-11-20-three-media-blender.md). See the [latest milestone](#latest-milestone--idc-production-rehearsal) for the applied Blender workflow.
 
 ## Give images and sound a purpose
 
@@ -112,7 +132,7 @@ Public built-in voice: [accepted default sample and native-speed comparison](exa
 
 ## Status and licensing
 
-This is an experimental snapshot of a working local workflow. Fresh-machine end-to-end installation is unverified. The user rejected both Blender candidates for viewing quality; the [current repair](docs/progress/2026-11-20-joint-directing-v3.md) addresses those findings while retaining the [earlier technical evidence](docs/progress/2026-11-20-three-media-blender.md). Successful composition or playerended does not overturn that rejection. The user listened but gave no separate finding on this batch's voice. Private voice materials remain excluded. The earlier REP-01 public voice approval applies only to that short sample; new scripts still need listening review.
+This is an experimental snapshot of a working local workflow. Fresh-machine end-to-end installation is unverified. The maintainer approved the overall result of the latest IDC rehearsal. Cross-device listening and the one-hour full-episode target still need testing. The [earlier repair record](docs/progress/2026-11-20-joint-directing-v3.md) preserves feedback on the initial Blender candidates. REP-01 listening approval covers its specific public voice sample.
 
 Before any new batch changes to the three media skills, ask whether to sync the maintainer-configured public copy. Reuse an explicit answer within that batch; ordinary research or production adds no such prompt. See the [maintenance contract](skills/news-to-video/references/media-maintenance.md).
 
