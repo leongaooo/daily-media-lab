@@ -48,3 +48,7 @@ COM-04已发布三类Issue模板及五个社区任务入口（Issue #1—#5）�
 维护者已授权 r1 发布。按 [11 月 27 日执行入口](progress/2026-11-26-idc-publication-governance.md#11-月-27-日执行入口) 开工前重审跨日清单，再按 r1 标准制作，交付后立即回收可再生暂存。r1 技术证据及实跑范围见[本期里程碑](progress/2026-11-26-idc-publication-governance.md#r1-正式版与-11-月-27-日制作交接)。
 
 本机 `E:/CodexMedia` 的真实盘点和隔离夹具回放已写入[E 盘治理回放](progress/2026-11-26-e-drive-governance.md)。下一工作日继续对前一天及更早的 MP4、帧、暂存和素材生成 `remove`／`retain` 清单，再显式 `--apply`；今日不删除真实旧作业。
+
+## 日更素材和留存
+
+次日先读最新已安装技能的素材索引和现用依赖清单。使用合成短段验证设备与方向，再进入整期。已验收的 r1 恢复链继续优先保留。 [OPS-04](progress/2026-11-26-illustrations-and-frame-retention.md)

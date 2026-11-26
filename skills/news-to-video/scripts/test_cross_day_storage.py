@@ -66,6 +66,33 @@ class CrossDayStorageTests(unittest.TestCase):
         self.assertTrue(nested.is_dir())
         self.assertTrue(unreviewed.is_dir())
 
+    def test_current_dependency_overrides_earlier_remove_review(self):
+        baseline = self.fixture("jobs/2026-11-25/baseline")
+        old = self.fixture("jobs/2026-11-25/old")
+        governance = self.root / "governance"
+        governance.mkdir()
+        (governance / "active-media-inputs.json").write_text(
+            json.dumps(
+                [
+                    {
+                        "path": "jobs/2026-11-25/baseline",
+                        "action": "retain",
+                        "reason": "current input",
+                    }
+                ]
+            ),
+            encoding="utf-8",
+        )
+        review = {
+            "jobs/2026-11-25/baseline": {"action": "remove", "reason": "old review"},
+            "jobs/2026-11-25/old": {"action": "remove", "reason": "retired"},
+        }
+        result = self.replay(review, "active-check.json", apply=True)
+        rows = {row["path"]: row for row in result["entries"]}
+        self.assertEqual(rows["jobs/2026-11-25/baseline"]["reason"], "current input")
+        self.assertTrue(baseline.exists())
+        self.assertFalse(old.exists())
+
     def test_unknown_or_duplicate_review_does_not_delete(self):
         job = self.fixture("jobs/2026-11-25/reviewed")
         review = {

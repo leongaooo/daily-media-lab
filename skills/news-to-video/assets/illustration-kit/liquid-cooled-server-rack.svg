@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="530" height="620" viewBox="0 0 530 620" role="img" aria-labelledby="title details">
+  <title id="title">液冷服务器机柜</title>
+  <desc id="details">通用液冷机柜，前门保留导轨与抽屉式服务器轮廓，左侧露出两排抽象分配歧管。</desc>
+  <defs>
+    <linearGradient id="face" x2="100%" y2="100%">
+      <stop stop-color="#546f80"/>
+      <stop offset="1" stop-color="#283c4b"/>
+    </linearGradient>
+    <linearGradient id="left" x2="100%" y2="100%">
+      <stop stop-color="#405868"/>
+      <stop offset="1" stop-color="#1f3340"/>
+    </linearGradient>
+    <linearGradient id="top" x2="100%" y2="100%">
+      <stop stop-color="#91a9ae"/>
+      <stop offset="1" stop-color="#557886"/>
+    </linearGradient>
+    <linearGradient id="tray" x2="0" y2="100%">
+      <stop stop-color="#577380"/>
+      <stop offset=".47" stop-color="#364c5c"/>
+      <stop offset="1" stop-color="#273d4b"/>
+    </linearGradient>
+    <g id="server-tray">
+      <rect x="189" width="209" height="37" rx="5" fill="url(#tray)" stroke="#6a8795" stroke-width="2"/>
+      <path d="M204 12h32m-32 13h32m17-13h31m-31 13h31m17-13h31m-31 13h31" stroke="#728d99" stroke-width="3" stroke-linecap="round"/>
+      <rect x="351" y="10" width="19" height="17" rx="4" fill="#172c38"/>
+      <circle cx="385" cy="18" r="4" fill="#9de5d9"/>
+    </g>
+  </defs>
+  <g id="frame" stroke-linejoin="round" stroke-width="3">
+    <ellipse cx="272" cy="584" rx="200" ry="20" fill="#07141b" opacity=".62"/>
+    <path d="M156 77h261l-80-42H79Z" fill="url(#top)" stroke="#a7bdc1"/>
+    <path d="M156 77 79 35v491l77 47Z" fill="url(#left)" stroke="#658391"/>
+    <path d="M156 77h261v496H156Z" fill="url(#face)" stroke="#8ba2ab"/>
+    <path d="M167 93h238m-236-6v459m235-459v459" fill="none" stroke="#a3b9bf" opacity=".57"/>
+    <path d="M79 506l77 44h261v23H156l-77-47Z" fill="#20303d" stroke="#557581"/>
+    <path d="M177 574h43v17h-43zm182 0h43v17h-43z" fill="#102430" stroke="#567683"/>
+    <path d="M94 106l45 26v397l-45-26Z" fill="#223946" stroke="#6f8994"/>
+  </g>
+  <g id="front-server-bays">
+    <rect x="179" y="107" width="229" height="421" rx="8" fill="#152a37" stroke="#79929e" stroke-width="3"/>
+    <path d="M191 124h203m-203 387h203" fill="none" stroke="#55717f" stroke-width="3"/>
+    <use href="#server-tray" y="137"/>
+    <use href="#server-tray" y="181"/>
+    <use href="#server-tray" y="225"/>
+    <use href="#server-tray" y="269"/>
+    <use href="#server-tray" y="313"/>
+    <use href="#server-tray" y="357"/>
+    <use href="#server-tray" y="401"/>
+    <use href="#server-tray" y="445"/>
+    <path d="M203 496h179" stroke="#55717f" stroke-width="6" stroke-linecap="round"/>
+  </g>
+  <g id="side-manifold">
+    <path d="M105 164v297m20-285v297" fill="none" stroke="#9bb4ba" stroke-width="6" stroke-linecap="round"/>
+    <path d="M105 192l19 11m-19 31 19 11m-19 31 19 11m-19 31 19 11m-19 31 19 11m-19 31 19 11m-19 31 19 11" stroke="#80a3a8" stroke-width="4"/>
+    <path d="M39 355h28l38 13M39 475h28l58-12" fill="none" stroke="#101e27" stroke-width="19" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M39 355h28l38 13M39 475h28l58-12" fill="none" stroke="#829da6" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M66 345v20m0 100v20" stroke="#b2c8cd" stroke-width="5" stroke-linecap="round"/>
+    <circle id="supply-anchor" cx="39" cy="355" r="10" fill="#263d49" stroke="#9dbfbe" stroke-width="3"/>
+    <circle id="return-anchor" cx="39" cy="475" r="10" fill="#263d49" stroke="#9dbfbe" stroke-width="3"/>
+  </g>
+</svg>

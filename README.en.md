@@ -16,6 +16,13 @@ If you want to make regular content for your project, team, or community, you ar
 
 ## See the work
 
+### Reusable cooling illustrations · 2026-11-26
+
+An original CDU and server rack show the transition from an available route to active supply and return flow. The four-second sample is silent and retains the caption area. Managed production also verified that the renderer can reclaim and reconstruct duplicated compositing frames. [Silent sample](previews/cooling-two-state-silent.mp4) · [Editable assets](skills/news-to-video/assets/illustration-kit/README.md) · [Production notes](docs/progress/2026-11-26-illustrations-and-frame-retention.md)
+
+![Active supply and return at phone width](previews/cooling-active-326.png)
+
+
 ### Latest production record · IDC edition and workspace management
 
 The 26 November 2026 IDC r1 edition was approved for release. Data, dates and evidence limits are placed beside the relevant equipment, transport module or evaluation bench. Short narration captions remain at the bottom. Both encodes decoded end to end and played at 1× through the last frame. The milestone includes measured immediate and cross-day storage cleanup. [Milestone record](docs/progress/2026-11-26-idc-publication-governance.md) · [E-drive governance replay](docs/progress/2026-11-26-e-drive-governance.md)

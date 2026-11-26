@@ -16,6 +16,13 @@
 
 ## 先看成果
 
+### 液冷设备原创插画 · 2026-11-26
+
+四秒静音样片用液冷分配单元和机柜展示供回液从待开启到流动的变化，底部留出字幕区。受管合成已实测回收重复 PNG 并从母版恢复。 [静音样片](previews/cooling-two-state-silent.mp4) · [可编辑素材](skills/news-to-video/assets/illustration-kit/README.md) · [执行记录](docs/progress/2026-11-26-illustrations-and-frame-retention.md)
+
+![手机宽度的供回液运行画面](previews/cooling-active-326.png)
+
+
 ### 最新制作记录 · IDC 成片补制与作业空间治理
 
 2026 年 11 月 26 日的 IDC r1 已获发布授权。四条新闻的关键数字、日期和事实边界分别连到设备、运送模块或评估台，底部继续显示口播短句。两版完整解码并以 1× 播至结尾。跨日清理和交付后即时回收已有实跑记录。[本期里程碑](docs/progress/2026-11-26-idc-publication-governance.md) · [E 盘治理回放](docs/progress/2026-11-26-e-drive-governance.md)

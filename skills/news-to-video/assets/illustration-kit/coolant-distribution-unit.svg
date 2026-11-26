@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="530" height="620" viewBox="0 0 530 620" role="img" aria-labelledby="title details">
+  <title id="title">液冷分配单元</title>
+  <desc id="details">通用机柜式 CDU，前面板包含控制屏、双泵示意与通风格栅。右侧露出两个二次侧接口。</desc>
+  <defs>
+    <linearGradient id="front" x2="100%" y2="100%">
+      <stop stop-color="#637f8c"/>
+      <stop offset=".39" stop-color="#354b59"/>
+      <stop offset="1" stop-color="#20303e"/>
+    </linearGradient>
+    <linearGradient id="side" x2="100%" y2="100%">
+      <stop stop-color="#435d6a"/>
+      <stop offset="1" stop-color="#1c2d3a"/>
+    </linearGradient>
+    <linearGradient id="top" x2="100%" y2="100%">
+      <stop stop-color="#8ea7ac"/>
+      <stop offset="1" stop-color="#577785"/>
+    </linearGradient>
+    <linearGradient id="pump" x2="100%" y2="100%">
+      <stop stop-color="#aac8c3"/>
+      <stop offset=".33" stop-color="#678f91"/>
+      <stop offset="1" stop-color="#314855"/>
+    </linearGradient>
+  </defs>
+  <g id="chassis" stroke-width="3" stroke-linejoin="round">
+    <ellipse cx="255" cy="584" rx="206" ry="20" fill="#07141b" opacity=".62"/>
+    <path d="M95 77 373 77 453 35 179 35Z" fill="url(#top)" stroke="#a7bdc1"/>
+    <path d="M374 77 453 35V526l-79 47Z" fill="url(#side)" stroke="#66838e"/>
+    <path d="M95 77h279v496H95Z" fill="url(#front)" stroke="#819aa3"/>
+    <path d="M96 94h275M112 84v472M356 84v472" stroke="#a3bac0" opacity=".63" fill="none"/>
+    <path d="M94 548h280l79-43v21l-79 47H94Z" fill="#20303d" stroke="#57727c"/>
+    <path d="M115 574h49v17h-49zm188 0h48v17h-48z" fill="#102430" stroke="#57727c"/>
+    <path d="M389 145l47-26v160l-47 26Z" fill="#1c2d39" stroke="#5b7780"/>
+    <path d="M399 167l26-14m-26 25 26-14m-26 25 26-14m-26 25 26-14m-26 25 26-14m-26 25 26-14m-26 25 26-14m-26 25 26-14m-26 25 26-14" stroke="#658290" stroke-width="3"/>
+  </g>
+  <g id="controls">
+    <rect x="126" y="114" width="218" height="112" rx="10" fill="#203440" stroke="#76929b" stroke-width="3"/>
+    <rect x="143" y="135" width="129" height="53" rx="6" fill="#0d2530" stroke="#5d9d9b" stroke-width="2"/>
+    <path d="M155 169h16l9-11h18l10-8 13 14h38" fill="none" stroke="#8cebdc" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>
+    <path d="M144 206h88" stroke="#85a3a9" stroke-width="3" stroke-linecap="round" opacity=".65"/>
+    <circle cx="294" cy="151" r="6" fill="#91e9d7"/>
+    <circle cx="318" cy="151" r="6" fill="#718b97"/>
+    <rect x="290" y="174" width="35" height="18" rx="4" fill="#456575"/>
+  </g>
+  <g id="pump-window">
+    <rect x="126" y="243" width="218" height="162" rx="10" fill="#192c39" stroke="#6c8993" stroke-width="3"/>
+    <path d="M144 309v-23h183v23m-163 43v22h143v-22" fill="none" stroke="#648591" stroke-width="11" stroke-linecap="round"/>
+    <circle cx="183" cy="326" r="32" fill="url(#pump)" stroke="#9cbcc0" stroke-width="3"/>
+    <circle cx="287" cy="326" r="32" fill="url(#pump)" stroke="#9cbcc0" stroke-width="3"/>
+    <circle cx="183" cy="326" r="19" fill="#1b3644"/>
+    <circle cx="287" cy="326" r="19" fill="#1b3644"/>
+    <path d="M183 315v22m-11-11h22m93-11v22m-11-11h22" stroke="#95bdb9" stroke-width="3" stroke-linecap="round"/>
+    <path d="M137 394h195" stroke="#86a7a8" stroke-width="3" opacity=".43"/>
+  </g>
+  <g id="lower-grille">
+    <rect x="126" y="423" width="218" height="103" rx="10" fill="#1b2e3b" stroke="#6c8993" stroke-width="3"/>
+    <path d="M145 445h177m-177 13h177m-177 13h177m-177 13h177m-177 13h177m-177 13h177" stroke="#6c8993" stroke-width="4" stroke-linecap="round"/>
+  </g>
+  <g id="secondary-ports">
+    <path d="M425 355h56m-56 120h56" fill="none" stroke="#101e27" stroke-width="19" stroke-linecap="round"/>
+    <path d="M425 355h56m-56 120h56" fill="none" stroke="#829da6" stroke-width="11" stroke-linecap="round"/>
+    <path d="M454 345v20m0 100v20" stroke="#bcced0" stroke-width="5" stroke-linecap="round"/>
+    <circle id="supply-anchor" cx="481" cy="355" r="10" fill="#263d49" stroke="#9dbfbe" stroke-width="3"/>
+    <circle id="return-anchor" cx="481" cy="475" r="10" fill="#263d49" stroke="#9dbfbe" stroke-width="3"/>
+  </g>
+</svg>

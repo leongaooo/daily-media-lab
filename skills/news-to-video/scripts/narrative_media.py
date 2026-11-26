@@ -3,14 +3,17 @@
 import argparse
 import hashlib
 import json
+import os
 from pathlib import Path
 import re
 import shutil
 import struct
+from tempfile import NamedTemporaryFile
 
 from PIL import Image
 
 from frozen_audio import file_hash
+from media_storage import plain_chain
 
 WORKER_PATH = Path(__file__).with_name("blender_worker.py")
 
@@ -248,23 +251,73 @@ def seal(manifest_path, shot_id=None):
         )
 
 
+def stage_directories(manifest, base, public):
+    """Resolve the renderer's immutable directory for each source identity."""
+    for shot in manifest["shots"]:
+        identity = source_identity(shot, base)
+        # 完整身份包含源、局部取帧和全局边界。省略镜头名以缩短 Windows 路径。
+        yield shot, identity, public / "narrative" / identity
+
+
+def sealed_stage_pairs(manifest_path, public, total_frames, job):
+    """List generated paths with their master sources and sealed frame digests."""
+    manifest = read_json(manifest_path)
+    base = manifest_path.parent
+    validate_manifest(manifest, base, total_frames, check_frames=False)
+    for shot, identity, destination in stage_directories(manifest, base, public):
+        sources = frame_paths(shot, base)
+        receipt_path = base / shot["receipt"]
+        dependencies = [shot["source"], *shot["dependencies"]]
+        # The stage cleanup lock must protect the retained inputs as well as the copies.
+        for path in (
+            receipt_path,
+            *(base / dependency["path"] for dependency in dependencies),
+            *sources,
+        ):
+            absolute = Path(os.path.abspath(path))
+            if not absolute.is_relative_to(job):
+                raise ValueError(
+                    f"Stage recovery input is outside the locked job: {absolute}"
+                )
+            plain_chain(absolute)
+        receipt = read_json(receipt_path)
+        hashes = receipt.get("frames", {})
+        if receipt.get("identity") != identity or len(hashes) != len(sources):
+            raise ValueError(f"Missing sealed frame evidence for {shot['shot_id']}")
+        for index, source in enumerate(sources):
+            expected = hashes.get(source.relative_to(base).as_posix(), "")
+            if not re.fullmatch(r"[0-9a-f]{64}", expected):
+                raise ValueError(f"Missing sealed digest for {source}")
+            yield destination / f"{index:06}.png", source, expected
+
+
 def stage_manifest(project, base, public, total_frames):
     """逐字节拷贝母版，不经Pillow重存，不把代理或8位重编码冒充源母版。"""
     path = (base / project["narrative_manifest"]).resolve()
     manifest = read_json(path)
     validate_manifest(manifest, path.parent, total_frames)
+    public = public.absolute()
     staged = []
-    for shot in manifest["shots"]:
-        identity = source_identity(shot, path.parent)
-        # 完整身份已覆盖源、局部取帧和全局边界；shot_id留在载荷中，避免
-        # 深层Windows项目再叠一层业务名称后超过传统路径长度限制。
-        destination = public / "narrative" / identity
+    for shot, identity, destination in stage_directories(manifest, path.parent, public):
+        parent = next(
+            part
+            for part in (destination, *destination.parents)
+            if os.path.lexists(part)
+        )
+        plain_chain(parent)
         destination.mkdir(parents=True, exist_ok=True)
         frames = []
         for index, source in enumerate(frame_paths(shot, path.parent)):
             target = destination / f"{index:06}.png"
             if not target.is_file() or file_hash(target) != file_hash(source):
-                shutil.copyfile(source, target)
+                # Replacing the staging name does not overwrite an existing linked file.
+                with NamedTemporaryFile(dir=destination, delete=False) as handle:
+                    temporary = Path(handle.name)
+                try:
+                    shutil.copyfile(source, temporary)
+                    temporary.replace(target)
+                finally:
+                    temporary.unlink(missing_ok=True)
             frames.append(str(target.relative_to(public)).replace("\\", "/"))
         staged.append(
             {

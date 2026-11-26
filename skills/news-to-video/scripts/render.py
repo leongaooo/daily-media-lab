@@ -5,11 +5,14 @@ import json
 import math
 import os
 from pathlib import Path
-
-from media_storage import render_storage
 import re
-import subprocess
 import shutil
+import subprocess
+import sys
+from uuid import uuid4
+
+from episode import file_identity
+from media_storage import clean_rendered_stage, render_storage
 
 from frozen_audio import external_mode, validate_config, load_final, frame_at
 from narrative_media import read_json as read_narrative, validate_manifest
@@ -286,7 +289,7 @@ def prepare_narration(project, runtime, cache, base, output, fps):
     return duration, voice, gate, cues, sample_rate, models
 
 
-def run(args):
+def run(args, *, reclaim_narrative_stage=False):
     """Render one project as one continuous program using the sole visual engine."""
     if args.visual_engine != ENGINE:
         raise ValueError("Only remotion_editorial is supported")
@@ -577,7 +580,30 @@ def run(args):
             },
         },
     )
+    report["artifacts"] = {
+        name: file_identity(output / name)
+        for name in (
+            "video.mp4",
+            "captions.srt",
+            "timeline.json",
+            "voice.wav",
+            "motion-report.json",
+        )
+    }
     save_json(output / "validation.json", report)
+    if reclaim_narrative_stage and project.get("narrative_version") == 1:
+        try:
+            clean_rendered_stage(
+                project,
+                base,
+                output,
+                output / f"storage-stage-cleanup-{uuid4().hex}.json",
+                reason="Decoded delivery and its independently sealed source frames",
+                apply=True,
+            )
+        except (OSError, KeyError, ValueError) as error:
+            # The encoded delivery is already verified. Keep any stage with incomplete evidence.
+            print(f"Narrative stage cleanup deferred: {error}", file=sys.stderr)
     print(json.dumps(report, ensure_ascii=False, indent=2), flush=True)
 
 
@@ -589,6 +615,11 @@ def argument_parser():
         "--min-free-bytes",
         type=int,
         help="Minimum free bytes required for a managed media jobs output",
+    )
+    parser.add_argument(
+        "--keep-narrative-stage",
+        action="store_true",
+        help="Keep managed Remotion frame copies for Studio or working review",
     )
     parser.add_argument("--runtime")
     parser.add_argument("--image-connection")
@@ -603,5 +634,9 @@ if __name__ == "__main__":
         raise SystemExit("--min-free-bytes must be nonnegative")
     with render_storage(
         Path(options.project), Path(options.output), options.min_free_bytes
-    ):
-        run(options)
+    ) as job:
+        run(
+            options,
+            reclaim_narrative_stage=job is not None
+            and not options.keep_narrative_stage,
+        )

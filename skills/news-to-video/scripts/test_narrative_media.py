@@ -12,6 +12,7 @@ from PIL import Image
 import soundfile as sf
 
 from frozen_audio import file_hash, frame_at, load_final
+from media_storage import clean_rendered_stage, render_storage
 from narrative_media import seal, read_json, validate_manifest, stage_manifest
 import render
 import remotion_visual
@@ -106,7 +107,8 @@ class NarrativeMasterTests(unittest.TestCase):
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)
-        self.base = Path(self.temp.name)
+        self.base = Path(self.temp.name) / "jobs/2026-11-27/edition"
+        self.base.mkdir(parents=True)
         (self.base / "scene.blend").write_bytes(b"test scene identity")
         (self.base / "frames").mkdir()
         for index in (1, 2):
@@ -204,6 +206,139 @@ class NarrativeMasterTests(unittest.TestCase):
         self.assertEqual(payload["scenes"][0]["kind"], "narrative")
         self.assertEqual(payload["narrative_cues"][0]["end_frame"], 2)
         self.assertEqual(len(payload["narrative_shots"][0]["frames"]), 2)
+
+    def managed_stage(self):
+        project = {"narrative_version": 1, "narrative_manifest": "shots.json"}
+        output = self.base / "output"
+        public = output / "remotion/public"
+        stage = stage_manifest(project, self.base, public, 2)
+        video = output / "video.mp4"
+        video.write_bytes(b"fixture for decoded delivery identity")
+        (output / "validation.json").write_text(
+            json.dumps(
+                {
+                    "full_decode_passed": True,
+                    "artifacts": {"video.mp4": {"sha256": file_hash(video)}},
+                    "remotion_editorial": {"picture_frame_count": 2},
+                }
+            ),
+            encoding="utf-8",
+        )
+        paths = [public / frame for frame in stage[0]["frames"]]
+        return project, output, paths
+
+    def test_managed_stage_can_be_reclaimed_and_rebuilt_with_same_picture_key(self):
+        project, output, targets = self.managed_stage()
+        folder = output / "remotion"
+        payload = {
+            "narrative_shots": [
+                {
+                    "frames": [
+                        target.relative_to(folder / "public").as_posix()
+                        for target in targets
+                    ]
+                },
+            ]
+        }
+        before = remotion_visual.render_key(folder, payload)
+        other_stage = targets[0].parents[1] / ("a" * 64) / "000000.png"
+        other_stage.parent.mkdir()
+        other_stage.write_bytes(b"unowned historical stage frame")
+        receipt = output / "storage-cleanup.json"
+        with render_storage(self.base / "project.json", output):
+            report = clean_rendered_stage(
+                project,
+                self.base,
+                output,
+                receipt,
+                reason="fixture cleanup",
+                apply=True,
+            )
+        self.assertEqual([row["status"] for row in report["entries"]], ["removed"] * 2)
+        self.assertTrue(other_stage.is_file())
+        self.assertTrue((output / "validation.json").is_file())
+        self.assertTrue((output / "video.mp4").is_file())
+        self.assertTrue(all(not target.exists() for target in targets))
+        self.assertEqual(read_json(receipt), report)
+        stage_manifest(project, self.base, folder / "public", 2)
+        self.assertEqual(remotion_visual.render_key(folder, payload), before)
+
+    def test_cleanup_keeps_shared_stage_and_divergent_master(self):
+        project, output, targets = self.managed_stage()
+        original = self.base / "frames/000001.png"
+        targets[0].unlink()
+        targets[0].hardlink_to(original)
+        (self.base / "frames/000002.png").write_bytes(b"changed master")
+        with render_storage(self.base / "project.json", output):
+            report = clean_rendered_stage(
+                project,
+                self.base,
+                output,
+                output / "storage-cleanup.json",
+                reason="fixture cleanup",
+                apply=True,
+            )
+        self.assertEqual([row["status"] for row in report["entries"]], ["skipped"] * 2)
+        self.assertTrue(original.samefile(targets[0]))
+        self.assertTrue(targets[1].is_file())
+
+    def test_restaging_does_not_overwrite_a_stale_hardlink_target(self):
+        project, output, targets = self.managed_stage()
+        foreign_frame = self.base / "foreign.png"
+        foreign_frame.write_bytes(b"another asset")
+        targets[0].unlink()
+        targets[0].hardlink_to(foreign_frame)
+        stage_manifest(project, self.base, output / "remotion/public", 2)
+        self.assertEqual(foreign_frame.read_bytes(), b"another asset")
+        self.assertEqual(
+            targets[0].read_bytes(), (self.base / "frames/000001.png").read_bytes()
+        )
+
+    def test_cleanup_defers_when_source_job_cannot_use_the_same_lock(self):
+        project, output, targets = self.managed_stage()
+        other_job = self.base.parent / "other-job"
+        other_job.mkdir()
+        other_output = other_job / "output"
+        output.rename(other_output)
+        receipt = other_output / "storage-cleanup.json"
+        with (
+            render_storage(self.base / "project.json", other_output),
+            self.assertRaisesRegex(ValueError, "outside the locked job"),
+        ):
+            clean_rendered_stage(
+                project,
+                self.base,
+                other_output,
+                receipt,
+                reason="fixture cleanup",
+                apply=True,
+            )
+        self.assertFalse(receipt.exists())
+        self.assertTrue(
+            all(
+                (other_output / target.relative_to(output)).is_file()
+                for target in targets
+            )
+        )
+
+    def test_mismatched_delivery_identity_blocks_stage_cleanup(self):
+        project, output, targets = self.managed_stage()
+        (output / "video.mp4").write_bytes(b"unverified alternate delivery")
+        receipt = output / "storage-cleanup.json"
+        with (
+            render_storage(self.base / "project.json", output),
+            self.assertRaisesRegex(ValueError, "verified identity"),
+        ):
+            clean_rendered_stage(
+                project,
+                self.base,
+                output,
+                receipt,
+                reason="fixture cleanup",
+                apply=True,
+            )
+        self.assertTrue(all(target.is_file() for target in targets))
+        self.assertFalse(receipt.exists())
 
     def test_missing_or_changed_frame_cannot_be_delivered(self):
         target = self.base / "frames/000002.png"

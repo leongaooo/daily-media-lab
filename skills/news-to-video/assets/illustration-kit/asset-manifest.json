@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "purpose": "Reusable device illustrations for explanatory IDC video scenes.",
+  "assets": [
+    {
+      "asset_id": "idc-coolant-distribution-unit-v1",
+      "category": "idc/liquid-cooling",
+      "kind": "original_illustration",
+      "svg": "coolant-distribution-unit.svg",
+      "sha256": "a5909afc7f4b761dbad9607f3ddbd511fd892ea1691e9f944d497124cc1680e3",
+      "bytes": 4194,
+      "width": 530,
+      "height": 620,
+      "structural_features": [
+        "front control panel",
+        "two illustrative pump bodies",
+        "lower grille",
+        "right-side secondary ports"
+      ],
+      "source": "Original generic geometry created for Daily Media Lab, 2026-11-26.",
+      "license_status": "MIT",
+      "license": "LICENSE",
+      "motion_semantic": {
+        "attach_points": {
+          "supply": [
+            481,
+            355
+          ],
+          "return": [
+            481,
+            475
+          ]
+        },
+        "units": "svg-viewBox",
+        "supply": "CDU to rack when circulation is depicted",
+        "return": "rack to CDU when circulation is depicted"
+      },
+      "scope": "Generic illustrative form. Project evidence determines actual equipment, connection layout, chronology, and measured data."
+    },
+    {
+      "asset_id": "idc-liquid-cooled-server-rack-v1",
+      "category": "idc/liquid-cooling",
+      "kind": "original_illustration",
+      "svg": "liquid-cooled-server-rack.svg",
+      "sha256": "0b1a01f43163255fc2d3749d79b3000380728144cfe76f674e264d670538646a",
+      "bytes": 3610,
+      "width": 530,
+      "height": 620,
+      "structural_features": [
+        "stacked server trays",
+        "mounting frame",
+        "abstract left-side distribution manifold"
+      ],
+      "source": "Original generic geometry created for Daily Media Lab, 2026-11-26.",
+      "license_status": "MIT",
+      "license": "LICENSE",
+      "motion_semantic": {
+        "attach_points": {
+          "supply": [
+            39,
+            355
+          ],
+          "return": [
+            39,
+            475
+          ]
+        },
+        "units": "svg-viewBox",
+        "supply": "CDU to rack when circulation is depicted",
+        "return": "rack to CDU when circulation is depicted"
+      },
+      "scope": "Generic illustrative form. Project evidence determines actual equipment, connection layout, chronology, and measured data."
+    }
+  ]
+}

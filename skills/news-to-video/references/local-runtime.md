@@ -22,6 +22,14 @@ For new public narration, explicitly select qwen-uncle-fu-v1 and follow [public 
 
 本机 `news-to-video` 管理 `E:/CodexMedia/jobs/YYYY-MM-DD/<episode>/`、`E:/CodexMedia/cache/` 及明确归属于某一作业的临时目录。公开环境使用自己的媒体根。根内其他应用的 archive、session、visualization 目录由各自管理。
 
+### 素材与母版的生产设计
+
+通用粗场景和临时布景用可编辑 SVG、React/SVG 或小型生成脚本，按期构图并渲染。预估磁盘时分开计算真正需要 Blender 母版的镜头、合成副本和编码输出。已过技术检查的精细素材只维护一份可编辑源及必要依赖，按 [素材索引](../assets/illustration-kit/asset-manifest.json)保留版权、用途和哈希。只在受核验的语义边界内复用。
+
+可编辑工程、来源和许可、冻结口播与 cue、正式交付、必要的审阅证据长期保留。新的可重建三维镜头可在开工时标记拟退役帧范围，先在独立位置按相同源、依赖、Blender 版本和渲染参数重建，按原有逐帧回执核对像素身份、帧号和引用，再逐帧退役。没有可用替代或重建证据的原始母版继续保留。从正常入口可按源重新生成的 SVG 或 React/SVG 场景无需落整套 Blender 母版。
+
+### 保留与回收
+
 | 目录 | 内容及回收边界 |
 | --- | --- |
 | `output/`、`release/` | 正式 MP4、SRT、回执、哈希及可再生的合成暂存。正式交付身份通过回执核对。 |
@@ -33,9 +41,17 @@ For new public narration, explicitly select qwen-uncle-fu-v1 and follow [public 
 | 媒体根 `cache/` | 新的可再生跨作业缓存按 `cache/YYYY-MM-DD/<owner>/` 记录归属。未建立日期和归属的旧缓存先保留。 |
 | `E:/CodexMedia/governance/YYYY-MM-DD` | 盘点、删除和保留回执。放在 `jobs`、`cache` 之外，不参与媒体作业删除。 |
 
+受管 Blender 合成经 `render.py` 完整解码并写入验证记录后，仍持有作业锁时逐张匹配并回收 `remotion/public/narrative` 内的独立合成副本，并写入 `storage-stage-cleanup-*.json`。直接在 Remotion Studio 使用暂存时运行 `--keep-narrative-stage`。用原工程重跑该命令可重建暂存。硬链接、身份变化和证据不全的文件按回执保留。Blender 和 Remotion 的受管入口共用同一作业锁。
+
+旧版采用同一封存契约、且已有带 SHA‑256 的正式视频验证文件时，用以下命令预览。复核后改用新回执路径并加 `--apply`。
+
+```powershell
+python scripts/media_storage.py --job '<dated-job>' --stage-output '<output>' --project '<project.json>' --receipt '<review.json>' --reason 'Recoverable staging with sealed masters and decoded delivery'
+```
+
 **交付后立即执行。** 正式片完成技术校验并保存回执后，盘点作业临时目录。确认可复做、无在写、无引用的暂存按精确路径清理。Remotion Webpack pack 通过 `media_storage.py` 先预览再执行。把处理项、恢复入口、磁盘余量和跳过原因写入作业树之外的持久回执。同日作业的正式媒体和生产依赖可供接续。
 
-**次日开工时执行。** 先盘点前一天及更早的受管内容，包括 MP4、帧、暂存和素材。确认归属与引用后，为每个候选写相对媒体根的 `path`、`action`（`remove` 或 `retain`）和 `reason`。当前或未来日期、无法确认归属的目录、活动作业、锁、链接与当前制作所需的唯一依赖保留。若对仍在引用的文件取得替代版本，先核对新位置、哈希、回执和恢复入口，再重新审查旧路径。
+**次日开工时执行。** 先盘点前一天及更早的受管内容，包括 MP4、帧、暂存和素材。确认归属与引用后，为每个候选写相对媒体根的 `path`、`action`（`remove` 或 `retain`）和 `reason`。当前或未来日期、无法确认归属的目录、活动作业、锁、链接与当前制作所需的唯一依赖保留。受管根的 `governance/active-media-inputs.json` 沿用同一清单格式，只登记仍在使用的 `retain` 项。它优先于旧审查中的 `remove` 决定。确定替代位置和恢复身份后再更新这份现用清单。若对仍在引用的文件取得替代版本，先核对新位置、哈希、回执和恢复入口，再重新审查旧路径。
 
 ```powershell
 python scripts/cross_day_storage.py --root '<media-root>' --as-of 2026-11-27 --review '<review.json>' --receipt '<dry-run.json>'

@@ -12,11 +12,18 @@ from pathlib import Path
 from media_storage import is_day, job_guard, plain_chain
 
 
+def review_key(value):
+    path = Path(value)
+    if path.drive or path.root or ".." in path.parts:
+        raise ValueError(f"Use a media-root-relative review path: {value}")
+    return Path(os.path.normcase(path)).as_posix()
+
+
 def choices(path):
     rows = json.loads(path.read_text(encoding="utf-8-sig"))
     result = {}
     for row in rows:
-        key = Path(row["path"]).as_posix()
+        key = review_key(row["path"])
         if (
             key in result
             or row["action"] not in {"remove", "retain"}
@@ -25,6 +32,22 @@ def choices(path):
             raise ValueError(f"Invalid or duplicate review: {key}")
         result[key] = row
     return result
+
+
+def active_inputs(root):
+    # A dated review can remove a job only when the current dependency list permits it.
+    governance = root / "governance"
+    if not governance.exists() and not governance.is_symlink():
+        return {}
+    plain_chain(governance)
+    path = governance / "active-media-inputs.json"
+    if not path.exists() and not path.is_symlink():
+        return {}
+    plain_chain(path)
+    protected = choices(path)
+    if any(row["action"] != "retain" for row in protected.values()):
+        raise ValueError("The active media input list may only retain paths")
+    return protected
 
 
 def is_link(path):
@@ -87,8 +110,10 @@ def govern(root, as_of, review, receipt, *, apply=False):
     plain_chain(receipt.parent)
     if receipt.is_relative_to(root / "jobs") or receipt.is_relative_to(root / "cache"):
         raise ValueError("Use a receipt outside the jobs being retired")
+    protected = active_inputs(root)
+    review = {review_key(name): row for name, row in review.items()}
     inventory = list(candidates(root))
-    names = {path.relative_to(root).as_posix() for path, _ in inventory}
+    names = {review_key(path.relative_to(root)) for path, _ in inventory}
     if unknown := review.keys() - names:
         raise ValueError(
             f"Reviews reference paths outside this inventory: {sorted(unknown)}"
@@ -100,7 +125,8 @@ def govern(root, as_of, review, receipt, *, apply=False):
     with receipt.open("x", encoding="utf-8") as journal:
         for path, day in inventory:
             name = path.relative_to(root).as_posix()
-            reviewed = review.get(name)
+            key = review_key(name)
+            reviewed = review.get(key)
             row = {"path": name, "status": "retained", "bytes": 0}
             rows.append(row)
             try:
@@ -111,6 +137,8 @@ def govern(root, as_of, review, receipt, *, apply=False):
                     row["reason"] = "Undated entry, unowned file, or production lock"
                 elif day >= as_of:
                     row["reason"] = "Current or future production date"
+                elif key in protected:
+                    row["reason"] = protected[key]["reason"]
                 elif blocker or lock.exists():
                     row.update(
                         status="skipped", reason=f"Link or lock: {blocker or lock.name}"
@@ -123,6 +151,9 @@ def govern(root, as_of, review, receipt, *, apply=False):
                     )
                 elif apply:
                     with job_guard(path):
+                        if (current := active_inputs(root).get(key)) is not None:
+                            row["reason"] = current["reason"]
+                            continue
                         plain_chain(path)
                         if path.resolve() != path or not path.is_relative_to(root):
                             raise ValueError(
