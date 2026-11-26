@@ -18,7 +18,7 @@ If you want to make regular content for your project, team, or community, you ar
 
 ### Latest production record · IDC edition and workspace management
 
-The November 26, 2026 IDC edition runs 164 seconds. Encoded frame checks covered the 3D action, key figures and always-visible captions. Chrome played the full video at normal speed. The render entry now records free space and holds a job lock. Cleanup takes an explicit list of reviewed temporary files. Human viewing, listening and maintainer approval are pending. [Milestone record](docs/progress/2026-11-26-idc-publication-governance.md)
+The 26 November 2026 IDC r1 edition was approved for release. Data, dates and evidence limits are placed beside the relevant equipment, transport module or evaluation bench. Short narration captions remain at the bottom. Both encodes decoded end to end and played at 1× through the last frame. The milestone includes measured immediate and cross-day storage cleanup. [Milestone record](docs/progress/2026-11-26-idc-publication-governance.md)
 
 ### Approved public preview · IDC production rehearsal
 
@@ -90,7 +90,7 @@ The user no longer carries intermediate scripts between skills. Load only the re
 
 The current repair adds [design consumption before modeling](skills/news-to-video/references/visual-director.md#建模前参考与设计消费) and a [project joint-direction entry](skills/news-to-video/references/blender-handoff.md#项目联合导演接入): verify recognizable objects and the actual text composition, then share frames and semantic events across camera, graphics and sound, with camera projections where needed. `narrative_directing` currently targets two concrete project panels; it is not a general automatic director. Consumer tests and actual animatic review remain separate. See the [repair record](docs/progress/2026-11-20-joint-directing-v3.md) for executed and unverified work; archived previews do not validate this repair.
 
-The format remains 1920×1080 at 24fps with a fixed y904—1080 caption rail. Full Blender shots keep their aspect ratio and bypass old object-stage slots; legacy diagrams remain compatible. Images are optional, with at most 10 new paid attempts per episode. See the [workflow](docs/WORKFLOW.md), [minimal synthetic example](examples/three-media-minimal/README.md) and [current integration evidence](docs/progress/2026-11-20-three-media-blender.md). See the [latest milestone](#latest-milestone--idc-production-rehearsal) for the applied Blender workflow.
+The format remains 1920×1080 at 24fps with a fixed y904—1080 caption rail. Full Blender shots keep their aspect ratio and bypass old object-stage slots; legacy diagrams remain compatible. Images are optional, with at most 10 new paid attempts per episode. See the [workflow](docs/WORKFLOW.md), [minimal synthetic example](examples/three-media-minimal/README.md) and [current integration evidence](docs/progress/2026-11-20-three-media-blender.md). See the [latest milestone](docs/progress/2026-11-26-idc-publication-governance.md) for the applied Blender workflow.
 
 ## Give images and sound a purpose
 

@@ -18,6 +18,31 @@ For new public narration, explicitly select qwen-uncle-fu-v1 and follow [public 
 
 ## 作业空间治理
 
+### 目录和清理时点
+
+本机 `news-to-video` 管理 `E:/CodexMedia/jobs/YYYY-MM-DD/<episode>/`、`E:/CodexMedia/cache/` 及明确归属于某一作业的临时目录。公开环境使用自己的媒体根。根内其他应用的 archive、session、visualization 目录由各自管理。
+
+| 目录 | 内容及回收边界 |
+| --- | --- |
+| `output/`、`release/` | 正式 MP4、SRT、回执、哈希及可再生的合成暂存。正式交付身份通过回执核对。 |
+| `frames/`、`composition/` | 生产母版、合成中间轨和试编码。用于当前复做的母版及硬链接来源继续保护。 |
+| `preview/`、`review/` | 短段、代表帧和审核证据。确认无用途且可重建的预演暂存可回收。 |
+| `audio/` | 冻结口播、cue、音频身份及试音缓存。冻结母带与已核准 cue 是恢复输入。 |
+| `source/`、`sources/` | Blender、组件、来源、配置和许可。保留仍引用或缺少替代的唯一来源。 |
+| `cache/`、`tmp/` | 作业内可再生缓存及明确归属的临时文件。浏览器配置、模型、依赖运行时分别核对，活动锁和链接保留。 |
+| 媒体根 `cache/` | 新的可再生跨作业缓存按 `cache/YYYY-MM-DD/<owner>/` 记录归属。未建立日期和归属的旧缓存先保留。 |
+
+**交付后立即执行。** 正式片完成技术校验并保存回执后，盘点作业临时目录。确认可复做、无在写、无引用的暂存按精确路径清理。Remotion Webpack pack 通过 `media_storage.py` 先预览再执行。把处理项、恢复入口、磁盘余量和跳过原因写入作业树之外的持久回执。同日作业的正式媒体和生产依赖可供接续。
+
+**次日开工时执行。** 先盘点前一天及更早的受管内容，包括 MP4、帧、暂存和素材。确认归属与引用后，为每个候选写相对媒体根的 `path`、`action`（`remove` 或 `retain`）和 `reason`。当前或未来日期、无法确认归属的目录、活动作业、锁、链接与当前制作所需的唯一依赖保留。若对仍在引用的文件取得替代版本，先核对新位置、哈希、回执和恢复入口，再重新审查旧路径。
+
+```powershell
+python scripts/cross_day_storage.py --root '<media-root>' --as-of 2026-11-27 --review '<review.json>' --receipt '<dry-run.json>'
+python scripts/cross_day_storage.py --root '<media-root>' --as-of 2026-11-27 --review '<review.json>' --receipt '<apply.json>' --apply
+```
+
+两次均使用当天北京时间日期和互不覆盖的回执，先查看 `eligible`、`retained`、`skipped` 及实际删除路径。文件大小之和和卷余量差均写回执。工具只枚举媒体根内 `jobs` 与 `cache`，跨日删除仅处理经过确认的日期目录下作业或缓存子目录。其他作业专用临时目录逐项核对归属与恢复入口后，纳入对应作业清理记录。
+
 日更先估算完整母版、合成暂存与输出总预算，再传给制作入口。以下示例预算为 2 GiB，按本期实际估算填写。
 
 ```powershell
@@ -34,4 +59,4 @@ python scripts/media_storage.py --job '<root>/jobs/2026-11-27/<episode>' `
   --reason '已核对无引用、写入者已退出、原项目可重建' --receipt '<job>/storage-preview.json'
 ```
 
-首次核对输出路径、暂存和输入，成片交付后在进度回执登记保留或跳过原因。完整作业清理继续沿用旧作业验证门槛。
+首次核对输出路径、暂存和输入，成片交付后在进度回执登记保留或跳过原因。每日开工的整作业清理按本页跨日入口执行。既有发布收尾仍可按已核对的新成片回执复核退役名单。

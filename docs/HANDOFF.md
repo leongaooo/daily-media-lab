@@ -45,4 +45,4 @@ COM-04已发布三类Issue模板及五个社区任务入口（Issue #1—#5）�
 
 ## 2026-11-26 接续
 
-下一期先用 [作业空间治理](../skills/news-to-video/references/local-runtime.md#作业空间治理) 记录余量和预算。冻结口播后，用同一画面做带声可见字幕预演与静音对照，检查数据、动作、方位和事实边界；终版留编码抽帧和实际播放证据。按交付结果复核暂存和旧作业保留原因。[本期制作与空间治理里程碑](progress/2026-11-26-idc-publication-governance.md) 记录实跑和待验层级。
+维护者已授权 r1 发布。按 [11 月 27 日执行入口](progress/2026-11-26-idc-publication-governance.md#11-月-27-日执行入口) 开工前重审跨日清单，再按 r1 标准制作，交付后立即回收可再生暂存。r1 技术证据及实跑范围见[本期里程碑](progress/2026-11-26-idc-publication-governance.md#r1-正式版与-11-月-27-日制作交接)。

@@ -55,3 +55,13 @@ python skills/news-to-video/scripts/render.py "$job/project.json" --output "$job
 若已有合法最终单声道干声，按 [Blender／external_final交接](../../skills/news-to-video/references/blender-handoff.md) 提供真实hash/sample_rate/samples/channels/processing_identity及准确cue，播放1.0；本目录不伪造这些字段，不用测试音冒充口播。新的Blender项目还需真实可编辑.blend、依赖与有效PNG母版，采用narrative_version=1，不套本例旧图解槽。
 
 本样例使用项目MIT文本／代码许可，不引入第三方媒体；官方公开声音模型另遵守其原许可。实际运行结果与未验收层见 [本批进度](../../docs/progress/2026-11-20-three-media-blender.md)。
+
+## 画内数据与同画面对照
+
+通过源代码生成两段合成审查片。120 kW 徽标和连线跟随模块沿路径进入接收台，接入待核状态在停稳后出现。带字幕审查版用合成文本覆盖底部 y904–1080 区域，静音对照保留主体、路径和数据牌。两份示例均无音轨。需要带 libass 和 libx264 的 FFmpeg。
+
+```powershell
+python examples/three-media-minimal/render_integrated_visuals.py './outputs/integrated-visuals' --ffmpeg '<ffmpeg>'
+```
+
+依次抽查 0.25、1.5 和 3.25 秒。三个时点分别覆盖出发前、运输中和落位后。作业回收入口的隔离回归用 `python -m unittest discover -s skills/news-to-video/scripts -p test_cross_day_storage.py -v` 检查。该回归只在临时夹具上删除，并检查锁、同日和未确认目录的保护。

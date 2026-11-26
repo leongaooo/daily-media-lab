@@ -618,6 +618,18 @@
         "scripts/media_storage.py",
         "scripts/test_media_storage.py"
       ]
+    },
+    {
+      "id": 97,
+      "name": "integrated-data-and-cross-day-storage",
+      "prompt": "按 r1 标准制作下一期。开工先清理前一天及更早受管产物，交付后立即回收可再生暂存。",
+      "expected_output": "画内关键数据绑定对象、动作、来源和帧区间，y904–1080 留给短句字幕，输出静音对照和正式编码证据。实际跑跨日预检与回执，保护在写、链接及仍需依赖的资产，再回收确认无用途的作业和暂存。",
+      "files": [
+        "SKILL.md",
+        "references/local-runtime.md",
+        "scripts/cross_day_storage.py",
+        "scripts/test_cross_day_storage.py"
+      ]
     }
   ],
   "scope_notice": "2026-11-20: explicit v1/v2 component cases remain compatibility checks. New narrative_version=1 Blender shots are independent of old object slots/counts. Historical maintenance prompts now also apply the current per-batch open-source sync question; prior batch approval is not perpetual approval."
