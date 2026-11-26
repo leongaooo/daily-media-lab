@@ -25,3 +25,5 @@ jobs:
             echo "checking $f"
             python -c "import json,sys; json.load(open(sys.argv[1], encoding='utf-8'))" "$f"
           done < <(git ls-files '*.json')
+      - name: Test media storage governance
+        run: python -m unittest discover -s skills/news-to-video/scripts -p 'test_*storage.py'

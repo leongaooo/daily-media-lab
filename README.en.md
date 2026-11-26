@@ -18,7 +18,7 @@ If you want to make regular content for your project, team, or community, you ar
 
 ### Latest production record · IDC edition and workspace management
 
-The 26 November 2026 IDC r1 edition was approved for release. Data, dates and evidence limits are placed beside the relevant equipment, transport module or evaluation bench. Short narration captions remain at the bottom. Both encodes decoded end to end and played at 1× through the last frame. The milestone includes measured immediate and cross-day storage cleanup. [Milestone record](docs/progress/2026-11-26-idc-publication-governance.md)
+The 26 November 2026 IDC r1 edition was approved for release. Data, dates and evidence limits are placed beside the relevant equipment, transport module or evaluation bench. Short narration captions remain at the bottom. Both encodes decoded end to end and played at 1× through the last frame. The milestone includes measured immediate and cross-day storage cleanup. [Milestone record](docs/progress/2026-11-26-idc-publication-governance.md) · [E-drive governance replay](docs/progress/2026-11-26-e-drive-governance.md)
 
 ### Approved public preview · IDC production rehearsal
 

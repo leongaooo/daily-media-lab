@@ -31,6 +31,7 @@ For new public narration, explicitly select qwen-uncle-fu-v1 and follow [public 
 | `source/`、`sources/` | Blender、组件、来源、配置和许可。保留仍引用或缺少替代的唯一来源。 |
 | `cache/`、`tmp/` | 作业内可再生缓存及明确归属的临时文件。浏览器配置、模型、依赖运行时分别核对，活动锁和链接保留。 |
 | 媒体根 `cache/` | 新的可再生跨作业缓存按 `cache/YYYY-MM-DD/<owner>/` 记录归属。未建立日期和归属的旧缓存先保留。 |
+| `E:/CodexMedia/governance/YYYY-MM-DD` | 盘点、删除和保留回执。放在 `jobs`、`cache` 之外，不参与媒体作业删除。 |
 
 **交付后立即执行。** 正式片完成技术校验并保存回执后，盘点作业临时目录。确认可复做、无在写、无引用的暂存按精确路径清理。Remotion Webpack pack 通过 `media_storage.py` 先预览再执行。把处理项、恢复入口、磁盘余量和跳过原因写入作业树之外的持久回执。同日作业的正式媒体和生产依赖可供接续。
 
