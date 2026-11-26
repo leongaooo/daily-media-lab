@@ -15,3 +15,23 @@ See [installation](../../../docs/GETTING_STARTED.md) for the explicit public voi
 Blender 4.4.3 was tested locally with EEVEE on an RTX 3060 Ti. Use scripts/blender_render.py shots.json --blender <installed executable>; the executable path is configured by the caller. GPU and fresh installation on another machine remain unverified. Source, engine and worker identities must match; do not silently switch renderer.
 
 For new public narration, explicitly select qwen-uncle-fu-v1 and follow [public voice](public-voice.md). Its separate profile, fixed weights, policy and tests are preserved. Local private b-male-v1 assets and audio are not distributed. For final narration supply a legitimately usable mono vocal, accurate cues and its actual sample/hash/processing identity; external_final never grants redistribution rights. Never place keys, weights, runtime, reference audio or private vocal samples in this repository.
+
+## 作业空间治理
+
+日更先估算完整母版、合成暂存与输出总预算，再传给制作入口。以下示例预算为 2 GiB，按本期实际估算填写。
+
+```powershell
+python scripts/render.py <project.json> --output <root>/jobs/2026-11-27/<episode>/output --min-free-bytes 2147483648
+```
+
+规范作业目录默认记录渲染前实际可用空间，历史非规范路径继续兼容。运行期间持有作业同级的 `.<episode-id>.media-production.lock`。中断遗留锁时，先核实原进程、渲染子进程及其他写入者均已退出，再恢复。使用独立合成入口时包裹 `render_storage(project, output, min_free_bytes)`，共享同一作业锁和预检回执。
+
+交付后检查引用、在写状态、可再生性和许可。只为确认无引用且可由原工程与固定运行环境再生的 Remotion Webpack pack 提供其作业内相对路径。先预览，再使用新回执路径加 `--apply`。命令核对日期层级、文件类型、链接和共享作业锁，记录每项删除或跳过原因、文件字节数和卷余量变化。受保护项包括浏览器缓存、模型、冻结声、源、母版、正式片、回执、许可与其他在用作业。旧作业完整退役使用 [Remove-RetiredMediaJobs.ps1](../scripts/Remove-RetiredMediaJobs.ps1)，由主执行者逐一确认迁移和引用，再显式传入退役名单。
+
+```powershell
+python scripts/media_storage.py --job '<root>/jobs/2026-11-27/<episode>' `
+  --pack 'output/remotion/node_modules/.cache/webpack/remotion-production-4.0.542/0123456789abcdef/0.pack' `
+  --reason '已核对无引用、写入者已退出、原项目可重建' --receipt '<job>/storage-preview.json'
+```
+
+首次核对输出路径、暂存和输入，成片交付后在进度回执登记保留或跳过原因。完整作业清理继续沿用旧作业验证门槛。

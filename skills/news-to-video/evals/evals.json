@@ -606,6 +606,18 @@
       "prompt": "沿用冻结最终口播先取21秒审查窗口；Windows编码write EOF，不要动原声或别的任务。",
       "expected_output": "按样本区间另存精确PCM窗口及母版/窗口身份，不TTS/变速/降噪；使用显式本次资源参数与现有作业暂存，有界恢复不改系统/杀其他进程，不将一次成功外推全部write EOF根因。",
       "files": []
+    },
+    {
+      "id": 96,
+      "name": "managed-media-storage-and-publication-captions",
+      "prompt": "补齐今天的正式成片，并回收本作业可再生暂存。明天继续沿用。",
+      "expected_output": "正式制作测量卷余量并持有共享作业锁。明确确认引用、写入和恢复入口后仅删除指定可再生暂存，回执实记跳过、文件字节数和卷差。关键数据、对象变化、冻结口播短句和可见字幕都经过实际抽帧，静音对照保留动作和数据。记录尚缺的感知、观众、设备和跨机验证。",
+      "files": [
+        "SKILL.md",
+        "references/local-runtime.md",
+        "scripts/media_storage.py",
+        "scripts/test_media_storage.py"
+      ]
     }
   ],
   "scope_notice": "2026-11-20: explicit v1/v2 component cases remain compatibility checks. New narrative_version=1 Blender shots are independent of old object slots/counts. Historical maintenance prompts now also apply the current per-batch open-source sync question; prior batch approval is not perpetual approval."

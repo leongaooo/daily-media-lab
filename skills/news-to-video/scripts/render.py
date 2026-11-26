@@ -5,6 +5,8 @@ import json
 import math
 import os
 from pathlib import Path
+
+from media_storage import render_storage
 import re
 import subprocess
 import shutil
@@ -583,6 +585,11 @@ def argument_parser():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("project")
     parser.add_argument("--output", required=True)
+    parser.add_argument(
+        "--min-free-bytes",
+        type=int,
+        help="Minimum free bytes required for a managed media jobs output",
+    )
     parser.add_argument("--runtime")
     parser.add_argument("--image-connection")
     parser.add_argument("--image-credentials")
@@ -591,4 +598,10 @@ def argument_parser():
 
 
 if __name__ == "__main__":
-    run(argument_parser().parse_args())
+    options = argument_parser().parse_args()
+    if options.min_free_bytes is not None and options.min_free_bytes < 0:
+        raise SystemExit("--min-free-bytes must be nonnegative")
+    with render_storage(
+        Path(options.project), Path(options.output), options.min_free_bytes
+    ):
+        run(options)

@@ -40,6 +40,18 @@ python './skills/news-to-video/scripts/render.py' './examples/three-media-minima
 
 运行环境按 [公开声音配置](../../skills/news-to-video/references/public-voice.md) 独立setup。project显式qwen-uncle-fu-v1，不能被默认B声替换；匹配失败停止，绝不寻找或提交私人参考。需要真实新闻时先替换合成证据、核验来源及日期，不把这段文案当真实采编示例。格式校验不等于声音好听、完整解码或新机器安装通过。
 
+## 实跑作业预检
+
+可用同一合成模板与两秒本地静音验证作业预检、字幕和完整解码。命令需要已安装的合成运行环境。下列路径只作示例，换用尚未创建的作业目录。
+
+```powershell
+$job = './outputs/jobs/2026-11-27/storage-smoke'
+python examples/three-media-minimal/prepare_storage_smoke.py $job
+python skills/news-to-video/scripts/render.py "$job/project.json" --output "$job/output" --min-free-bytes 536870912 --runtime '<render-only-runtime.json>'
+```
+
+确认输出含 48 帧、`validation.json` 和 `storage-preflight-*.json`。静音在本机生成，随代码分发的是 MIT 源码和合成文字。
+
 若已有合法最终单声道干声，按 [Blender／external_final交接](../../skills/news-to-video/references/blender-handoff.md) 提供真实hash/sample_rate/samples/channels/processing_identity及准确cue，播放1.0；本目录不伪造这些字段，不用测试音冒充口播。新的Blender项目还需真实可编辑.blend、依赖与有效PNG母版，采用narrative_version=1，不套本例旧图解槽。
 
 本样例使用项目MIT文本／代码许可，不引入第三方媒体；官方公开声音模型另遵守其原许可。实际运行结果与未验收层见 [本批进度](../../docs/progress/2026-11-20-three-media-blender.md)。

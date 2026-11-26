@@ -16,7 +16,11 @@ If you want to make regular content for your project, team, or community, you ar
 
 ## See the work
 
-### Latest milestone · IDC production rehearsal
+### Latest production record · IDC edition and workspace management
+
+The November 26, 2026 IDC edition runs 164 seconds. Encoded frame checks covered the 3D action, key figures and always-visible captions. Chrome played the full video at normal speed. The render entry now records free space and holds a job lock. Cleanup takes an explicit list of reviewed temporary files. Human viewing, listening and maintainer approval are pending. [Milestone record](docs/progress/2026-11-26-idc-publication-governance.md)
+
+### Approved public preview · IDC production rehearsal
 
 The maintainer approved the overall result on November 25, 2026. Both silent animations come from the reviewed edit and show original 3D illustrations.
 
