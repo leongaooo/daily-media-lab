@@ -2,7 +2,7 @@
 
 原始口播和事实分别保存在 [narration.json](narration.json) 与 [evidence.json](evidence.json)。图形、建筑和路线均为原创示意。实际结果见[制作记录](../../docs/progress/2026-11-27-idc-kajaani.md)。
 
-先准备[公开语音运行环境](../../skills/news-to-video/references/public-voice.md)、Blender 4.4.3、Edge 或 Chromium，以及渲染 Python 上的 Playwright 1.61.0。以下命令使用 PowerShell，从仓库根运行。工作目录位于日期化媒体根内，留出至少 2 GiB。
+先准备[公开语音运行环境](../../skills/news-to-video/references/public-voice.md)、Blender 4.4.3、Edge 或 Chromium，以及渲染 Python 上的 Playwright 1.58.0。以下命令使用 PowerShell，从仓库根运行。工作目录位于日期化媒体根内，留出至少 2 GiB。
 
 ```powershell
 $repo = (Resolve-Path '.').Path

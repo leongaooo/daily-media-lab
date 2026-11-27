@@ -28,7 +28,7 @@ $publicRuntime = Join-Path $publicCache 'runtime.json'
 
 `--download` 才联网，下载约 2.5 GB；已存在且哈希匹配的文件直接复用。下载固定 revision，校验成功才替换目标，失败清理 `.partial`。不传此参数仅检查已有模型。模型与运行环境均应放在仓库外。
 
-setup 只连接模型、解释器和字体；不安装软件、不做完整设备预检。候选配置检查失败不会覆盖已有 runtime；成功写入公开专用目录，默认私人 runtime 不变。`check_runtime.py` 再检查渲染依赖、字体、音乐池、Qwen 导入及 CUDA；真正模型加载与合成仍需运行样本。
+setup 只连接模型、解释器和字体；不安装软件、不做完整设备预检。候选配置检查失败不会覆盖已有 runtime；成功写入公开专用目录，默认私人 runtime 不变。`check_runtime.py` 再检查渲染依赖、字体、音乐池、Qwen 导入及 CUDA；真正模型加载与合成仍需运行样本。Windows 使用已固定的 safetensors 0.8.0，在模型加载期间显式读取权重，再移至 CUDA 推理。已有环境可按依赖清单更新。
 
 ## 项目、缓存与验收
 

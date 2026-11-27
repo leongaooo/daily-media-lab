@@ -9,6 +9,7 @@ from pathlib import Path
 import numpy as np
 import soundfile as sf
 
+from qwen_weights import load_qwen_weights
 from voice_backend import load_profile, read_json
 from public_voice import PUBLIC_VOICE_ID
 
@@ -54,10 +55,10 @@ def run(request_path, check_only=False):
         return
     torch.set_num_threads(6)
     print("Loading configured voice backend", flush=True)
-    model = Qwen3TTSModel.from_pretrained(
+    model = load_qwen_weights(
+        Qwen3TTSModel.from_pretrained,
         profile["model_dir"],
-        # Windows 上直接向 CUDA 映射 safetensors 切片会在 storage 索引中
-        # 原生崩溃；先在 CPU 完成同一权重加载，再整体转移到 GPU 推理。
+        # 统一在 CPU 读取主模型和 tokenizer，再一起转至 CUDA 推理。
         device_map="cpu",
         dtype=torch.bfloat16,
         attn_implementation="sdpa",
