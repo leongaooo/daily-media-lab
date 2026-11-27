@@ -1,0 +1,108 @@
+{
+  "schema_version": 1,
+  "package_id": "idc-kajaani-20261127",
+  "domain": "idc",
+  "coverage": {
+    "start": "2026-11-21",
+    "end": "2026-11-27",
+    "timezone": "Asia/Shanghai",
+    "limitations": [
+      "仅取一条新案例做混合分镜验证",
+      "同周台账核对，哈伍德案已有采用记录"
+    ]
+  },
+  "news": [
+    {
+      "news_id": "idc-kajaani-20261124",
+      "title": "卡亚尼首座数据中心启用",
+      "topic_key": "xtx-kajaani-first-data-centre-open-20261124",
+      "canonical_url": "https://about.xtxmarkets.com/news/2026-xtx-markets-opens-first-data-centre/",
+      "delta": "XTX Markets 于 11 月 24 日公告首座启用，披露 22.5 MW IT 容量，第二座计划 2027 年启用。",
+      "category": "数据中心交付",
+      "evidence": [
+        {
+          "evidence_id": "XTX-OPEN-1124",
+          "url": "https://about.xtxmarkets.com/news/2026-xtx-markets-opens-first-data-centre/",
+          "publisher": "XTX Markets",
+          "published_at": "2026-11-24",
+          "event_date": null,
+          "readable_excerpt": "运营方宣布首座设施启用，IT 功率容量 22.5 MW，第二座计划 2027 年启用。",
+          "source_type": "项目运营方公告"
+        },
+        {
+          "evidence_id": "KAJAANI-CITY-0122",
+          "url": "https://kajaani.fi/en/news/xtx-markets-plans-to-invest-over-e1bn-in-large-scale-data-centre-project-in-kajaani-finland/",
+          "publisher": "卡亚尼市",
+          "published_at": "2025-01-22",
+          "event_date": null,
+          "readable_excerpt": "市方项目说明列出首座设施包含三个数据厅，合计 IT 功率 22.5 MW。",
+          "source_type": "项目所在地政府"
+        }
+      ],
+      "claims": [
+        {
+          "claim_id": "kajaani-open",
+          "text": "11 月 24 日运营方宣布首座设施启用，披露 22.5 MW IT 功率容量。",
+          "evidence_ids": [
+            "XTX-OPEN-1124"
+          ]
+        },
+        {
+          "claim_id": "kajaani-halls",
+          "text": "市方项目说明将三个数据厅和合计 22.5 MW IT 功率归入首座设施。",
+          "evidence_ids": [
+            "KAJAANI-CITY-0122"
+          ]
+        },
+        {
+          "claim_id": "kajaani-next",
+          "text": "第二座设施计划 2027 年启用。",
+          "evidence_ids": [
+            "XTX-OPEN-1124"
+          ]
+        },
+        {
+          "claim_id": "kajaani-limit",
+          "text": "启用公告没有提供单厅容量分配和实时负载。",
+          "evidence_ids": [
+            "XTX-OPEN-1124"
+          ]
+        }
+      ],
+      "paragraphs": [
+        {
+          "paragraph_id": "kajaani-01",
+          "text": "首座设施启用与 IT 功率容量。",
+          "claim_ids": [
+            "kajaani-open"
+          ]
+        },
+        {
+          "paragraph_id": "kajaani-02",
+          "text": "三个数据厅合计 22.5 MW，第二座设施计划 2027 年启用。",
+          "claim_ids": [
+            "kajaani-halls",
+            "kajaani-next"
+          ]
+        },
+        {
+          "paragraph_id": "kajaani-03",
+          "text": "用小场景说明一座设施与三个数据厅的包含关系，单厅功率分配和实时负载仍未知。",
+          "claim_ids": [
+            "kajaani-halls",
+            "kajaani-limit"
+          ]
+        }
+      ],
+      "limitations": [
+        "运营方和市方采用设施容量口径，暂无单厅功率分配和实时负载",
+        "两份材料的场地面积单位表述存在差异，本片不采用园区面积"
+      ],
+      "material_constraints": [
+        "机构原文只用于事实核对",
+        "设备图形、建筑布局及路线采用原创示意",
+        "不使用第三方照片或背景音乐"
+      ]
+    }
+  ]
+}

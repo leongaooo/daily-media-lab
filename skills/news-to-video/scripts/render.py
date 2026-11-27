@@ -298,6 +298,11 @@ def run(args, *, reclaim_narrative_stage=False):
         json.loads(project_path.read_text(encoding="utf-8-sig"))
     )
     validate(project)
+    picture_only = getattr(args, "picture_only", False)
+    if picture_only and (
+        project.get("narrative_version") != 1 or not external_mode(project)
+    ):
+        raise ValueError("--picture-only requires a sealed narrative and frozen audio")
     base = project_path.parent
     pending_images = any(
         scene.get("image_generation", {}).get("enabled", True)
@@ -351,6 +356,9 @@ def run(args, *, reclaim_narrative_stage=False):
         "captions": "bottom_rail",
         **project.get("editorial", {}),
     }
+    # Keep the production project's verified cue identity and suppress display only.
+    if picture_only:
+        project["editorial"]["captions"] = "off"
     project.update(visual_engine=ENGINE, width=width, height=height, fps=fps)
     if not external_mode(project):
         project["voice"] = {
@@ -496,26 +504,15 @@ def run(args, *, reclaim_narrative_stage=False):
         sheet.paste(picture, ((index % 3) * 270, (index // 3) * 152))
     sheet.save(output / "storyboard.jpg")
     result = output / "video.mp4"
-    subprocess.run(
+    # Both cuts share the Remotion picture and retain the frozen cue duration.
+    mux = [ffmpeg, "-y", "-v", "error", "-i", str(silent)]
+    if not picture_only:
+        mux.extend(["-i", str(output / "mix.wav")])
+    mux.extend(["-map", "0:v:0", "-c:v", "copy"])
+    if not picture_only:
+        mux.extend(["-map", "1:a:0", "-c:a", "aac", "-b:a", "192k"])
+    mux.extend(
         [
-            ffmpeg,
-            "-y",
-            "-v",
-            "error",
-            "-i",
-            str(silent),
-            "-i",
-            str(output / "mix.wav"),
-            "-map",
-            "0:v:0",
-            "-map",
-            "1:a:0",
-            "-c:v",
-            "copy",
-            "-c:a",
-            "aac",
-            "-b:a",
-            "192k",
             "-t",
             str(duration),
             "-color_primaries",
@@ -529,9 +526,9 @@ def run(args, *, reclaim_narrative_stage=False):
             "-movflags",
             "+faststart",
             str(result),
-        ],
-        check=True,
+        ]
     )
+    subprocess.run(mux, check=True)
     subprocess.run(
         [ffmpeg, "-v", "error", "-i", str(result), "-f", "null", "-"], check=True
     )
@@ -590,6 +587,8 @@ def run(args, *, reclaim_narrative_stage=False):
             "motion-report.json",
         )
     }
+    if picture_only:
+        report["picture_only"] = True
     save_json(output / "validation.json", report)
     if reclaim_narrative_stage and project.get("narrative_version") == 1:
         try:
@@ -620,6 +619,11 @@ def argument_parser():
         "--keep-narrative-stage",
         action="store_true",
         help="Keep managed Remotion frame copies for Studio or working review",
+    )
+    parser.add_argument(
+        "--picture-only",
+        action="store_true",
+        help="Render a sealed narrative without visible captions or an audio stream",
     )
     parser.add_argument("--runtime")
     parser.add_argument("--image-connection")

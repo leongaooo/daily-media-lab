@@ -42,3 +42,7 @@ Copy-Item "$example/source/*.py" "$job/source/"
 按顺序运行，任一步非零退出时先处理该步。`freeze.py` 以公开音色 `qwen-uncle-fu-v1` 实测句长。`prepare.py` 由句级 cue 生成整数帧边界。`blackbird.py` 由该边界生成可编辑 Blender 场景、三维帧及实际机位投影。`visuals.py` 生成可编辑 SVG、二维帧和三维标注层。两版经正式 Remotion 合成。带声版烧录字幕并交 SRT，静音版关闭口播字幕并从 MP4 移除音轨。检查读取编码文件并将记录写入 `review/encoded-checks.json`。
 
 公开运行会按实测口播重新确定时长。技术与感知证据见[制作记录](../../docs/progress/2026-11-27-idc-mixed-shot-validation.md)。
+
+## 已验收的二维修订
+
+复制全部 Python 文件后，将二维和叠标的 `visuals.py` 命令换成 `refined_visuals.py`。同一帧边界和 Blackbird 场景下，修订脚本重建设备轮廓、连线高亮、机柜组移出、逐架安装与回同框。上一轮二维修订和 Blackbird 三维呈现已获用户认可。 [跨案例复核](../../docs/progress/2026-11-27-idc-kajaani.md)

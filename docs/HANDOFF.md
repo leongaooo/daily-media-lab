@@ -2,6 +2,10 @@
 
 更新：2026-11-20（Asia/Shanghai）。先读AGENTS和ROADMAP，任务状态仅在ROADMAP维护。
 
+## 卡亚尼跨案例实测（2026-11-27）
+
+公开入口用同一冻结项目生成两版。卡亚尼样片已完成编码、字幕和原速回放，人工体验待验。 [复现和证据](progress/2026-11-27-idc-kajaani.md)
+
 ## IDC 混合分镜接续（2026-11-27）
 
 以[混合分镜复现例](../examples/idc-mixed-shot/README.md)检查拓扑高亮、改造放大后回同框及三维路线从起点可见。现场设备近景、真实整期工时、人工观看与试听、目标观众复述和独立机器复现按需续验，详见[本轮记录](progress/2026-11-27-idc-mixed-shot-validation.md)。

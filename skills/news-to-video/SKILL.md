@@ -21,6 +21,8 @@ description: 将资讯、产品资料、研究稿或已有确认稿制作成中�
 
 领域来源、专业判断与去重由领域技能维护；媒体画幅、声音、时间线与视觉由本技能维护。领域包不递归调用新的视频入口。[编辑包与节目编排](references/editorial-handoff.md) 定义稳定ID、稿件状态、交付采用与失败恢复；episode.py实际执行结构校验、内容身份、revision／锁及幂等采用，不负责自动事实核验或自动导演。
 
+用[混合分镜渲染入口](references/mixed-shot-render.md)准备可编辑的 SVG 和 Blender 母版，并从同一冻结项目生成带声和静音对照。
+
 ## 作业资产与磁盘
 
 先选择有足够余量的媒体工作根，在 `<MEDIA_WORK_ROOT>/jobs/YYYY-MM-DD/<episode-id>/` 建立稳定作业目录，保存项目、sources、audio、frames、output及必要回执；渲染暂存随job，跨作业可再生缓存放 `<MEDIA_WORK_ROOT>/cache/`。用户明确路径优先，技能维护源与作业资产分离。盘符由使用者配置，不要求使用维护者本机路径。

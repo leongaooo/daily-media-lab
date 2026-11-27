@@ -16,6 +16,10 @@ If you want to make regular content for your project, team, or community, you ar
 
 ## See the work
 
+### Kajaani mixed-shot validation · 2026-11-27
+
+A capacity card, staged SVG highlights and an original 3D route explain how three data halls fit within the first facility and distinguish the planned second facility. Both cuts share a frozen project and passed production checks. [Editable example](examples/idc-kajaani/README.md) · [Production record](docs/progress/2026-11-27-idc-kajaani.md)
+
 ### Mixed IDC shots · 2026-11-27
 
 A single timeline steps through a proposed topology, zooms into a rack retrofit before returning to the side-by-side comparison, and shows the 3D module route from the first frame of motion. The example includes the original graphics and scene sources and can be rebuilt with the public voice and production captions. [Reproduction steps](examples/idc-mixed-shot/README.md) · [Production record](docs/progress/2026-11-27-idc-mixed-shot-validation.md)
