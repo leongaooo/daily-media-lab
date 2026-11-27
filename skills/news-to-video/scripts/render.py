@@ -6,16 +6,12 @@ import math
 import os
 from pathlib import Path
 import re
-import shutil
 import subprocess
-import sys
-from uuid import uuid4
-
-from episode import file_identity
-from media_storage import clean_rendered_stage, render_storage
+import shutil
 
 from frozen_audio import external_mode, validate_config, load_final, frame_at
 from narrative_media import read_json as read_narrative, validate_manifest
+from episode import file_identity, validate_animatic_receipt
 
 import imageio_ffmpeg
 import numpy as np
@@ -41,6 +37,125 @@ LEGACY_FIELDS = {
     "header_style",
     "decoration",
 }
+
+
+def _visual_path(project):
+    if project.get("narrative_version") == 1:
+        return "narrative_v1"
+    if project.get("visual_contract_version") == 2:
+        return "object_stage"
+    return "legacy"
+
+
+def validate_formal_acceptance(project, project_path, base):
+    """Bind the full render to the approved baseline and the reviewed scene inputs."""
+    contract = project.get("acceptance_contract")
+    if contract is None:
+        return None
+    if contract != "daily-v1":
+        raise ValueError("Unsupported project acceptance_contract")
+    for key in (
+        "episode_id",
+        "baseline_id",
+        "production_baseline",
+        "animatic_review_receipt",
+    ):
+        if not isinstance(project.get(key), str) or not project[key].strip():
+            raise ValueError(f"daily-v1 requires {key}")
+    receipt_path = (base / project["animatic_review_receipt"]).resolve(strict=True)
+    stability_gate_version = project.get("stability_gate_version")
+    if stability_gate_version not in (None, 1):
+        raise ValueError("stability_gate_version must be 1 when provided")
+    receipt = validate_animatic_receipt(
+        receipt_path,
+        project["episode_id"],
+        require_stability=stability_gate_version == 1,
+    )
+    baseline = file_identity(base / project["production_baseline"])
+    if (
+        baseline != receipt["baseline"]
+        or project["baseline_id"] != receipt["baseline_id"]
+    ):
+        raise ValueError(
+            "Formal project baseline differs from the reviewed production baseline"
+        )
+    visual_path = _visual_path(project)
+    if visual_path != receipt["visual_path"]:
+        raise ValueError(
+            "Animatic visual_path must match the formal project visual path"
+        )
+    if project.get("editorial", {}).get("captions", "bottom_rail") != "bottom_rail":
+        raise ValueError("Daily production requires the bottom caption rail")
+    if visual_path == "legacy":
+        reason = project.get("simple_diagram_reason")
+        if (
+            project.get("visual_contract_version") != 1
+            or not isinstance(reason, str)
+            or not reason.strip()
+        ):
+            raise ValueError(
+                "Daily production requires an explicit simple diagram or narrative path"
+            )
+    preview_path = Path(receipt["project"]["path"])
+    preview_project = remotion_visual.normalize_editorial(read_narrative(preview_path))
+    selected = receipt["scope"]["scenes"]
+    if selected != sorted(set(selected)) or not all(
+        0 <= index < len(project["scenes"]) for index in selected
+    ):
+        raise ValueError("Preview scope must name ordered scenes in the formal project")
+    if preview_project.get("scenes") != [
+        project["scenes"][index] for index in selected
+    ]:
+        raise ValueError("Preview scene or narration differs from the formal inputs")
+    if external_mode(project):
+        voice = project["voice"]
+        if (
+            file_identity(base / voice["path"])["sha256"]
+            != receipt["voice_window"]["source"]["sha256"]
+        ):
+            raise ValueError("Review audio must come from the formal frozen dry voice")
+        full_cues = read_narrative(base / voice["cues"])
+        selected_cues = [cue for cue in full_cues if cue["scene"] in selected]
+        window = receipt["voice_window"]
+        rate = voice["sample_rate"]
+        start, end = window["start_sample"], window["end_sample"]
+        if (start, end) != (
+            round(selected_cues[0]["start"] * rate),
+            round(selected_cues[-1]["end"] * rate),
+        ):
+            raise ValueError("Preview window must cover the selected semantic scenes")
+        for cue in selected_cues:
+            cue["scene"] = selected.index(cue["scene"])
+            for edge in ("start", "end"):
+                cue[edge] = (round(cue[edge] * rate) - start) / rate
+        preview_cues = read_narrative(
+            preview_path.parent / preview_project["voice"]["cues"]
+        )
+        for given, expected in zip(preview_cues, selected_cues, strict=True):
+            if any(
+                given[key] != expected[key] for key in ("scene", "text", "start", "end")
+            ):
+                raise ValueError("Preview must use the selected frozen semantic cues")
+    if visual_path == "object_stage":
+        component = remotion_visual._component_source(project, base)
+        consumer = (
+            component / "Stage.tsx"
+            if component
+            else remotion_visual.TEMPLATE / "ObjectStage.tsx"
+        )
+        if (
+            file_identity(consumer)["sha256"]
+            != receipt["consumer"]["artifact"]["sha256"]
+        ):
+            raise ValueError("Formal visual consumer differs from the reviewed source")
+    return {
+        "baseline": baseline,
+        "baseline_id": project["baseline_id"],
+        "animatic": file_identity(receipt_path),
+        "project": file_identity(project_path),
+        "visual_path": visual_path,
+        "stability_gate": receipt.get("stability_gate"),
+    }
 
 
 def save_json(path, value):
@@ -289,7 +404,7 @@ def prepare_narration(project, runtime, cache, base, output, fps):
     return duration, voice, gate, cues, sample_rate, models
 
 
-def run(args, *, reclaim_narrative_stage=False):
+def run(args):
     """Render one project as one continuous program using the sole visual engine."""
     if args.visual_engine != ENGINE:
         raise ValueError("Only remotion_editorial is supported")
@@ -298,12 +413,8 @@ def run(args, *, reclaim_narrative_stage=False):
         json.loads(project_path.read_text(encoding="utf-8-sig"))
     )
     validate(project)
-    picture_only = getattr(args, "picture_only", False)
-    if picture_only and (
-        project.get("narrative_version") != 1 or not external_mode(project)
-    ):
-        raise ValueError("--picture-only requires a sealed narrative and frozen audio")
     base = project_path.parent
+    acceptance = validate_formal_acceptance(project, project_path, base)
     pending_images = any(
         scene.get("image_generation", {}).get("enabled", True)
         and scene.get("image_generation")
@@ -340,6 +451,8 @@ def run(args, *, reclaim_narrative_stage=False):
             )
         )
         validate(project)
+        if acceptance is not None:
+            validate_formal_acceptance(project, project_path, base)
     runtime_path = Path(
         args.runtime
         or os.environ.get(
@@ -356,9 +469,6 @@ def run(args, *, reclaim_narrative_stage=False):
         "captions": "bottom_rail",
         **project.get("editorial", {}),
     }
-    # Keep the production project's verified cue identity and suppress display only.
-    if picture_only:
-        project["editorial"]["captions"] = "off"
     project.update(visual_engine=ENGINE, width=width, height=height, fps=fps)
     if not external_mode(project):
         project["voice"] = {
@@ -450,6 +560,31 @@ def run(args, *, reclaim_narrative_stage=False):
         output / "motion-report.json",
         {
             "version": "narrative-1" if project.get("narrative_version") == 1 else 2,
+            "visual_path": _visual_path(project),
+            "consumer": {
+                "kind": (
+                    "narrative_stage"
+                    if project.get("narrative_version") == 1
+                    else (
+                        "object_stage"
+                        if project.get("visual_contract_version") == 2
+                        else "editorial_composition"
+                    )
+                ),
+                "module": (
+                    "narrative"
+                    if project.get("narrative_version") == 1
+                    else (
+                        "custom/Stage"
+                        if project.get("editorial", {}).get("component_dir")
+                        else (
+                            "ObjectStage"
+                            if project.get("visual_contract_version") == 2
+                            else "Composition"
+                        )
+                    )
+                ),
+            },
             "narrative_shots": payload.get("narrative_shots", []),
             "engine": ENGINE,
             "status": "staged-awaiting-render",
@@ -459,13 +594,31 @@ def run(args, *, reclaim_narrative_stage=False):
                     "scene": index,
                     "kind": scene["kind"],
                     "shots": scene["shots"],
-                    "actions": scene.get("object_stage", {}).get("actions", []),
+                    "actions": [
+                        {
+                            "action_id": f"scene-{index}-action-{action_index}",
+                            **action,
+                        }
+                        for action_index, action in enumerate(
+                            scene.get("object_stage", {}).get("actions", [])
+                        )
+                    ],
                     "content_ends_before_y": 904,
                 }
                 for index, scene in enumerate(payload["scenes"])
             ],
         },
     )
+    motion_path = output / "motion-report.json"
+    motion = read_narrative(motion_path)
+    consumer_module = motion["consumer"]["module"]
+    consumer_path = folder / "src" / f"{consumer_module}.tsx"
+    if not consumer_path.is_file() and consumer_module == "narrative":
+        consumer_path = folder / "src" / "Composition.tsx"
+    if not consumer_path.is_file():
+        raise ValueError(f"Visual consumer source is missing: {consumer_path}")
+    motion["consumer"]["artifact"] = file_identity(consumer_path)
+    save_json(motion_path, motion)
     production_plan(project, cues, payload, output)
     silent = cache / f"{remotion_visual.render_key(folder, payload)}.mp4"
     frames = round(duration * fps)
@@ -487,7 +640,6 @@ def run(args, *, reclaim_narrative_stage=False):
             temporary_picture.replace(silent)
         finally:
             temporary_picture.unlink(missing_ok=True)
-    motion_path = output / "motion-report.json"
     motion = json.loads(motion_path.read_text(encoding="utf-8"))
     motion.update(status="rendered", picture_key=silent.stem, frame_count=frames)
     save_json(motion_path, motion)
@@ -504,15 +656,26 @@ def run(args, *, reclaim_narrative_stage=False):
         sheet.paste(picture, ((index % 3) * 270, (index // 3) * 152))
     sheet.save(output / "storyboard.jpg")
     result = output / "video.mp4"
-    # Both cuts share the Remotion picture and retain the frozen cue duration.
-    mux = [ffmpeg, "-y", "-v", "error", "-i", str(silent)]
-    if not picture_only:
-        mux.extend(["-i", str(output / "mix.wav")])
-    mux.extend(["-map", "0:v:0", "-c:v", "copy"])
-    if not picture_only:
-        mux.extend(["-map", "1:a:0", "-c:a", "aac", "-b:a", "192k"])
-    mux.extend(
+    subprocess.run(
         [
+            ffmpeg,
+            "-y",
+            "-v",
+            "error",
+            "-i",
+            str(silent),
+            "-i",
+            str(output / "mix.wav"),
+            "-map",
+            "0:v:0",
+            "-map",
+            "1:a:0",
+            "-c:v",
+            "copy",
+            "-c:a",
+            "aac",
+            "-b:a",
+            "192k",
             "-t",
             str(duration),
             "-color_primaries",
@@ -526,9 +689,9 @@ def run(args, *, reclaim_narrative_stage=False):
             "-movflags",
             "+faststart",
             str(result),
-        ]
+        ],
+        check=True,
     )
-    subprocess.run(mux, check=True)
     subprocess.run(
         [ffmpeg, "-v", "error", "-i", str(result), "-f", "null", "-"], check=True
     )
@@ -587,22 +750,9 @@ def run(args, *, reclaim_narrative_stage=False):
             "motion-report.json",
         )
     }
-    if picture_only:
-        report["picture_only"] = True
+    if acceptance is not None:
+        report["acceptance"] = acceptance
     save_json(output / "validation.json", report)
-    if reclaim_narrative_stage and project.get("narrative_version") == 1:
-        try:
-            clean_rendered_stage(
-                project,
-                base,
-                output,
-                output / f"storage-stage-cleanup-{uuid4().hex}.json",
-                reason="Decoded delivery and its independently sealed source frames",
-                apply=True,
-            )
-        except (OSError, KeyError, ValueError) as error:
-            # The encoded delivery is already verified. Keep any stage with incomplete evidence.
-            print(f"Narrative stage cleanup deferred: {error}", file=sys.stderr)
     print(json.dumps(report, ensure_ascii=False, indent=2), flush=True)
 
 
@@ -610,21 +760,6 @@ def argument_parser():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("project")
     parser.add_argument("--output", required=True)
-    parser.add_argument(
-        "--min-free-bytes",
-        type=int,
-        help="Minimum free bytes required for a managed media jobs output",
-    )
-    parser.add_argument(
-        "--keep-narrative-stage",
-        action="store_true",
-        help="Keep managed Remotion frame copies for Studio or working review",
-    )
-    parser.add_argument(
-        "--picture-only",
-        action="store_true",
-        help="Render a sealed narrative without visible captions or an audio stream",
-    )
     parser.add_argument("--runtime")
     parser.add_argument("--image-connection")
     parser.add_argument("--image-credentials")
@@ -633,14 +768,4 @@ def argument_parser():
 
 
 if __name__ == "__main__":
-    options = argument_parser().parse_args()
-    if options.min_free_bytes is not None and options.min_free_bytes < 0:
-        raise SystemExit("--min-free-bytes must be nonnegative")
-    with render_storage(
-        Path(options.project), Path(options.output), options.min_free_bytes
-    ) as job:
-        run(
-            options,
-            reclaim_narrative_stage=job is not None
-            and not options.keep_narrative_stage,
-        )
+    run(argument_parser().parse_args())

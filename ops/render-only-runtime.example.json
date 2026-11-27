@@ -1,0 +1,5 @@
+{
+  "font": "<readable-Chinese-font>",
+  "remotion_install": "<pinned-Remotion-install>",
+  "ffprobe": "<ffprobe-executable>"
+}

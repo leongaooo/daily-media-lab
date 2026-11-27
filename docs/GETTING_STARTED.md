@@ -2,6 +2,14 @@
 
 当前适合能使用本地代理技能、愿意记录环境问题的早期参与者。先体验预览和剧本流程，再决定是否配置完整制作环境。
 
+## OPS-01 生产预检与可搬迁源包
+
+完成一个本地作业后，可从仓库根目录运行 `ops/preflight.py` 检查磁盘余量、临时目录、项目／镜头清单、真实母版、冻结音频、Blender 和 render-only runtime。`ops/cache_audit.py` 只读统计可再生缓存与重复哈希，`ops/recovery_drill.py` 在内存回执副本中演练缺帧拒绝和恢复，`ops/portable_package.py` 生成不含 runtime、权重、字体、Key、缓存和日志的相对源包。具体命令与边界见 [OPS-01 入口](../ops/README.md)。
+
+这些检查不会替代新机器安装、GPU／Blender实际运行、连续观看、耳机／扬声器试听或远程发布；报告必须分别记录已做和未做的层。
+
+仓库推送和 PR 会由 `.github/workflows/python-tests.yml` 运行渲染侧 Python 回归及 OPS 纯工具回归；CI 不下载模型，不调用 GPU/TTS/Remotion 或付费生图。
+
 ## 无制作环境也能开始
 
 从仓库根目录打开代理。近期IDC／Web3成片请求读取 `skills/news-to-video/SKILL.md`，按需加载对应领域；独立剧本／文字任务读取 `skills/idc-compute-news-digest/SKILL.md` 或 `skills/web3-tech-news-digest/SKILL.md`。根目录 `news/` 是来源地图、可写采用台账与Web3 tracker，不能只搬SKILL.md。新增IDC台账提供清洁模板；已有使用者台账、tracker与公开历史证据不得重置。

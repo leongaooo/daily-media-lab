@@ -20,9 +20,12 @@
 
 `episode.py` 是本地收据与写入工具，不是自动网页采编器或自动导演。技能执行者使用当前网页工具采编、进行事实审查和创作，再调用工具记录真正完成的阶段。相对CLI文件参数按当前工作目录解析，存入清单的文件路径解析为绝对路径。
 
+日更在建立节目清单前先按 [日更编辑工作流](daily-editorial-workflow.md) 形成编辑计划。计划绑定观众问题、观众收获、探索切入点、表达方式、交付标题、可选互动、价值意图和手动复盘边界。`episode.py init --editorial-plan` 会保存计划文件身份，`verify` 会在计划变化时停止恢复。
+
 ```powershell
 python scripts/episode.py validate-package package.json
-python scripts/episode.py init episode.json --episode-id issue-20261120 --request "近期IDC资讯成片" --package package.json
+python scripts/daily_editorial.py validate-plan editorial-plan.json
+python scripts/episode.py init episode.json --episode-id issue-20261120 --request "近期IDC资讯成片" --package package.json --editorial-plan editorial-plan.json
 python scripts/episode.py draft episode.json --revision 1 --paragraphs paragraphs.json --output draft.json
 python scripts/episode.py stage episode.json --revision 2 --name editorial_locked --output draft.json --evidence "事实、归属、段落映射已逐项审查"
 python scripts/episode.py verify episode.json
@@ -30,7 +33,7 @@ python scripts/episode.py verify episode.json
 
 已有确认稿件用 `init --confirmed-script confirmed.md`，该输入即受身份保护。内部新稿用 `draft` 反复编辑，直至 `editorial_locked`；之后不能覆盖锁定稿。`draft` 只可创建新文件或覆盖本节目的未锁定草案，不能覆盖源证据、旧稿、节目清单或任意已有文件。不是任意Markdown自动导入器。
 
-清单含 `schema_version,episode_id,revision,request,packages,stage_receipts,delivery_receipts,adoption_receipts,failure_receipts`。写入要求当前 `--revision`，邻接 `.lock` 通过独占创建阻止竞争写者；锁不按超时自动删除，遗留锁先核验PID与实际写者已停止。原子替换使用同目录临时文件。并行采编只返回资料，由主执行者单写清单和台账。
+清单含 `schema_version,episode_id,revision,request,packages,editorial_plan,stage_receipts,delivery_receipts,adoption_receipts,failure_receipts`。`editorial_plan` 是可选的日更编辑层输入，写入节目清单时保存 `{path,sha256,bytes}`，不把标题或互动文案当成自动发布命令。写入要求当前 `--revision`，邻接 `.lock` 通过独占创建阻止竞争写者；锁不按超时自动删除，遗留锁先核验PID与实际写者已停止。原子替换使用同目录临时文件。并行采编只返回资料，由主执行者单写清单和台账。
 
 阶段依赖：证据就绪 → 稿件锁定；稿件锁定后声音和视觉可并行；两者完成后正式预演；再到母版、合成、复核。对应 stage 名为 `evidence_ready`（init生成）、`editorial_locked`、`audio_locked`、`visual_ready`、`animatic_reviewed`、`masters_ready`、`composed`、`reviewed`。阶段记录 `--input/--output` 的真实内容哈希及 `--evidence`；输出不能是零字节占位。音频和视觉的具体格式由执行契约负责。记录证据时分别注明技术解码、实际连续观看、试听和用户认可，不以一句“通过”代替未完成层。
 
@@ -50,3 +53,18 @@ python scripts/episode.py adopt episode.json --revision 10 --domain idc --ledger
 两领域分别沿用现有台账。IDC不迁移历史表头，交付关联写入 Why Included；Web3写入交付状态／文件。通过topic_key关联已有事件，剧本改编视频补充同一行的交付，不制造新新闻；实质新进展使用新的事件身份与delta。写入含稳定adoption标记，产物先落地、台账后提交、清单最后记回执；台账落盘后回执失败时，重试识别标记补回执，不重复追加。可用 `--ledger-sha256` 做预期内容冲突检查；冲突后重读再试。
 
 混合节目逐领域提交，保留独立回执；一个完成而另一个失败时只补失败侧，不宣称两个Markdown具有原子事务，不为补台账重渲染。恢复采用时先重读当前清单revision与台账。Web3 tracker仍记录项目原生状态，按采用证据或用户专题核验更新；不把渲染失败写成项目状态倒退。工具不自动改tracker或归档历史，执行者按领域规范处理，不能清空使用者记录。
+
+## 日更成片回执
+
+新节目由 `episode.py init` 默认启用 `daily-v1`。在正式项目声明 `acceptance_contract: "daily-v1"`、`episode_id`、本期适用的 `baseline_id`、`production_baseline` 文件路径和 `animatic_review_receipt` 路径。先读取基线的实际验收范围，记录本期沿用的做法，按本期内容另作设计。旧清单仍可核验，低层渲染可用于历史重现和预演。新节目正式交付要求审阅绑定到当前正式渲染报告。独立 Blender narrative 继续使用自己的镜头和母版契约，简单图解在正式项目使用时需声明 `visual_contract_version: 1` 及 `simple_diagram_reason`。
+
+1. 先按冻结声样本与完整语义制作代表段。使用 `review_window.py` 取样，保留母版、窗口的独立身份以及句级时间。短片使用 `render.py` 合成有声 MP4。正式入口复核预演项目与整期所选场景，并核验已经冻结的母版和对应 cue。
+2. 预演回执使用 `schema_version: 1` 与 `kind: "animatic_review"`。文件身份统一使用 `{path, sha256, bytes}`。记录 `episode_id`、`baseline_id`、`baseline`、`scope.scenes`（整期零起点序号）、`scope.evidence_ids`、`scope.semantic_goal`、`visual_path` 和 `consumer`。关联 `preview`、`project`、`motion_report`、`validation`、`playback` 及 `voice_window.source/window/start_sample/end_sample`。播放器记录写入实际媒体 SHA-256、原速、静音状态、尾帧和连续播放事件。对象舞台观察用生成报告的 `action_id`、三个对应的帧号、PNG 身份和具体可见变化。Blender 使用实际渲染的 `shot_id`。逐项填写 `checks` 与 `limitations`，见 `episode.py` 校验及回归。
+3. 记录 `animatic_reviewed` 时，把 MP4 和预演回执登记为输出，以 `--review-receipt` 指向该回执，把基线、预演项目、运动报告、验证报告、播放器记录、母版、窗口和真实消费源码登记为输入。正式合成后，`reviewed` 用同一选项登记 `kind: "delivery_review"` 的回执文件，关联 `episode_id`、由 `composed` 登记并实际检查的 `video`、`captions`、`validation`、逐幕 `scene_reviews` 及 `limitations`。每幕描述所见并附抽帧文件身份。
+4. 两类回执分别保留完整解码、画面抽查、连续播放、人工观看和试听、用户认可的实际依据。播放器到尾只登记播放证据。资料或消费者变化后重做受影响的预演，已登记产物的内容身份受原阶段校验保护。
+
+### 稳定日更门槛
+
+需要声明稳定日更结论的新项目在项目 JSON 中加入 `stability_gate_version: 1`，并在预演回执中填写 `stability_gate`。门槛按 `technical_decode`、`actual_visual`、`continuous_av`、`manual_viewing`、`manual_listening`、`phone_viewing`、`headphone_listening`、`speaker_listening`、`audience_recall`、`cross_machine` 和 `user_approval` 分层记录。每层只能使用 `passed`、`not_run` 或 `blocked`，通过层必须给出证据引用，未通过层必须给出原因。
+
+`stable_daily`、`status` 与 `blocking_layers` 由这组层级共同决定。播放器 `ended`、抽帧、一次人工认可或单机回放都不能代替缺失层级。没有 `stability_gate_version` 的历史 `daily-v1` 项目继续按原回执契约核验。

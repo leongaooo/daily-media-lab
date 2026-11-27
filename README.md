@@ -16,45 +16,6 @@
 
 ## 先看成果
 
-### 卡亚尼混合分镜复验 · 2026-11-27
-
-容量卡、三个数据厅的 SVG 分步高亮与三维路线，分别说明功率容量、数据厅归属和设施状态。本机样片已通过维护者验收。公开示例使用公开内置音色重新生成口播，带声和静音版共用一个冻结项目。 [可编辑示例](examples/idc-kajaani/README.md) · [制作记录](docs/progress/2026-11-27-idc-kajaani.md)
-
-### IDC 混合分镜验证 · 2026-11-27
-
-同一条时间线依次展示拟议拓扑的分步高亮、旧机房改造的局部放大和同框对照，以及从动作首帧可见的三维模块进场路线。公开示例包含原创图形与建模源，可用公开音色和正式字幕重新合成。[复现步骤](examples/idc-mixed-shot/README.md) · [制作记录](docs/progress/2026-11-27-idc-mixed-shot-validation.md)
-
-### 液冷设备原创插画 · 2026-11-26
-
-四秒静音样片用液冷分配单元和机柜展示供回液从待开启到流动的变化，底部留出字幕区。受管合成已实测回收重复 PNG 并从母版恢复。 [静音样片](previews/cooling-two-state-silent.mp4) · [可编辑素材](skills/news-to-video/assets/illustration-kit/README.md) · [执行记录](docs/progress/2026-11-26-illustrations-and-frame-retention.md)
-
-![手机宽度的供回液运行画面](previews/cooling-active-326.png)
-
-
-### 最新制作记录 · IDC 成片补制与作业空间治理
-
-2026 年 11 月 26 日的 IDC r1 已获发布授权。四条新闻的关键数字、日期和事实边界分别连到设备、运送模块或评估台，底部继续显示口播短句。两版完整解码并以 1× 播至结尾。跨日清理和交付后即时回收已有实跑记录。[本期里程碑](docs/progress/2026-11-26-idc-publication-governance.md) · [E 盘治理回放](docs/progress/2026-11-26-e-drive-governance.md)
-
-### 已认可的公开预览 · IDC 真实案例短段
-
-2026 年 11 月 25 日完成并获维护者整体认可。两段动画截自实际验收成片，均为原创三维示意和公开静音预览。
-
-#### 哈伍德数据厅
-
-从机柜走廊切到同一栋楼的三厅剖面，先显示首批 75 MW 的基础设施调试范围，再揭示首厅 25 MW 达到服务就绪。其余 50 MW 待安装和交付。
-
-![静音动画依次呈现机柜走廊、三厅剖面和首厅安装揭示](previews/idc-20261125-harwood.webp)
-
-#### 俄亥俄输电改造
-
-沿同一条输电走廊标出拟换线段，交代谷歌已签约的 24 MW、预计提前约两年交付，以及审批和工程完工条件。
-
-![静音动画显示输电走廊拟换线段的高亮变化及审批和完工条件](previews/idc-20261125-ohio.webp)
-
-验收成片长 **39.625 秒**。从已知选题建工程到交付检查实测 **23 分 06 秒**。查看来源、制作过程和整期计时的接续计划。[里程碑记录](docs/progress/2026-11-25-idc-production-milestone.md)
-
-### 历史预览 · Web3 日报
-
 ![真实Editorial制作画面，生成示意与流程图交替呈现](previews/editorial-preview.gif)
 
 **图片建立直觉，图解说明关系，声音带着观众往下走。**
@@ -95,7 +56,7 @@ API Key 是一种起点，不是全部运行条件。图片生成使用兼容的
 
 好的技术内容也需要编辑、设计、声音、翻译与无障碍经验。这个仓库欢迎这些贡献进入同一条工作流：一处事实纠正、一张关系更清楚的图、一条发音修正，都能改善下一期内容。
 
-制作端支持通用资讯，统一1920×1080、24fps和y904—1080固定字幕轨。三维主视觉由Blender建立故事世界，Remotion负责镜头、字幕、来源和声音合成；旧图解项目继续兼容。画面保留原比例，不把完整镜头压入旧对象槽。每期最多10次新的付费生图尝试，图片不是必需配额。新路线的实际运行和未验收范围见 [本批记录](docs/progress/2026-11-20-three-media-blender.md)；本期 Blender 应用见[本期里程碑](docs/progress/2026-11-26-idc-publication-governance.md)。
+制作端支持通用资讯，统一1920×1080、24fps和y904—1080固定字幕轨。三维主视觉由Blender建立故事世界，Remotion负责镜头、字幕、来源和声音合成；旧图解项目继续兼容。画面保留原比例，不把完整镜头压入旧对象槽。每期最多10次新的付费生图尝试，图片不是必需配额。新路线的实际运行和未验收范围见 [本批记录](docs/progress/2026-11-20-three-media-blender.md)；上方历史预览不作为新Blender成片证据。
 
 ## 三个技能，一个成片入口
 
@@ -116,6 +77,10 @@ API Key 是一种起点，不是全部运行条件。图片生成使用兼容的
 ```
 
 不再要求用户手工先做新闻再交接视频。领域分别维护来源与台账，混合一期才同时使用两领域；各条新闻保留独立主线，不强造因果。新稿可在定稿前内部校订，确认稿和最终音频保持身份保护。明确只要文字、剧本、计划或图片时到指定产物停止；讨论示例不启动制作。详见 [工作流](docs/WORKFLOW.md) 与 [最小合成示例](examples/three-media-minimal/README.md)。
+
+### 日更编辑入口
+
+IDC 日更先记录一个观众问题、一句可复述的收获、工程进展/技术运维/采购供应链切入点、表达方式、可直接发布的标题和可选互动，再进入 `episode.py init --editorial-plan`。方向建议保留原意和工作场景，由人工方向研讨委员会记录采纳、补证后再议或暂存理由。抖音导出和评论只在用户明确说“复盘”后读取。契约、结构校验和示例见 [日更编辑工作流](skills/news-to-video/references/daily-editorial-workflow.md)。
 
 本批正在补齐[建模前设计消费](skills/news-to-video/references/visual-director.md#建模前参考与设计消费)与[项目联合导演入口](skills/news-to-video/references/blender-handoff.md#项目联合导演接入)：先核对可辨主体及实际文字构图，再用共享帧／语义事件联动摄影、解释图形与声音；需要时从当前相机导出锚点。`narrative_directing` 是具体项目消费入口，当前两类板面不构成全题材自动导演。新接口回归和实际预演分开验收，进展见[返修记录](docs/progress/2026-11-20-joint-directing-v3.md)，不以历史预览证明本批质量。
 
@@ -153,6 +118,7 @@ API Key 是一种起点，不是全部运行条件。图片生成使用兼容的
 
 - [补充10组中文读法](https://github.com/leongaooo/daily-media-lab/issues/1) · `EXP-02-01`
 - [无GPU测试CI](https://github.com/leongaooo/daily-media-lab/issues/2) · `REP-04-01`
+- `ops/README.md`：生产预检、缓存审计、恢复演练与可搬迁源包入口
 - [手机字幕反馈](https://github.com/leongaooo/daily-media-lab/issues/3) · `EXP-02-02`
 - [第二台Windows/NVIDIA复现](https://github.com/leongaooo/daily-media-lab/issues/4) · `REP-02-01`
 - [单张原创SVG](https://github.com/leongaooo/daily-media-lab/issues/5) · `EXP-01-01`
@@ -163,7 +129,7 @@ API Key 是一种起点，不是全部运行条件。图片生成使用兼容的
 
 ## 当前状态与许可
 
-这是从本地实际使用流程整理的实验性开源准备版，尚未完成全新机器端到端安装验证。最新 IDC 短段已获整体认可，跨设备试听与整期一小时仍待实测。早期 Blender 候选的反馈和返修经过见[历史记录](docs/progress/2026-11-20-joint-directing-v3.md)。REP-01 的人耳认可覆盖对应的公开声音短样本。
+这是从本地实际使用流程整理的实验性开源准备版，尚未完成全新机器端到端安装验证。两片Blender候选已被用户判定观赏未通过，当前按[返修记录](docs/progress/2026-11-20-joint-directing-v3.md)修正；旧[技术证据](docs/progress/2026-11-20-three-media-blender.md)保留，技术合成或播放器ended不抵消观赏失败。用户已试听但未给本批声音分项结论。私人 B 声仍受保护；REP-01的公开短样本认可仅适用于该样本，新文稿仍需试听。
 
 维护三个媒体技能的任何新批更新前，先询问是否同步维护者配置的公开副本；同批明确答复沿用，正常采编或制作不增加确认。详见 [媒体维护约定](skills/news-to-video/references/media-maintenance.md)。
 

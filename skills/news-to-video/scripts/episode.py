@@ -13,8 +13,22 @@ import json
 import os
 from pathlib import Path
 import tempfile
+import subprocess
 from urllib.parse import urlsplit
 import uuid
+
+from daily_editorial import validate_plan
+from stability_gate import validate_stability_gate
+
+ACCEPTANCE_CONTRACTS = {"legacy", "daily-v1"}
+ANIMATIC_CHECKS = (
+    "audio_present",
+    "continuous_playback",
+    "caption_protection",
+    "before_middle_after",
+    "source_boundary",
+    "visual_path_consumed",
+)
 
 STAGE_DEPENDENCIES = {
     "editorial_locked": ["evidence_ready"],
@@ -58,6 +72,287 @@ def verify_identity(identity):
     actual = file_identity(identity["path"])
     if actual != identity:
         raise ValueError(f"Artifact identity changed: {identity['path']}")
+
+
+def _identity_set(identities):
+    return {(item["path"], item["sha256"], item["bytes"]) for item in identities}
+
+
+def _has_identity(value, identities):
+    return isinstance(value, dict) and (
+        value.get("path"),
+        value.get("sha256"),
+        value.get("bytes"),
+    ) in _identity_set(identities)
+
+
+def _require_identity(value, label):
+    if not isinstance(value, dict) or not {"path", "sha256", "bytes"} <= set(value):
+        raise ValueError(f"{label} must contain a complete file identity")
+    verify_identity(value)
+    return value
+
+
+def _motion_actions(motion):
+    actions = {}
+    for scene in motion.get("scenes", []):
+        for action in scene.get("actions", []):
+            action_id = action.get("action_id")
+            if not action_id or action_id in actions:
+                raise ValueError("Motion report actions need unique action_id values")
+            actions[action_id] = {"scene": scene.get("scene"), **action}
+    return actions
+
+
+def validate_animatic_receipt(
+    path, episode_id, inputs=(), outputs=None, require_stability=False
+):
+    """Validate a real short, voiced preview and its actual visual consumer.
+
+    The receipt is evidence-shaped. It records media identities, the frozen-voice
+    window, the renderer path and observed before/middle/after frames. It does not
+    infer audience approval from those technical checks.
+    """
+    path = Path(path).resolve(strict=True)
+    receipt_identity = file_identity(path)
+    if outputs is not None and not _has_identity(receipt_identity, outputs):
+        raise ValueError("Animatic receipt must be registered as a stage output")
+    receipt = read_json(path)
+    if receipt.get("schema_version") != 1 or receipt.get("kind") != "animatic_review":
+        raise ValueError(
+            "Animatic receipt requires schema_version=1 and kind=animatic_review"
+        )
+    if receipt.get("episode_id") != episode_id:
+        raise ValueError("Animatic receipt episode_id does not match the episode")
+    _required_text(receipt, ["baseline_id"], "Animatic receipt")
+    _require_identity(receipt.get("baseline"), "Production baseline")
+    scope = receipt.get("scope", {})
+    _required_text(scope, ["semantic_goal"], "Animatic scope")
+    if not scope.get("scenes") or any(
+        type(index) is not int for index in scope["scenes"]
+    ):
+        raise ValueError("Animatic scope needs source scene indices")
+    if not scope.get("evidence_ids") or not all(
+        isinstance(item, str) and item for item in scope["evidence_ids"]
+    ):
+        raise ValueError("Animatic scope needs actual evidence IDs")
+    visual_path = receipt.get("visual_path")
+    if visual_path not in {"legacy", "object_stage", "narrative_v1"}:
+        raise ValueError("Animatic receipt visual_path is unsupported")
+    for key in ("preview", "project", "motion_report", "validation", "playback"):
+        _require_identity(receipt.get(key), f"Animatic receipt {key}")
+    if outputs is not None and not _has_identity(receipt["preview"], outputs):
+        raise ValueError("Animatic preview must be an actual stage output")
+    for key in ("baseline", "project", "motion_report", "validation", "playback"):
+        if outputs is not None and not _has_identity(receipt[key], inputs):
+            raise ValueError(f"Animatic receipt {key} is not a registered stage input")
+    checks = receipt.get("checks")
+    if not isinstance(checks, dict) or any(
+        checks.get(key) is not True for key in ANIMATIC_CHECKS
+    ):
+        raise ValueError(
+            "Animatic receipt must prove the voiced preview and caption-safe visual checks"
+        )
+    limitations = receipt.get("limitations")
+    if not isinstance(limitations, list) or not limitations:
+        raise ValueError("Animatic receipt must state unmeasured quality layers")
+    stability_gate = receipt.get("stability_gate")
+    if stability_gate is None and require_stability:
+        raise ValueError("Stable daily acceptance requires a stability_gate")
+    if stability_gate is not None:
+        validate_stability_gate(stability_gate)
+    window = receipt.get("voice_window")
+    if not isinstance(window, dict):
+        raise ValueError(
+            "Animatic receipt must retain the frozen voice window identity"
+        )
+    for key in ("source", "window"):
+        _require_identity(window.get(key), f"Animatic voice_window.{key}")
+        if outputs is not None and not _has_identity(window[key], inputs):
+            raise ValueError(
+                f"Animatic voice_window.{key} is not a registered stage input"
+            )
+    if (
+        type(window.get("start_sample")) is not int
+        or type(window.get("end_sample")) is not int
+        or window["start_sample"] < 0
+        or window["end_sample"] <= window["start_sample"]
+    ):
+        raise ValueError(
+            "Animatic voice window needs a positive integer sample interval"
+        )
+
+    motion = read_json(receipt["motion_report"]["path"])
+    if motion.get("visual_path") != visual_path:
+        raise ValueError("Animatic visual_path does not match the motion report")
+    consumer = receipt.get("consumer")
+    if not isinstance(consumer, dict):
+        raise ValueError("Animatic receipt must name the real visual consumer")
+    _require_identity(consumer.get("artifact"), "Animatic consumer")
+    if outputs is not None and not _has_identity(consumer["artifact"], inputs):
+        raise ValueError("Animatic consumer is not a registered stage input")
+    reported = motion.get("consumer", {})
+    if consumer.get("kind") != reported.get("kind") or consumer[
+        "artifact"
+    ] != reported.get("artifact"):
+        raise ValueError(
+            "Animatic consumer must match the source staged by the renderer"
+        )
+    if motion.get("status") != "rendered" or type(motion.get("frame_count")) is not int:
+        raise ValueError("Animatic motion report must come from rendered frames")
+    preview_project = read_json(receipt["project"]["path"])
+    evidence_ids = {source.get("id") for source in preview_project.get("sources", [])}
+    if not set(scope["evidence_ids"]) <= evidence_ids:
+        raise ValueError(
+            "Animatic scope references evidence absent from the preview project"
+        )
+
+    observations = receipt.get("observations")
+    if not isinstance(observations, list) or not observations:
+        raise ValueError("Animatic receipt needs observed action or shot transitions")
+    if visual_path == "object_stage":
+        actions = _motion_actions(motion)
+        for observation in observations:
+            if not isinstance(observation, dict):
+                raise ValueError("Animatic observations must be objects")
+            action = actions.get(observation.get("action_id"))
+            if not action:
+                raise ValueError(
+                    "Animatic observation must reference a rendered action_id"
+                )
+            for key in ("before_frame", "middle_frame", "after_frame"):
+                if type(observation.get(key)) is not int:
+                    raise ValueError(
+                        "Animatic observations need integer before/middle/after frames"
+                    )
+            if not (
+                observation["before_frame"] < action["start_frame"]
+                and action["start_frame"]
+                <= observation["middle_frame"]
+                < action["end_frame"]
+                and observation["after_frame"] >= action["end_frame"]
+            ):
+                raise ValueError(
+                    "Animatic observation frames do not cover the action transition"
+                )
+            _required_text(
+                observation, ["observed", "evidence"], "Animatic observation"
+            )
+            _validate_frame_samples(observation, motion["frame_count"])
+    elif visual_path == "narrative_v1":
+        shots = motion.get("narrative_shots", [])
+        shot_ids = {shot.get("shot_id") for shot in shots}
+        for observation in observations:
+            if observation.get("shot_id") not in shot_ids:
+                raise ValueError(
+                    "Narrative animatic observation must reference a rendered shot_id"
+                )
+            _required_text(
+                observation, ["observed", "evidence"], "Animatic observation"
+            )
+    else:
+        for observation in observations:
+            _required_text(
+                observation, ["observed", "evidence"], "Animatic observation"
+            )
+    _validate_preview_media(receipt, preview_project, motion["frame_count"])
+    validation = read_json(receipt["validation"]["path"])
+    artifacts = validation.get("artifacts", {})
+    if (
+        validation.get("full_decode_passed") is not True
+        or validation.get("remotion_editorial", {}).get("captions_in_video")
+        != "bottom_rail"
+        or artifacts.get("video.mp4") != receipt["preview"]
+        or artifacts.get("motion-report.json") != receipt["motion_report"]
+        or artifacts.get("voice.wav", {}).get("sha256") != window["window"]["sha256"]
+    ):
+        raise ValueError(
+            "Animatic validation must bind the decoded voiced MP4, motion and caption rail"
+        )
+    playback = read_json(receipt["playback"]["path"])
+    if (
+        playback.get("media_sha256") != receipt["preview"]["sha256"]
+        or playback.get("ended") is not True
+        or playback.get("muted") is not False
+        or playback.get("rate") != 1
+        or playback.get("decodedFrames") != motion["frame_count"]
+        or type(playback.get("updates")) is not int
+        or playback["updates"] < 2
+        or any(event[0] in {"seeking", "error"} for event in playback.get("events", []))
+    ):
+        raise ValueError(
+            "Animatic playback must cover this MP4 continuously at original speed"
+        )
+    return receipt
+
+
+def _validate_frame_samples(observation, frame_count):
+    for phase in ("before", "middle", "after"):
+        if not 0 <= observation[f"{phase}_frame"] < frame_count:
+            raise ValueError("Animatic observation lies outside the rendered preview")
+        identity = observation.get("frames", {}).get(phase)
+        _require_identity(identity, f"Animatic {phase} frame")
+        if Path(identity["path"]).suffix.lower() != ".png":
+            raise ValueError("Animatic frame samples must be extracted PNGs")
+
+
+def _validate_preview_media(receipt, project, frame_count):
+    """Check actual stream types, frame/sample mapping, and the original PCM window."""
+    import imageio_ffmpeg
+    import numpy as np
+    import soundfile as sf
+
+    window = receipt["voice_window"]
+    source_path = window["source"]["path"]
+    window_path = window["window"]["path"]
+    start, end = window["start_sample"], window["end_sample"]
+    with sf.SoundFile(source_path) as source, sf.SoundFile(window_path) as voice:
+        if (
+            source.channels != 1
+            or voice.channels != 1
+            or source.samplerate != voice.samplerate
+            or end > source.frames
+            or voice.frames != end - start
+            or frame_count
+            != (voice.frames * 24 + voice.samplerate - 1) // voice.samplerate
+            or project.get("voice", {}).get("sha256") != window["window"]["sha256"]
+        ):
+            raise ValueError(
+                "Preview voice window does not match frozen PCM or frame count"
+            )
+        source.seek(start)
+        actual = voice.read(dtype="float64")
+        if not np.any(actual) or not np.array_equal(
+            actual, source.read(end - start, dtype="float64")
+        ):
+            raise ValueError(
+                "Preview window must preserve the audible frozen source samples"
+            )
+    preview = Path(receipt["preview"]["path"])
+    if preview.suffix.lower() != ".mp4":
+        raise ValueError("Animatic requires a voiced MP4")
+    # Decode both required stream types. A renamed storyboard or silent MP4 cannot pass.
+    result = subprocess.run(
+        [
+            imageio_ffmpeg.get_ffmpeg_exe(),
+            "-nostdin",
+            "-v",
+            "error",
+            "-xerror",
+            "-i",
+            str(preview),
+            "-map",
+            "0:v:0",
+            "-map",
+            "0:a:0",
+            "-f",
+            "null",
+            "-",
+        ],
+        capture_output=True,
+    )
+    if result.returncode:
+        raise ValueError("Animatic must decode with both video and audio streams")
 
 
 def _required_text(item, keys, label):
@@ -243,10 +538,20 @@ def _current(path, revision):
     return state
 
 
-def create_episode(path, episode_id, request, packages, confirmed_script=None):
+def create_episode(
+    path,
+    episode_id,
+    request,
+    packages,
+    confirmed_script=None,
+    acceptance_contract="daily-v1",
+    editorial_plan=None,
+):
     """Create internal evidence-ready state without claiming user delivery."""
     if not isinstance(episode_id, str) or not episode_id.strip() or not request:
         raise ValueError("Episode needs a stable episode_id and the actual request")
+    if acceptance_contract not in ACCEPTANCE_CONTRACTS:
+        raise ValueError("Unknown acceptance contract")
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
     with exclusive(path):
@@ -259,6 +564,7 @@ def create_episode(path, episode_id, request, packages, confirmed_script=None):
             "schema_version": 1,
             "episode_id": episode_id,
             "revision": 1,
+            "acceptance_contract": acceptance_contract,
             "request": request,
             "packages": package_receipts,
             "stage_receipts": {
@@ -273,6 +579,13 @@ def create_episode(path, episode_id, request, packages, confirmed_script=None):
             "adoption_receipts": [],
             "failure_receipts": [],
         }
+        if editorial_plan:
+            plan_identity = file_identity(editorial_plan)
+            plan = read_json(editorial_plan)
+            validate_plan(plan)
+            if plan["episode_id"] != episode_id:
+                raise ValueError("Editorial plan episode_id does not match the episode")
+            state["editorial_plan"] = plan_identity
         if confirmed_script:
             state["confirmed_script"] = file_identity(confirmed_script)
         atomic_json(path, state)
@@ -281,14 +594,47 @@ def create_episode(path, episode_id, request, packages, confirmed_script=None):
 
 def verify_episode(state):
     """Detect changed dependencies before resuming; never relabel stale output as current."""
+    acceptance_contract = state.get("acceptance_contract", "legacy")
+    if acceptance_contract not in ACCEPTANCE_CONTRACTS:
+        raise ValueError("Unknown episode acceptance contract")
     for package in state["packages"]:
         verify_identity({key: package[key] for key in ["path", "sha256", "bytes"]})
         validate_package(read_json(package["path"]))
+    if state.get("editorial_plan"):
+        verify_identity(state["editorial_plan"])
+        plan = read_json(state["editorial_plan"]["path"])
+        validate_plan(plan)
+        if plan["episode_id"] != state["episode_id"]:
+            raise ValueError("Editorial plan episode_id does not match the episode")
     if state.get("confirmed_script"):
         verify_identity(state["confirmed_script"])
     for receipt in state["stage_receipts"].values():
         for artifact in receipt.get("inputs", []) + receipt.get("outputs", []):
             verify_identity({key: artifact[key] for key in ["path", "sha256", "bytes"]})
+        if receipt.get("review_receipt"):
+            verify_identity(
+                {
+                    key: receipt["review_receipt"][key]
+                    for key in ["path", "sha256", "bytes"]
+                }
+            )
+    if (
+        acceptance_contract == "daily-v1"
+        and "animatic_reviewed" in state["stage_receipts"]
+    ):
+        stage = state["stage_receipts"]["animatic_reviewed"]
+        review_path = stage.get("review_receipt", {}).get("path")
+        if not review_path:
+            raise ValueError("Daily acceptance requires an animatic review receipt")
+        validate_animatic_receipt(
+            review_path,
+            state["episode_id"],
+            stage.get("inputs", []),
+            stage.get("outputs", []),
+            require_stability=state.get("stability_gate_version") == 1,
+        )
+    if acceptance_contract == "daily-v1" and "reviewed" in state["stage_receipts"]:
+        validate_delivery_review(state, state["stage_receipts"]["reviewed"])
     for receipt in state["delivery_receipts"]:
         verify_identity(receipt["artifact"])
     return state
@@ -340,7 +686,72 @@ def draft_episode(path, revision, paragraphs, output):
         return state
 
 
-def record_stage(path, revision, stage, outputs, evidence, inputs=()):
+def validate_delivery_review(state, stage):
+    """Bind the reviewed MP4 and SRT to the validated formal render of this animatic."""
+    review_identity = stage.get("review_receipt")
+    if not review_identity or review_identity not in stage["outputs"]:
+        raise ValueError(
+            "Daily acceptance requires a registered delivery review receipt"
+        )
+    review = read_json(review_identity["path"])
+    if review.get("schema_version") != 1 or review.get("kind") != "delivery_review":
+        raise ValueError(
+            "Daily review requires schema_version=1 and kind=delivery_review"
+        )
+    if review.get("episode_id") != state["episode_id"]:
+        raise ValueError("Daily review belongs to another episode")
+    composed = state["stage_receipts"]["composed"]["outputs"]
+    for key in ("video", "captions", "validation"):
+        if (
+            not review.get(key)
+            or review[key] not in composed
+            or review[key] not in stage["inputs"]
+        ):
+            raise ValueError(f"Daily review must cover the actual composed {key}")
+    validation = read_json(review["validation"]["path"])
+    production = validation.get("acceptance", {})
+    animatic = state["stage_receipts"]["animatic_reviewed"]["review_receipt"]
+    if (
+        production.get("animatic") != animatic
+        or validation.get("full_decode_passed") is not True
+    ):
+        raise ValueError(
+            "Composition requires a formal decode report bound to the reviewed animatic"
+        )
+    animatic_review = read_json(animatic["path"])
+    review_gate = review.get("stability_gate")
+    animatic_gate = animatic_review.get("stability_gate")
+    if state.get("stability_gate_version") == 1:
+        if review_gate is None:
+            raise ValueError("Stable daily delivery review requires a stability_gate")
+        validate_stability_gate(review_gate)
+        if review_gate != animatic_gate:
+            raise ValueError("Delivery review stability_gate differs from the animatic")
+    elif review_gate is not None:
+        validate_stability_gate(review_gate)
+    if (
+        validation.get("artifacts", {}).get("video.mp4") != review["video"]
+        or validation.get("artifacts", {}).get("captions.srt") != review["captions"]
+    ):
+        raise ValueError("Delivery video or captions differ from the formal render")
+    inspected = review.get("scene_reviews")
+    if not isinstance(inspected, list) or not inspected:
+        raise ValueError("Daily review requires scene observations")
+    for item in inspected:
+        _required_text(item, ["observation"], "Delivery scene review")
+        for frame in item.get("frames", []):
+            _require_identity(frame, "Delivery frame sample")
+        if not item.get("frames"):
+            raise ValueError(
+                "Delivery scene observations require encoded frame samples"
+            )
+    if not review.get("limitations"):
+        raise ValueError("Daily review requires the remaining quality limits")
+
+
+def record_stage(
+    path, revision, stage, outputs, evidence, inputs=(), review_receipt=None
+):
     """Record verified artifacts and dependencies after the executor actually completes a stage."""
     if stage not in STAGE_DEPENDENCIES or not evidence:
         raise ValueError("Known stage and concrete completion evidence required")
@@ -350,13 +761,31 @@ def record_stage(path, revision, stage, outputs, evidence, inputs=()):
         missing = set(STAGE_DEPENDENCIES[stage]) - state["stage_receipts"].keys()
         if missing:
             raise ValueError(f"Stage dependencies not ready: {sorted(missing)}")
+        input_identities = [file_identity(item) for item in inputs]
+        output_identities = [file_identity(item) for item in outputs]
         receipt = {
-            "inputs": [file_identity(item) for item in inputs],
-            "outputs": [file_identity(item) for item in outputs],
+            "inputs": input_identities,
+            "outputs": output_identities,
             "evidence": evidence,
         }
         if not receipt["outputs"]:
             raise ValueError("Stage receipt must identify actual outputs")
+        if (
+            state.get("acceptance_contract", "legacy") == "daily-v1"
+            and stage == "animatic_reviewed"
+        ):
+            if not review_receipt:
+                raise ValueError(
+                    "Daily acceptance requires --review-receipt for animatic_reviewed"
+                )
+            validate_animatic_receipt(
+                review_receipt,
+                state["episode_id"],
+                input_identities,
+                output_identities,
+                require_stability=state.get("stability_gate_version") == 1,
+            )
+            receipt["review_receipt"] = file_identity(review_receipt)
         if stage == "editorial_locked":
             narration = state.get("confirmed_script") or state.get("draft")
             if not narration or narration not in receipt["outputs"]:
@@ -365,6 +794,13 @@ def record_stage(path, revision, stage, outputs, evidence, inputs=()):
                 )
             verify_identity(narration)
         if stage == "reviewed":
+            if state.get("acceptance_contract") == "daily-v1":
+                if not review_receipt:
+                    raise ValueError(
+                        "Daily acceptance requires --review-receipt for reviewed"
+                    )
+                receipt["review_receipt"] = file_identity(review_receipt)
+                validate_delivery_review(state, receipt)
             composed_outputs = state["stage_receipts"]["composed"]["outputs"]
             if not any(item in composed_outputs for item in receipt["inputs"]):
                 raise ValueError(
@@ -411,6 +847,14 @@ def record_delivery(
             raise ValueError(
                 "Delivered video identity was not covered by the recorded review"
             )
+        if kind == "video" and state.get("acceptance_contract") == "daily-v1":
+            review = read_json(
+                state["stage_receipts"]["reviewed"]["review_receipt"]["path"]
+            )
+            if review["video"] != identity:
+                raise ValueError(
+                    "Delivered video differs from the daily review receipt"
+                )
         receipt = {
             "kind": kind,
             "artifact": identity,
@@ -610,6 +1054,15 @@ def main():
     create.add_argument("--request", required=True)
     create.add_argument("--package", action="append", required=True)
     create.add_argument("--confirmed-script")
+    create.add_argument(
+        "--acceptance-contract",
+        choices=sorted(ACCEPTANCE_CONTRACTS),
+        default="daily-v1",
+    )
+    create.add_argument(
+        "--editorial-plan",
+        help="Validated daily editorial choices to bind to this episode",
+    )
     for name in ["verify", "draft", "stage", "deliver", "adopt", "fail"]:
         command = sub.add_parser(name)
         command.add_argument("episode")
@@ -627,6 +1080,7 @@ def main():
             command.add_argument("--input", action="append", default=[])
             command.add_argument("--output", action="append", required=True)
             command.add_argument("--evidence", action="append", required=True)
+            command.add_argument("--review-receipt")
         elif name == "deliver":
             command.add_argument("--kind", choices=DELIVERY_KINDS, required=True)
             command.add_argument("--artifact", required=True)
@@ -662,6 +1116,8 @@ def main():
             args.request,
             args.package,
             args.confirmed_script,
+            args.acceptance_contract,
+            args.editorial_plan,
         )
     elif args.command == "verify":
         result = verify_episode(read_json(args.episode))
@@ -678,6 +1134,7 @@ def main():
             args.output,
             args.evidence,
             args.input,
+            getattr(args, "review_receipt", None),
         )
     elif args.command == "deliver":
         result = record_delivery(

@@ -70,11 +70,82 @@ class EpisodeTests(unittest.TestCase):
         self.package_path = self.root / "idc.json"
         episode.atomic_json(self.package_path, package())
         self.state = episode.create_episode(
-            self.path, "fixture-episode", "synthetic test", [self.package_path]
+            self.path,
+            "fixture-episode",
+            "synthetic test",
+            [self.package_path],
+            acceptance_contract="legacy",
         )
 
     def tearDown(self):
         self.temp.cleanup()
+
+    def test_daily_editorial_plan_is_bound_and_verified(self):
+        plan_path = self.root / "editorial-plan.json"
+        plan_path.write_text(
+            json.dumps(
+                {
+                    "schema_version": 1,
+                    "plan_id": "daily-fixture-plan",
+                    "episode_id": "fixture-episode",
+                    "publish_date": "2026-11-28",
+                    "timezone": "Asia/Shanghai",
+                    "question": "这条消息改变了什么？",
+                    "audience_outcome": "能说出已披露范围和待核边界。",
+                    "lane": "engineering_progress",
+                    "format": "fact",
+                    "headline": "这条消息改变了什么？",
+                    "evidence_ids": ["idc-e1"],
+                    "editorial_package_ids": ["idc-fixture"],
+                    "value_intent": {
+                        "directions": {
+                            name: {
+                                "level": "supporting",
+                                "reason": "fixture",
+                            }
+                            for name in (
+                                "content_depth",
+                                "content_value",
+                                "knowledge_value",
+                                "audio_visual_value",
+                                "emotion_value",
+                            )
+                        },
+                        "column_identity": {
+                            "mode": "carry",
+                            "signals": ["subtitle rail"],
+                            "fit_reason": "fixture",
+                        },
+                    },
+                    "expression": {
+                        "text": "fixture",
+                        "visual": "fixture",
+                        "sound": "fixture",
+                        "structure": "fixture",
+                    },
+                    "interaction": {"type": "none"},
+                    "review_policy": "user_requested_only",
+                },
+                ensure_ascii=False,
+            ),
+            encoding="utf-8",
+        )
+        plan_episode_path = self.root / "editorial-plan-episode.json"
+        state = episode.create_episode(
+            plan_episode_path,
+            "fixture-episode",
+            "synthetic test",
+            [self.package_path],
+            acceptance_contract="legacy",
+            editorial_plan=plan_path,
+        )
+        self.assertEqual(state["editorial_plan"]["path"], str(plan_path.resolve()))
+        episode.verify_episode(state)
+        plan_path.write_text(
+            plan_path.read_text(encoding="utf-8") + "\n", encoding="utf-8"
+        )
+        with self.assertRaisesRegex(ValueError, "Artifact identity changed"):
+            episode.verify_episode(episode.read_json(plan_episode_path))
 
     def draft(self):
         self.draft_path = self.root / "draft.json"

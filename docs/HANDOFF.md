@@ -1,48 +1,39 @@
 # 当前交接
 
-更新：2026-11-27（Asia/Shanghai）。先读 AGENTS 和 ROADMAP，任务状态在 ROADMAP 维护。
-
-## 卡亚尼跨案例实测（2026-11-27）
-
-维护者已验收本机卡亚尼样片。公开入口按独立的公开内置音色生成口播，再用同一冻结项目生成两版。完整日更工时、实机体验和独立机器继续按 ROADMAP 验证。 [复现和证据](progress/2026-11-27-idc-kajaani.md)
-
-## IDC 混合分镜接续（2026-11-27）
-
-以[混合分镜复现例](../examples/idc-mixed-shot/README.md)检查拓扑高亮、改造放大后回同框及三维路线从起点可见。现场设备近景、真实整期工时、人工观看与试听、目标观众复述和独立机器复现按需续验，详见[本轮记录](progress/2026-11-27-idc-mixed-shot-validation.md)。
-
-## IDC 短段制作接续（2026-11-25）
-
-本期真实案例演练已产出 39.625 秒带声预演并获维护者整体认可。下期从选题开始计时，先用一个专业对象做带声联合预演，再扩展整期。复用本次的状态对照、路径高亮和字幕验收方式，单独补齐整期工时、实机读字和分设备试听。见[IDC 短段制作里程碑](progress/2026-11-25-idc-production-milestone.md)。
+更新：2026-11-21（Asia/Shanghai）。先读AGENTS和ROADMAP；任务状态仅在ROADMAP维护。
 
 ## 当前焦点
 
-PUB-07已由开源发布会话`01a1f8af-4350-76e3-9784-ba4b6839de72`完成并收口。提交`dc412bf087e1f67a5da32addb553a09495f4b5d2`已正常推送`origin/main`，远端 ref、关键文件、GitHub提交页／README／发布记录和技能入口已核验；详见[本轮发布收尾](progress/2026-11-20-open-source-publication.md)。第二部分PROD-01、第三部分OPS-01仅登记，暂不制作新片或启动新机环境。
+PROD-01 已由会话 `01a1f934-d7a6-7220-961c-5ab5fcae26d1` 实际制作并交付新一期《十八面镜子，一束星光》，主题为韦布望远镜2022年分段镜校准，采用“现象—误判—相位—全仪器边界”结构。完整命令、来源、设计、预演、整片、返修与限制见[本期进度](progress/2026-11-20-prod-01-webb.md)。没有用旧IDC／cavern片或REP-09阶段认可替代本片验收。
 
-REP-09已完成：2026-11-20用户明确确认“作为这个阶段的成果验收通过”。本阶段涵盖建模前设计消费、共享事件驱动摄影／图板／声音、两条完整返修视频及E盘资产收尾。586帧代表片和934帧IDC整期保持原最终干声，完整解码、1.0播放及关键状态复核完成，canonical118／public123项回归通过。旧候选的负反馈仍保留，不改判旧片通过。
+本地权威作业根：`E:/CodexMedia/jobs/2026-11-20/prod-01-webb/`。
 
-阶段认可不替代声音跨设备专项、跨题材稳定性、独立新机器或远程发布验证；本批仍仅本地公开定向合并，未commit／push。后续以可复用生产和实际观看效果为目标，按下面建议推进；本轮没有启动新一期或发布。
+- 完整成片：`output/video.mp4`，59.833333秒／1436帧，1920×1080／24fps；SHA256 `d139cc71fc834b8e2c47712f867ef8f4af97f83305fb42fe14639d9018f3c3c9`。
+- 字幕与声音：`output/captions.srt`、`audio/voice.wav`、`output/mix.wav`；10条连续实测语义cue，公开qwen-uncle-fu-v1冻结干声，无私人参考、音乐或模拟现场声。最终合成不再TTS／变速／降噪／重拼。
+- 可编辑交付：`prod-01-webb-editable.zip`，63文件／14,044,602字节，SHA256 `39355d170206fb8d1728a72ea82a6afe1d2bed6697f9ebda5153ec0c7b3de470`。包含两个真实blend、原创字卡／作者脚本、来源／许可、事件／镜头／音频身份、主片与预演。包内逐文件SHA已核对，不含runtime、权重、字体、Key、网页影像或私人声音；完整PNG及原始HTML留job。
+- 证据：`quality-review.json`、`technical-review.json`、`artifact-manifest.json`、`phase-repair-provenance.json`、`source-dependency-review.json`；原母版及失败／恢复日志保留。NASA三份一手页面URL、HTML及哈希在sources；本片只用原创示意，不冒充实测光路、整星复原或2026新闻。
 
-维护者本地成果已迁到`E:/CodexMedia/jobs/2026-11-20/joint-directing-v3/implementation/`，完整视频分别在`cavern-full/output/`、`idc-program-v2/output/`。旧C作业路径是指向E的NTFS junction，兼容旧链接和blend纹理绝对引用；不把这视作独立新机可移植包。公开用户工作根可配置，不要求E盘。本地日志／媒体身份／迁移清理回执不含入库授权，继续保护私人声音及未授权新素材。
+## 必须保留的验收边界
 
-此前REP-06／REP-07／REP-08的入口、冻结音频、整数帧、母版／代理、声音轨和节目恢复成果保留：news-to-video为近期IDC／Web3成片总入口，独立领域保留剧本／文字；确认稿及最终音频保持身份。以下既往技术验证只适用于当时版本，不自动覆盖v3新增消费者或媒体。
+实际完成：正式render.py与独立verify.py完整解码、1436帧及10条字幕连续、输出干声字节保持、双声道PCM等于单声道干声复制、峰值0.779968、123项公开回归；Chrome从头1.0／unmuted播放至59.833333、关键状态与相位段定点复核。15张编码后抽帧另用于排版，不称持续观看。
 
-本地共享能力及公开适配已实施，canonical103项、public108项全量回归通过，含保留的public_voice5项。公开首跑的1项error为测试硬编码路径经占位后非法，已双端改Path(__file__)定位并复跑；不跳过此失败记录。12保护文件哈希未变，Web3空模板补十列表头且原CRLF前缀保留。初始Windows导出分隔符断言已按真实路径重核，见 [本批证据](progress/2026-11-20-three-media-blender.md)。
+尚无本片持续人眼观看、人耳读音／耳机／普通扬声器试听、手机实机或用户认可证据；不能从ended、未静音或抽帧外推。390px竖屏内嵌字幕偏小，不判通过；844px桌面横放模拟字形可辨，仍不是手机实机。建议实际手机全屏横放并核对SRT／声音；收到设备、时间点及听感反馈后，在当前job返修对应层，再收口唯一任务表。没有新机或远程发布证据。
 
-真实IDC38.9167秒／934帧已无TTS合成、HTTP到ended、实际链接交付，episode与IDC采用幂等收口。真实Web3包及混合两包／三新闻／六段完成init/draft/lock/verify，没有冒称混合整片或另一领域新TTS。公开 [校色技术例](../examples/blender-calibration/README.md) 已从公开源实际运行到24帧合成，render-only环境无TTS／私人声音键；坏帧拒绝／单帧恢复、环境音只重混复用画面与音乐静音门均有实际证据。
+相位段曾因顶点线性混合在中态缩小波幅，已改为定幅波列平移，仅重渲156帧。其余1280帧先与原1436帧回执逐项SHA匹配，再按原源／参数技术重新登记；两个源和原回执保留，不将原帧伪称新源生成。恢复采用shots.json三段清单，不能只打开旧源的失败相位段判定正式片。
 
-旧cavern视觉已被用户拒绝，不作为质量基准。cavern-v2正式24.4167秒／586帧和review定位复核是技术历史，后续用户明确指出联动／叙事不足，IDC整期也因素材准确性和细节不足观赏未通过；不再写“待方向答复”。用户已试听，但没有声音分项结论，不推断配音通过或失败。播放器首尾完成不等于人眼持续注视或人耳试听。原稿、最终干声和旧片保留；新机／第二设备仍未完成，README历史样片保持旧身份。
+## 前序与后续边界
 
-公开声音REP-01已收口。维护者于本轮试听默认1.15倍样本后反馈“挺好的”，仅认可当前样本整体听感；原速、逐词和跨设备未单独验收。技术证据见[公开声音实施](progress/2026-11-11-public-voice.md)，样本见[试听入口](../examples/public-voice-smoke/README.md)。私人B声仍不公开，独立公开runtime不覆盖旧配置。
+PUB-07沿用[发布收尾](progress/2026-11-20-open-source-publication.md)：发布载荷 `dc412bf087e1f67a5da32addb553a09495f4b5d2`、收口 `6be44db792ae8c9d7e190f7ffb714979b6b07fdc2`，当时origin/main与GitHub入口已核验。本轮没有重新提交／推送、改远程历史或新增发布。
 
-COM-04已发布三类Issue模板及五个社区任务入口（Issue #1—#5）。发布验证及实际链接见[社区启动记录](progress/2026-11-11-community-launch.md)与[贡献任务](community/README.md)。父任务不因发布Issue自动完成；认领和讨论在Issue，状态只在ROADMAP。
+REP-09用户阶段验收与旧负反馈均保留，见[阶段记录](progress/2026-11-20-joint-directing-v3.md)；旧根为 `E:/CodexMedia/jobs/2026-11-20/joint-directing-v3/`。旧C junction不变，新作业／暂存在E盘。前序阶段认可不扩展到本片或跨设备声音。
 
-## 下一步
+OPS-01 已由会话 `01a1f934-d7a6-7220-961c-5ab5fcae26d1` 实际推进并进入待验证：`ops/` 预检、缓存审计、回执恢复演练、相对源包、公开最小示例、同机 clean venv 和无GPU CI入口已落地并实跑。详细命令和回执见[OPS-01进度](progress/2026-11-21-ops-01.md)。REP-02／REP-02-01第二台Windows/NVIDIA机器、REP-03完整真实Web3示例、REP-04远程CI回执与远程发布仍按各自证据单独记录，不能由本机结果外推。
 
-1. 优先以一个新主题跑完整一期：真实参考、前置设计、建模／摄影、声画联合预演、整片和实际观看。检验能否在不同专业对象与叙事结构下复用已验收链路，不把当前旁板／机柜构图固定为全题材模板。
-2. 补生产可靠性：沿E盘稳定作业根，执行磁盘预算／依赖／路径预检，明确母版与可再生缓存回收，保留失败续渲及冻结音轨身份；将本期依赖旧C junction的贴图逐步封装为可搬迁资产。
-3. 补观看专项：型号／缩写／数字读法、语义节奏、手机字幕与耳机／扬声器混音分别验证，已有最终干声不因专项计划自动重录。
-4. 补公开复现：REP-03完整公开例、REP-02／REP-02-01独立新机、REP-04-01无GPU回归CI按各自证据推进；公开样例用可合法分发声音／素材。后续发布遵守相应授权；本轮提交／推送已由PUB-07明确授权。
-5. 后续媒体技能新批更新按维护约定确认同步选择；不将本阶段验收扩展为新题材、新声音、长期效果或分发许可。
+当前可复核产物：PROD-01 `ops-preflight-final.json` 为 pass；`ops-cache-audit.json` 扫描5288文件并登记1681组重复SHA；`ops-recovery-drill.json` 的 baseline／拒绝／恢复均通过；可搬迁源包位于 `E:/CodexMedia/jobs/2026-11-21/ops-01/prod-01-webb-source.zip`，46项、SHA256 `84861087318c2f6c78469f538f90151e92a268166d9638fb785fc357e652345d`；同机clean venv记录在 `clean-env-reproduction.json`。这些文件都在E盘作业区，不进入Git。
+
+三个媒体技能本体本轮零修改，未触发维护同步；PUB-07答复没有作为永久授权。未来首次技能写入前仍按media-maintenance询问本批同步选择。私人声音、Key、runtime、模型、客户资料及未授权素材继续不进Git。
+
+本任务本地审片服务已停止，18766无监听，无制作子进程残留。job/tmp、__pycache__及自动blend1备份的清理被自动审批拒绝（仅返回blocked by policy），故保留；未换方式删除，不影响正式视频或工程包。
 
 
 ## 精炼成果固化接续（2026-11-21）
@@ -51,12 +42,30 @@ COM-04已发布三类Issue模板及五个社区任务入口（Issue #1—#5）�
 
 本次不包含新媒体、有声样片、私人声音、源PDF或新机／设备试听证明。用户一般赞许只认可对应短段方向，技术、连续观看、人耳及用户反馈分开；未来不得把本轮授权解释为继续整片制作。其他PROD-01／OPS-01工作和已有未提交改动继续保留；本条不改变它们的原验收状态。
 
-## 2026-11-26 接续
+## 对象状态叙事接续（2026-11-25）
 
-维护者已授权 r1 发布。按 [11 月 27 日执行入口](progress/2026-11-26-idc-publication-governance.md#11-月-27-日执行入口) 开工前重审跨日清单，再按 r1 标准制作，交付后立即回收可再生暂存。r1 技术证据及实跑范围见[本期里程碑](progress/2026-11-26-idc-publication-governance.md#r1-正式版与-11-月-27-日制作交接)。
+已将独立新闻场景、对象前后态、最终口播短段、实际画面和声音消费者接入 [news-to-video](../skills/news-to-video/SKILL.md)。公开复验入口见[合成示例](../skills/news-to-video/assets/object-state-preview/README.md)，当期证据见[本次进度](progress/2026-11-25-object-state-narrative.md)。下一轮研究先复核当前范围，再以具体验证方法对比可选价值目标及同方向产品。
 
-本机 `E:/CodexMedia` 的真实盘点和隔离夹具回放已写入[E 盘治理回放](progress/2026-11-26-e-drive-governance.md)。下一工作日继续对前一天及更早的 MP4、帧、暂存和素材生成 `remove`／`retain` 清单，再显式 `--apply`；今日不删除真实旧作业。
+## 稳定日更门槛接续（2026-11-26）
 
-## 日更素材和留存
+稳定日更门槛已接入本机 `news-to-video` 的 `stability_gate_version: 1` 入口和回执校验。历史 `legacy`、旧 `daily-v1`、简单图解与独立 Blender narrative 继续兼容。今日 IDC 独立复做目录为 `E:/CodexMedia/jobs/2026-11-26/idc-20261126-stability-gate/`，新版视频、字幕、预演回执、整期复核、验证报告和稳定门槛清单已绑定新的哈希。稳定结论是 `deferred`，技术解码、实际画面和连续声画通过，持续人工观看、人工试听、手机、耳机、普通扬声器、观众复述、跨机复现和本片用户认可没有证据，不能登记稳定日更通过。
 
-次日先读最新已安装技能的素材索引和现用依赖清单。使用合成短段验证设备与方向，再进入整期。已验收的 r1 恢复链继续优先保留。 [OPS-04](progress/2026-11-26-illustrations-and-frame-retention.md)
+Blackbird 同画面对照在整期复渲后补齐。下次涉及主体动作、路径或状态变化时，把静音去口播字幕版和同画面冻结口播版前置到整期合成之前。具体文件与跨期验证范围见[验收记录](progress/2026-11-26-idc-daily-acceptance.md#2026-11-26--稳定日更门槛与独立作业复做)。
+
+维护者已指定 `Westgate-Traffic-Silent.mp4` 为最新视觉成果标准。旧 IDC 信息卡版保留为历史交付，当前三维返修作业根为 `E:/CodexMedia/jobs/2026-11-26/idc-westgate-standard/`。先查看整期静音版的主体、方位、触发、动作与结果，再核查同一画面流的冻结原声版。文件身份、抽帧观察和剩余验收范围见[返修记录](progress/2026-11-26-idc-daily-acceptance.md#westgate-视觉基准与-idc-返修)。
+
+## Daily Media Lab 下一阶段日更入口（2026-11-27）
+
+日更编辑计划已接入 `news-to-video`。下一期先用
+`skills/news-to-video/scripts/daily_editorial.py validate-plan` 检查观众问题、
+观众收获、切入点、表达方式、交付标题、可选互动和价值意图，再用
+`episode.py init --editorial-plan` 绑定计划文件。当前演练使用真实卡亚尼证据包，
+但没有把演练清单当作交付或采用。
+
+- 计划契约：[日更编辑工作流](../skills/news-to-video/references/daily-editorial-workflow.md)
+- 结构入口：`skills/news-to-video/scripts/daily_editorial.py`
+- 11 月 28 日演练证据：`E:/Codex/2026-11-27/news-to-video-next-goals/work/rehearsal-20261128-kajaani.json`
+- 当前公开里程碑：[实施核验](progress/2026-11-27-daily-editorial-next-phase.md)
+
+方向建议进入独立方向板，由人工记录 `accepted`、`revise_after_evidence` 或
+`parked` 的理由。私人抖音导出和评论只有在用户明确发起“复盘”后读取。正式发布仍由维护者控制。
