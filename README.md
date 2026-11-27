@@ -16,6 +16,10 @@
 
 ## 先看成果
 
+### IDC 混合分镜验证 · 2026-11-27
+
+同一条时间线依次展示拟议拓扑的分步高亮、旧机房改造的局部放大和同框对照，以及从动作首帧可见的三维模块进场路线。公开示例包含原创图形与建模源，可用公开音色和正式字幕重新合成。[复现步骤](examples/idc-mixed-shot/README.md) · [制作记录](docs/progress/2026-11-27-idc-mixed-shot-validation.md)
+
 ### 液冷设备原创插画 · 2026-11-26
 
 四秒静音样片用液冷分配单元和机柜展示供回液从待开启到流动的变化，底部留出字幕区。受管合成已实测回收重复 PNG 并从母版恢复。 [静音样片](previews/cooling-two-state-silent.mp4) · [可编辑素材](skills/news-to-video/assets/illustration-kit/README.md) · [执行记录](docs/progress/2026-11-26-illustrations-and-frame-retention.md)

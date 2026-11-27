@@ -630,6 +630,17 @@
         "scripts/cross_day_storage.py",
         "scripts/test_cross_day_storage.py"
       ]
+    },
+    {
+      "id": 112,
+      "name": "idc-mixed-shot-selection-and-review",
+      "prompt": "制作一期 IDC 资讯，包含拟议节点拓扑、机柜更换前后对照，以及模块进场和落位。采用之前确认的二维与三维结合方案。",
+      "expected_output": "逐镜选择静态、二维或三维。固定拓扑节点并分步高亮，保留拟议与待核状态。改造先同框、更换时放大、最后回同框。进场和落位采用三维小场景，从动作开始用有依据的路线引导。整期扩制前验证同画面静音与冻结口播对照，并用正式合成检查字幕与画内标注。按实际验收交付并记录实际用时和返工。",
+      "files": [
+        "SKILL.md",
+        "references/visual-director.md",
+        "references/editorial-handoff.md"
+      ]
     }
   ],
   "scope_notice": "2026-11-20: explicit v1/v2 component cases remain compatibility checks. New narrative_version=1 Blender shots are independent of old object slots/counts. Historical maintenance prompts now also apply the current per-batch open-source sync question; prior batch approval is not perpetual approval."

@@ -434,7 +434,7 @@ def stage(project, cues, duration, base, folder, font):
         payload["narrative_shots"] = stage_manifest(
             project, base, public, round(duration * editorial_fps)
         )
-        payload["narrative_cues"] = cues
+        payload["narrative_cues"] = cues if caption_mode == "bottom_rail" else []
         payload["narrative_version"] = 1
         if project.get("narrative_directing"):
             payload["narrative_directing"] = stage_directing(

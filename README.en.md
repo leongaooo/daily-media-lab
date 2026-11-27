@@ -16,6 +16,10 @@ If you want to make regular content for your project, team, or community, you ar
 
 ## See the work
 
+### Mixed IDC shots · 2026-11-27
+
+A single timeline steps through a proposed topology, zooms into a rack retrofit before returning to the side-by-side comparison, and shows the 3D module route from the first frame of motion. The example includes the original graphics and scene sources and can be rebuilt with the public voice and production captions. [Reproduction steps](examples/idc-mixed-shot/README.md) · [Production record](docs/progress/2026-11-27-idc-mixed-shot-validation.md)
+
 ### Reusable cooling illustrations · 2026-11-26
 
 An original CDU and server rack show the transition from an available route to active supply and return flow. The four-second sample is silent and retains the caption area. Managed production also verified that the renderer can reclaim and reconstruct duplicated compositing frames. [Silent sample](previews/cooling-two-state-silent.mp4) · [Editable assets](skills/news-to-video/assets/illustration-kit/README.md) · [Production notes](docs/progress/2026-11-26-illustrations-and-frame-retention.md)

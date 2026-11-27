@@ -60,6 +60,39 @@ class EditorialContractTests(unittest.TestCase):
             self.assertEqual(scene["captions"][0]["start"], 0)
             self.assertEqual(scene["captions"][-1]["end"], scene["duration"])
 
+    def test_narrative_caption_off_excludes_display_cues_only(self):
+        font = self.base / "font.ttf"
+        font.write_bytes(b"test font copied without decoding")
+        cues = [
+            {
+                "scene": 0,
+                "text": "原口播",
+                "start": 0,
+                "end": 1,
+                "start_frame": 0,
+                "end_frame": 24,
+            }
+        ]
+        shots = [{"shot_id": "scene", "start_frame": 0, "end_frame": 24}]
+        (self.base / "shots.json").write_text("{}", encoding="utf-8")
+        project = {
+            "narrative_version": 1,
+            "narrative_manifest": "shots.json",
+            "scenes": [{}],
+        }
+        for mode, display_cues in (("bottom_rail", cues), ("off", [])):
+            with self.subTest(mode=mode), patch.object(
+                editorial, "stage_manifest", return_value=shots
+            ):
+                project["editorial"] = {"captions": mode}
+                payload = editorial.stage(
+                    project, cues, 1, self.base, self.base / mode, font
+                )
+                self.assertEqual(payload["narrative_cues"], display_cues)
+                self.assertEqual(payload["narrative_shots"], shots)
+                self.assertEqual(payload["scenes"][0]["segments"], ["原口播"])
+                self.assertEqual(payload["scenes"][0]["duration"], 24)
+
     def test_flow_data_and_diagram_fit_survive_staging(self):
         nodes = [{"title": "SDK"}, {"title": "签名"}, {"title": "激活后核验"}]
         project = {"scenes": [{"editorial_kind": "flow", "editorial_nodes": nodes}]}
