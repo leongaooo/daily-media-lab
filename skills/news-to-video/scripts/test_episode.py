@@ -184,7 +184,10 @@ class EpisodeTests(unittest.TestCase):
         header = (
             "| Date | URL | Title | Source | Topic | Domain | Why |"
             if domain == "idc"
-            else "| Date | URL | Title | Source | Topic | Project | Version | Dates | Delta | Delivery |"
+            else (
+                "| Date | URL | Title | Source | Topic | Project | Version | "
+                "Dates | Delta | Delivery |"
+            )
         )
         columns = 7 if domain == "idc" else 10
         path.write_text(

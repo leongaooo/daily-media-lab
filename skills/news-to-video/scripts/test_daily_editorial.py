@@ -97,7 +97,12 @@ class DailyEditorialTests(unittest.TestCase):
             path = Path(directory) / "plan.json"
             path.write_text(json.dumps(plan(), ensure_ascii=False), encoding="utf-8")
             result = __import__("subprocess").run(
-                ["python", str(Path(__file__).with_name("daily_editorial.py")), "validate-plan", str(path)],
+                [
+                    "python",
+                    str(Path(__file__).with_name("daily_editorial.py")),
+                    "validate-plan",
+                    str(path),
+                ],
                 check=True,
                 capture_output=True,
                 text=True,
