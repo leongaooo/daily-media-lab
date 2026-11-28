@@ -16,6 +16,10 @@ If you want to make regular content for your project, team, or community, you ar
 
 ## See the work
 
+### Key-scene review before refinement · 2026-11-28
+
+Review all key scenes in one place before refining the episode. Annotated layouts and motion previews follow the planned cut, with direct links to each scene. Production proceeds when the user approves the version under review. [Workflow notes](docs/progress/2026-11-28-key-scene-review.md)
+
 ### Transparent overlays for mixed shots · 2026-11-28
 
 The compositor checks that transparent SVG pixels preserve the Blender plate and verifies where the picture is expected to change. The public IDC example encoded two 200-frame versions from one sealed master and checked full decoding, stream types and subtitle settings. [Validation notes](docs/progress/2026-11-28-mixed-shot-transparency.md) · [Reproduction guide](examples/idc-mixed-shot/README.md)

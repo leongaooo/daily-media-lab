@@ -782,6 +782,27 @@
       "files": [
         "references/media-maintenance.md"
       ]
+    },
+    {
+      "id": 121,
+      "name": "key-scenes-single-review-panel",
+      "prompt": "三条新闻做成一期。我在整期精修前集中看关键幕，内容与配音一版你负责。路线、设备动作和两期数据对照我都怕被误读，审片时间按我的安排。",
+      "expected_output": "用同一板块按成片顺序交付所有关键幕，提供连播与幕号定位，每幕有标注构图及真实粗动态。呈现位置、层级、归属、触发、响应、停留和观众推断，关键视听决策做到接近成片。无固定审片时长，内容与首版配音由技能主导。未收到制作指令前停在审片阶段。",
+      "files": [
+        "SKILL.md",
+        "references/editorial-handoff.md",
+        "references/production-baseline.md"
+      ]
+    },
+    {
+      "id": 122,
+      "name": "key-scene-feedback-and-production-approval",
+      "prompt": "审片 v1 中第 2 幕箭头像管线，第 5 幕高亮遮住主体。稍后我在同一会话对修订版说通过。",
+      "expected_output": "把多条反馈绑定对应版本、幕号及修改项，未放行时保留待确认状态。只返看会改变观众理解或主要视听效果的受影响幕。针对修订版明确通过后直接开始正式制作，沿用已确认范围，无重复申请。其他修饰由技能复核，避免旧版认可被用作新版授权。",
+      "files": [
+        "SKILL.md",
+        "references/editorial-handoff.md"
+      ]
     }
   ],
   "scope_notice": "2026-11-20: explicit v1/v2 component cases remain compatibility checks. New narrative_version=1 Blender shots are independent of old object slots/counts. Historical maintenance prompts now also apply the current per-batch open-source sync question; prior batch approval is not perpetual approval. Candidate value architecture cases 96-102 are appended after canonical review. They cover value intent, work/audience evidence separation, static-frame limits, read-only evaluation, high-priority column recognition, no total score, and version scope. Cases 103–105 cover independent story worlds, actual stage/audio consumers, and approval-to-public-fixture boundaries. Cases 113–116 cover the Daily Media Lab next-phase editorial plan, human direction-board decisions, explicit review gating, and title/interaction delivery."

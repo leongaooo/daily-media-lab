@@ -77,3 +77,7 @@ Blackbird 同画面对照在整期复渲后补齐。下次涉及主体动作、�
 ## EXP-09 · 混合分镜透明覆盖
 
 新增覆盖 PNG、原始底图像素和动作窗口核验。公开混合分镜示例从同一封存母版生成带声与仅画面两版，路线证据、词点与复验入口见[本批核验](progress/2026-11-28-mixed-shot-transparency.md)。
+
+## EXP-10 · 关键幕集中审片
+
+新一期在精修前交一个按成片顺序的审片板块。板块含关键幕连播、稳定幕号、标注构图图和粗动态。用户对当前版本明确通过后继续整期制作。参照[关键幕集中审片](../skills/news-to-video/references/editorial-handoff.md#关键幕集中审片)和[本批核验](progress/2026-11-28-key-scene-review.md)。
