@@ -786,8 +786,8 @@
     {
       "id": 121,
       "name": "key-scenes-single-review-panel",
-      "prompt": "三条新闻做成一期。我在整期精修前集中看关键幕，内容与配音一版你负责。路线、设备动作和两期数据对照我都怕被误读，审片时间按我的安排。",
-      "expected_output": "用同一板块按成片顺序交付所有关键幕，提供连播与幕号定位，每幕有标注构图及真实粗动态。呈现位置、层级、归属、触发、响应、停留和观众推断，关键视听决策做到接近成片。无固定审片时长，内容与首版配音由技能主导。未收到制作指令前停在审片阶段。",
+      "prompt": "三条新闻做成一期。整期精修前我集中看所有关键幕，路线、设备动作和两期数据对照都怕被误读。现在只有脚本，没有配音，审片时间按我的安排。",
+      "expected_output": "技能主导节目内容。用稿件节奏和预计时长直接产出一份按成片顺序的可连播静音粗动态，所有关键幕提供稳定幕号、时间定位和标注构图。呈现位置、层级、归属、触发、响应、停留及观众推断，影响判断的视觉样段做到接近成片。等待用户按自己的时间反馈，正式配音和实测 cue 不阻塞送审。",
       "files": [
         "SKILL.md",
         "references/editorial-handoff.md",
@@ -797,11 +797,33 @@
     {
       "id": 122,
       "name": "key-scene-feedback-and-production-approval",
-      "prompt": "审片 v1 中第 2 幕箭头像管线，第 5 幕高亮遮住主体。稍后我在同一会话对修订版说通过。",
-      "expected_output": "把多条反馈绑定对应版本、幕号及修改项，未放行时保留待确认状态。只返看会改变观众理解或主要视听效果的受影响幕。针对修订版明确通过后直接开始正式制作，沿用已确认范围，无重复申请。其他修饰由技能复核，避免旧版认可被用作新版授权。",
+      "prompt": "审片 v1 中第 2 幕箭头像管线，第 5 幕高亮遮住主体。我稍后在同一会话明确说修订版通过，配音就在视觉精修的时候一起做，我不审核配音。",
+      "expected_output": "将累计反馈绑定版本、幕号和修改项。只返看会实质改变观众理解或主要视觉效果的受影响幕。当前版本明确通过后，直接并行开展视觉精修和正式配音。技能自验配音和声画技术质量，用户按自身节奏审批视觉，不重复请求开工确认。",
       "files": [
         "SKILL.md",
         "references/editorial-handoff.md"
+      ]
+    },
+    {
+      "id": 123,
+      "name": "key-scene-review-reuses-frozen-narration",
+      "prompt": "审片 v2 通过，按这版做。已有冻结口播和实测 cue，改一下两幕的动作节奏。",
+      "expected_output": "立即按获准范围精修。以 external_final 复用冻结声和原 cue，保留文件与原始字节，不运行 TTS、变速、降噪或重拼。按实测 cue 核对镜头、动作、字幕及尾音，技能自验实际带声短段。",
+      "files": [
+        "references/production-baseline.md",
+        "references/blender-handoff.md",
+        "scripts/frozen_audio.py"
+      ]
+    },
+    {
+      "id": 124,
+      "name": "visual-sign-off-precedes-technical-animatic-receipt",
+      "prompt": "只有静音关键幕预演。刚才我已经说这个审片版本通过，可以制作。正式配音还没生成。现在从哪一步继续？",
+      "expected_output": "记录所放行的视觉版本和范围，启动视觉精修与配音。待 audio_locked 和 visual_ready 后，按实测 cue 对齐并登记有声技术预演 animatic_reviewed，再封存母版并合成。技能实际检查配音、连续声画和尾音。静音审片和视觉放行不能用作冻结音频、带声技术预演或用户试听证据。",
+      "files": [
+        "references/editorial-handoff.md",
+        "references/production-baseline.md",
+        "scripts/episode.py"
       ]
     }
   ],

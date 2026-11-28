@@ -80,4 +80,4 @@ Blackbird 同画面对照在整期复渲后补齐。下次涉及主体动作、�
 
 ## EXP-10 · 关键幕集中审片
 
-新一期在精修前交一个按成片顺序的审片板块。板块含关键幕连播、稳定幕号、标注构图图和粗动态。用户对当前版本明确通过后继续整期制作。参照[关键幕集中审片](../skills/news-to-video/references/editorial-handoff.md#关键幕集中审片)和[本批核验](progress/2026-11-28-key-scene-review.md)。
+新一期在精修前交一个按成片顺序的视觉审片板块。板块含关键幕连播、稳定幕号、标注构图和可静音播放的粗动态。用户确认当前版本后，视觉精修与配音并行。技能用冻结后的实测 cue 对齐并自验声画。参照[关键幕集中审片](../skills/news-to-video/references/editorial-handoff.md#关键幕集中审片)和[本批核验](progress/2026-11-28-key-scene-review.md)。

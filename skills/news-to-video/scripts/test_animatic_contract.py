@@ -190,6 +190,43 @@ class AnimaticContractTests(unittest.TestCase):
             episode.validate_animatic_receipt(path, self.episode_id)
         self.assertIn("Format not recognised", str(error.exception))
 
+    def test_visual_can_be_ready_without_frozen_audio(self):
+        state_path = self.root / "episode.json"
+        package_path = self.root / "package.json"
+        episode.atomic_json(package_path, package())
+        state = episode.create_episode(
+            state_path,
+            self.episode_id,
+            "Synthetic video",
+            [package_path],
+            confirmed_script=self.project,
+        )
+        state = episode.record_stage(
+            state_path,
+            state["revision"],
+            "editorial_locked",
+            [self.project],
+            ["Locked script"],
+        )
+        state = episode.record_stage(
+            state_path,
+            state["revision"],
+            "visual_ready",
+            [self.image],
+            ["Visual asset"],
+        )
+        with self.assertRaisesRegex(
+            ValueError, r"dependencies not ready.*audio_locked"
+        ):
+            episode.record_stage(
+                state_path,
+                state["revision"],
+                "animatic_reviewed",
+                [self.preview],
+                ["Technical preview"],
+            )
+        self.assertEqual(episode.read_json(state_path), state)
+
     def test_new_episode_refuses_storyboard_for_animatic(self):
         state_path = self.root / "episode.json"
         package_path = self.root / "package.json"

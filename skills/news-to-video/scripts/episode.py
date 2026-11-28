@@ -34,6 +34,7 @@ STAGE_DEPENDENCIES = {
     "editorial_locked": ["evidence_ready"],
     "audio_locked": ["editorial_locked"],
     "visual_ready": ["editorial_locked"],
+    # The technical preview uses frozen audio. Visual sign-off is recorded separately.
     "animatic_reviewed": ["audio_locked", "visual_ready"],
     "masters_ready": ["animatic_reviewed"],
     "composed": ["masters_ready", "audio_locked"],

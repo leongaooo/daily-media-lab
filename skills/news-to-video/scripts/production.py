@@ -39,7 +39,11 @@ def locked_script(editorial, project):
 
 
 def freeze_narration(project, project_path, baseline, runtime_path):
-    """Synthesize the selected voice once and save the dry samples and measured cues."""
+    """Synthesize dry narration and measure cues for the formal production pass.
+
+    Visual review can use estimated timings. Reuse an existing frozen master
+    through external_final when preparing the technical preview and final cut.
+    """
     from render import prepare_narration
     import soundfile
 

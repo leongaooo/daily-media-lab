@@ -18,7 +18,7 @@ If you want to make regular content for your project, team, or community, you ar
 
 ### Key-scene review before refinement · 2026-11-28
 
-Review all key scenes in one place before refining the episode. Annotated layouts and motion previews follow the planned cut, with direct links to each scene. Production proceeds when the user approves the version under review. [Workflow notes](docs/progress/2026-11-28-key-scene-review.md)
+Review the key visuals in one place before refining the episode. The reel can be silent and follows the planned cut, with direct links and annotated layouts for each scene. After the user approves the current version, visual refinement and narration begin in parallel. The skill checks the voice and audiovisual quality. [Workflow notes](docs/progress/2026-11-28-key-scene-review.md)
 
 ### Transparent overlays for mixed shots · 2026-11-28
 
