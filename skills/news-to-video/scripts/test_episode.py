@@ -539,13 +539,15 @@ class EpisodeTests(unittest.TestCase):
         video_b = self.root / "b.mp4"
         video_a.write_bytes(b"synthetic video A identity only")
         video_b.write_bytes(b"synthetic video B identity only")
-        self.state = episode.record_stage(
-            self.path,
-            self.state["revision"],
-            "composed",
-            [video_a, video_b],
-            ["Synthetic composition"],
-        )
+        # Use historical composition rules for this two-output review fixture.
+        with patch("production_contract.ASSETS", self.root):
+            self.state = episode.record_stage(
+                self.path,
+                self.state["revision"],
+                "composed",
+                [video_a, video_b],
+                ["Synthetic composition"],
+            )
         review = self.root / "review.md"
         review.write_text("Reviewed synthetic A only", encoding="utf-8")
         for inputs in [[], [self.draft_path]]:

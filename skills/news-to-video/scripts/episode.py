@@ -813,6 +813,12 @@ def record_stage(
                     "Completed stage identity differs; fork an episode revision instead of overwriting a lock"
                 )
             return state
+        if stage == "composed":
+            # Old receipts stay verifiable after activation. New compositions must
+            # come from the production entry before review or ledger adoption.
+            from production_contract import require_registered_composition
+
+            require_registered_composition(path, output_identities)
         state["stage_receipts"][stage] = receipt
         state["revision"] += 1
         atomic_json(path, state)

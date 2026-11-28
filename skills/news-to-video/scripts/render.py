@@ -8,6 +8,10 @@ from pathlib import Path
 import re
 import subprocess
 import shutil
+import sys
+from uuid import uuid4
+
+from media_storage import clean_rendered_stage, render_storage
 
 from frozen_audio import external_mode, validate_config, load_final, frame_at
 from narrative_media import read_json as read_narrative, validate_manifest
@@ -404,7 +408,7 @@ def prepare_narration(project, runtime, cache, base, output, fps):
     return duration, voice, gate, cues, sample_rate, models
 
 
-def run(args):
+def run(args, *, reclaim_narrative_stage=False, production_context=None):
     """Render one project as one continuous program using the sole visual engine."""
     if args.visual_engine != ENGINE:
         raise ValueError("Only remotion_editorial is supported")
@@ -413,6 +417,11 @@ def run(args):
         json.loads(project_path.read_text(encoding="utf-8-sig"))
     )
     validate(project)
+    picture_only = getattr(args, "picture_only", False)
+    if picture_only and (
+        project.get("narrative_version") != 1 or not external_mode(project)
+    ):
+        raise ValueError("--picture-only requires a sealed narrative and frozen audio")
     base = project_path.parent
     acceptance = validate_formal_acceptance(project, project_path, base)
     pending_images = any(
@@ -469,6 +478,9 @@ def run(args):
         "captions": "bottom_rail",
         **project.get("editorial", {}),
     }
+    # Preserve cue identity and suppress the display layer for the silent cut.
+    if picture_only:
+        project["editorial"]["captions"] = "off"
     project.update(visual_engine=ENGINE, width=width, height=height, fps=fps)
     if not external_mode(project):
         project["voice"] = {
@@ -656,26 +668,15 @@ def run(args):
         sheet.paste(picture, ((index % 3) * 270, (index // 3) * 152))
     sheet.save(output / "storyboard.jpg")
     result = output / "video.mp4"
-    subprocess.run(
+    # Both cuts share the Remotion picture and retain the frozen cue duration.
+    mux = [ffmpeg, "-y", "-v", "error", "-i", str(silent)]
+    if not picture_only:
+        mux.extend(["-i", str(output / "mix.wav")])
+    mux.extend(["-map", "0:v:0", "-c:v", "copy"])
+    if not picture_only:
+        mux.extend(["-map", "1:a:0", "-c:a", "aac", "-b:a", "192k"])
+    mux.extend(
         [
-            ffmpeg,
-            "-y",
-            "-v",
-            "error",
-            "-i",
-            str(silent),
-            "-i",
-            str(output / "mix.wav"),
-            "-map",
-            "0:v:0",
-            "-map",
-            "1:a:0",
-            "-c:v",
-            "copy",
-            "-c:a",
-            "aac",
-            "-b:a",
-            "192k",
             "-t",
             str(duration),
             "-color_primaries",
@@ -689,9 +690,9 @@ def run(args):
             "-movflags",
             "+faststart",
             str(result),
-        ],
-        check=True,
+        ]
     )
+    subprocess.run(mux, check=True)
     subprocess.run(
         [ffmpeg, "-v", "error", "-i", str(result), "-f", "null", "-"], check=True
     )
@@ -740,6 +741,8 @@ def run(args):
             },
         },
     )
+    if production_context is not None:
+        report["production_baseline"] = production_context
     report["artifacts"] = {
         name: file_identity(output / name)
         for name in (
@@ -750,9 +753,24 @@ def run(args):
             "motion-report.json",
         )
     }
-    if acceptance is not None:
+    if picture_only:
+        report["picture_only"] = True
+    elif acceptance is not None:
         report["acceptance"] = acceptance
     save_json(output / "validation.json", report)
+    if reclaim_narrative_stage and project.get("narrative_version") == 1:
+        try:
+            clean_rendered_stage(
+                project,
+                base,
+                output,
+                output / f"storage-stage-cleanup-{uuid4().hex}.json",
+                reason="Decoded delivery and its independently sealed source frames",
+                apply=True,
+            )
+        except (OSError, KeyError, ValueError) as error:
+            # The encoded delivery is already verified. Keep any stage with incomplete evidence.
+            print(f"Narrative stage cleanup deferred: {error}", file=sys.stderr)
     print(json.dumps(report, ensure_ascii=False, indent=2), flush=True)
 
 
@@ -760,7 +778,27 @@ def argument_parser():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("project")
     parser.add_argument("--output", required=True)
+    parser.add_argument(
+        "--min-free-bytes",
+        type=int,
+        help="Minimum free bytes required for a managed media jobs output",
+    )
+    parser.add_argument(
+        "--keep-narrative-stage",
+        action="store_true",
+        help="Keep managed Remotion frame copies for Studio or working review",
+    )
+    parser.add_argument(
+        "--picture-only",
+        action="store_true",
+        help="Render a sealed narrative without visible captions or an audio stream",
+    )
     parser.add_argument("--runtime")
+    parser.add_argument(
+        "--backend-only",
+        action="store_true",
+        help="Run a technical example or preflight render without a production receipt",
+    )
     parser.add_argument("--image-connection")
     parser.add_argument("--image-credentials")
     parser.add_argument("--visual-engine", choices=(ENGINE,), default=ENGINE)
@@ -768,4 +806,20 @@ def argument_parser():
 
 
 if __name__ == "__main__":
-    run(argument_parser().parse_args())
+    options = argument_parser().parse_args()
+    from production_contract import ACTIVE_NAME, ASSETS
+
+    if (ASSETS / ACTIVE_NAME).is_file() and not (
+        options.picture_only or options.backend_only
+    ):
+        raise SystemExit("Use production.py for new production or revalidation")
+    if options.min_free_bytes is not None and options.min_free_bytes < 0:
+        raise SystemExit("--min-free-bytes must be nonnegative")
+    with render_storage(
+        Path(options.project), Path(options.output), options.min_free_bytes
+    ) as job:
+        run(
+            options,
+            reclaim_narrative_stage=job is not None
+            and not options.keep_narrative_stage,
+        )

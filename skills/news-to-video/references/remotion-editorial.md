@@ -13,7 +13,7 @@ $install = Join-Path $HOME '.cache/news-to-video/remotion-editorial'
 npm.cmd install --prefix $install --no-audit --no-fund '@remotion/cli@4.0.542' 'remotion@4.0.542' 'react@19.3.1' 'react-dom@19.3.1'
 
 $runtime = Get-Content "$HOME/.cache/news-to-video/runtime.json" -Raw | ConvertFrom-Json
-& $runtime.python "<repository>/skills/news-to-video/scripts/render.py" "项目.json" --output "成片目录"
+& $runtime.python "<repository>/skills/news-to-video/scripts/render.py" "项目.json" --backend-only --output "成片目录"
 ```
 
 runtime.json 可以用 remotion_install 指向独立安装目录。渲染器使用现有本地 FFmpeg 合成配音和音乐，不调用 Remotion 云端服务。

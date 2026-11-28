@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "version": "2026.11.28-1",
+  "frame": {
+    "width": 1920,
+    "height": 1080,
+    "fps": 24
+  },
+  "captions": {
+    "consumer": "bottom_rail",
+    "max_visible_characters": 34,
+    "max_seconds": 8,
+    "y": [
+      904,
+      1080
+    ]
+  },
+  "visual": {
+    "consumer": "narrative_v1",
+    "require_claim_links": true
+  },
+  "voice": {
+    "id": "qwen-uncle-fu-v1",
+    "backend": "qwen-custom-voice-v1",
+    "generation_speed": 1.15,
+    "playback_rate": 1
+  }
+}

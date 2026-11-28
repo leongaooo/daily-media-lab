@@ -20,7 +20,7 @@ For new public narration, explicitly select qwen-uncle-fu-v1 and follow [public 
 
 ### 目录和清理时点
 
-本机 `news-to-video` 管理 `E:/CodexMedia/jobs/YYYY-MM-DD/<episode>/`、`E:/CodexMedia/cache/` 及明确归属于某一作业的临时目录。公开环境使用自己的媒体根。根内其他应用的 archive、session、visualization 目录由各自管理。
+本机 `news-to-video` 管理 `<MEDIA_WORK_ROOT>/jobs/YYYY-MM-DD/<episode>/`、`<MEDIA_WORK_ROOT>/cache/` 及明确归属于某一作业的临时目录。公开环境使用自己的媒体根。根内其他应用的 archive、session、visualization 目录由各自管理。
 
 ### 素材与母版的生产设计
 
@@ -39,7 +39,7 @@ For new public narration, explicitly select qwen-uncle-fu-v1 and follow [public 
 | `source/`、`sources/` | Blender、组件、来源、配置和许可。保留仍引用或缺少替代的唯一来源。 |
 | `cache/`、`tmp/` | 作业内可再生缓存及明确归属的临时文件。浏览器配置、模型、依赖运行时分别核对，活动锁和链接保留。 |
 | 媒体根 `cache/` | 新的可再生跨作业缓存按 `cache/YYYY-MM-DD/<owner>/` 记录归属。未建立日期和归属的旧缓存先保留。 |
-| `E:/CodexMedia/governance/YYYY-MM-DD` | 盘点、删除和保留回执。放在 `jobs`、`cache` 之外，不参与媒体作业删除。 |
+| `<MEDIA_WORK_ROOT>/governance/YYYY-MM-DD` | 盘点、删除和保留回执。放在 `jobs`、`cache` 之外，不参与媒体作业删除。 |
 
 受管 Blender 合成经 `render.py` 完整解码并写入验证记录后，仍持有作业锁时逐张匹配并回收 `remotion/public/narrative` 内的独立合成副本，并写入 `storage-stage-cleanup-*.json`。直接在 Remotion Studio 使用暂存时运行 `--keep-narrative-stage`。用原工程重跑该命令可重建暂存。硬链接、身份变化和证据不全的文件按回执保留。Blender 和 Remotion 的受管入口共用同一作业锁。
 
@@ -63,7 +63,7 @@ python scripts/cross_day_storage.py --root '<media-root>' --as-of 2026-11-27 --r
 日更先估算完整母版、合成暂存与输出总预算，再传给制作入口。以下示例预算为 2 GiB，按本期实际估算填写。
 
 ```powershell
-python scripts/render.py <project.json> --output <root>/jobs/2026-11-27/<episode>/output --min-free-bytes 2147483648
+python scripts/render.py <project.json> --backend-only --output <root>/jobs/2026-11-27/<episode>/output --min-free-bytes 2147483648
 ```
 
 规范作业目录默认记录渲染前实际可用空间，历史非规范路径继续兼容。运行期间持有作业同级的 `.<episode-id>.media-production.lock`。中断遗留锁时，先核实原进程、渲染子进程及其他写入者均已退出，再恢复。使用独立合成入口时包裹 `render_storage(project, output, min_free_bytes)`，共享同一作业锁和预检回执。

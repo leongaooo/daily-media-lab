@@ -35,7 +35,7 @@ $runtime = '<render-only-runtime.json>'
 & $renderPython './skills/news-to-video/scripts/narrative_media.py' "$output/shots.json"
 & $renderPython './skills/news-to-video/scripts/check_runtime.py' `
   --runtime $runtime --project "$output/project.json"
-& $renderPython './skills/news-to-video/scripts/render.py' "$output/project.json" `
+& $renderPython './skills/news-to-video/scripts/render.py' "$output/project.json" --backend-only `
   --runtime $runtime --output "$output/delivery"
 ```
 

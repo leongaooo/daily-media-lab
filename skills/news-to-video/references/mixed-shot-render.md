@@ -8,8 +8,8 @@
 
 ```powershell
 python scripts/check_runtime.py --project '<job>/project.json' --runtime '<runtime.json>'
-python scripts/render.py '<job>/project.json' --output '<job>/output' --runtime '<runtime.json>'
-python scripts/render.py '<job>/project.json' --output '<job>/silent-compose' --runtime '<runtime.json>' --picture-only
+python scripts/render.py '<job>/project.json' --backend-only --output '<job>/output' --runtime '<runtime.json>'
+python scripts/render.py '<job>/project.json' --backend-only --output '<job>/silent-compose' --runtime '<runtime.json>' --picture-only
 ```
 
 `--picture-only` 使用冻结 cue 保持时轴并生成仅含视频流的 MP4。独立 SRT 保存在带声输出。浏览器截图遇到资源不足时先核对磁盘和活动进程，可在当期项目将 `editorial.render.concurrency` 设为 `1`，并关闭 `parallel_encoding` 后重试。

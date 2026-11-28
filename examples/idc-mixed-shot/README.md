@@ -34,8 +34,8 @@ Copy-Item "$example/source/*.py" "$job/source/"
 & $py "$job/source/prepare.py" $job --manifest
 & $py "$scripts/narrative_media.py" "$job/shots.json" --seal
 & $py "$scripts/check_runtime.py" --runtime $runtime --project "$job/project.json"
-& $py "$scripts/render.py" "$job/project.json" --output "$job/output" --runtime $runtime --min-free-bytes 2147483648
-& $py "$scripts/render.py" "$job/project-silent-picture.json" --output "$job/silent-compose" --runtime $runtime --min-free-bytes 2147483648
+& $py "$scripts/render.py" "$job/project.json" --backend-only --output "$job/output" --runtime $runtime --min-free-bytes 2147483648
+& $py "$scripts/render.py" "$job/project-silent-picture.json" --backend-only --output "$job/silent-compose" --runtime $runtime --min-free-bytes 2147483648
 & $py "$job/source/verify.py" $job --probe $profile.ffprobe --browser $browser --output "$job/deliverables"
 ```
 

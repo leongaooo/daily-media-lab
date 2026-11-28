@@ -53,11 +53,11 @@ python "$skill/scripts/generate_images.py" $project `
 
 ```powershell
 python './skills/news-to-video/scripts/check_runtime.py' --runtime '<your-private-runtime.json>'
-python './skills/news-to-video/scripts/render.py' '<project.json>' `
-  --runtime '<your-private-runtime.json>' --output './outputs/episode'
+python './skills/news-to-video/scripts/render.py' '<project.json>' --backend-only `
+  --runtime '<your-private-runtime.json>' --output './outputs/backend-check'
 ```
 
-其中 `python` 必须指向准备好的渲染环境。输出可包括 MP4、SRT、voice.wav、mix.wav、分镜和验证记录；缓存与输出目录不纳入版本库。新机器安装尚未实测，不能将作者已有本机成功当作首装验证。
+此命令用于授权的技术诊断，正式节目使用下文的 `production.py`。其中 `python` 必须指向准备好的渲染环境。输出可包括 MP4、SRT、voice.wav、mix.wav、分镜和验证记录；缓存与输出目录不纳入版本库。新机器安装尚未实测，不能将作者已有本机成功当作首装验证。
 
 ## Blender与冻结最终音频
 
@@ -84,9 +84,11 @@ $renderPython = '<render-env>/Scripts/python.exe'
 # 母版已就绪，再检查external_final项目；这条分支不读取TTS配置。
 & $renderPython './skills/news-to-video/scripts/check_runtime.py' `
   --runtime '<render-only-runtime.json>' --project '<project.json>'
-& $renderPython './skills/news-to-video/scripts/render.py' '<project.json>' `
-  --runtime '<render-only-runtime.json>' --output './outputs/episode'
+& $renderPython './skills/news-to-video/scripts/production.py' new --episode '<episode.json>' `
+  --project '<project.json>' --runtime '<render-only-runtime.json>' --output './outputs/episode'
 ```
+
+先使用 `episode.py init --editorial-plan` 建立节目并锁定稿件，随后用上面的制作命令读取当前生效基线。已有节目复验使用 `production.py revalidate` 并给出新的输出目录。纯技术示例用 `render.py --backend-only`，其产物用于诊断。详见 [节目流程](WORKFLOW.md)。
 
 仅渲染／external_final环境不要运行省略--project的check_runtime：其默认分支会检查TTS，而不是一个纯渲染环境检测。准确干声和cue可提前准备；针对三维项目的完整检查则要等母版存在，不用零字节图片或proxy绕过。
 

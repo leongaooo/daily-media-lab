@@ -34,7 +34,7 @@ init拒绝覆盖已有episode；重复练习用新的输出目录，真实中断
 仅在用户实际要求制作并完成自己的公开运行环境后，才用project.json运行render.py；本次格式练习不执行这一步：
 
 ```powershell
-python './skills/news-to-video/scripts/render.py' './examples/three-media-minimal/project.json' `
+python './skills/news-to-video/scripts/render.py' './examples/three-media-minimal/project.json' --backend-only `
   --runtime '<your-public-voice-runtime.json>' --output './outputs/three-media-minimal-media'
 ```
 
@@ -47,7 +47,7 @@ python './skills/news-to-video/scripts/render.py' './examples/three-media-minima
 ```powershell
 $job = './outputs/jobs/2026-11-27/storage-smoke'
 python examples/three-media-minimal/prepare_storage_smoke.py $job
-python skills/news-to-video/scripts/render.py "$job/project.json" --output "$job/output" --min-free-bytes 536870912 --runtime '<render-only-runtime.json>'
+python skills/news-to-video/scripts/render.py "$job/project.json" --backend-only --output "$job/output" --min-free-bytes 536870912 --runtime '<render-only-runtime.json>'
 ```
 
 确认输出含 48 帧、`validation.json` 和 `storage-preflight-*.json`。静音在本机生成，随代码分发的是 MIT 源码和合成文字。

@@ -4,7 +4,7 @@
 
 ## 执行入口
 
-项目保留 `title/scenes[].segments[].text/spoken`。加入 `narrative_version:1` 与 `narrative_manifest:"shots.json"`，不设置旧 `visual_contract_version`。可以使用新合成口播，也可以使用下方冻结入口。画面仍由同一个 `render.py project.json --output output --runtime runtime.json` 合成。运行环境只需渲染Python、Node/Remotion、字体与FFprobe；冻结入口不读TTS配置或私人参考。
+项目保留 `title/scenes[].segments[].text/spoken`。加入 `narrative_version:1` 与 `narrative_manifest:"shots.json"`，不设置旧 `visual_contract_version`。可以使用新合成口播，也可以使用下方冻结入口。画面仍由同一个 `render.py project.json --backend-only --output output --runtime runtime.json` 合成。运行环境只需渲染Python、Node/Remotion、字体与FFprobe；冻结入口不读TTS配置或私人参考。
 
 先按 [建模前设计](visual-director.md#建模前参考与设计消费) 核对参考与可见候选，选定并记录用于造型、材质和摄影的具体特征，再制作可编辑 `.blend`。模型代表帧对照选定图，不能只登记图片路径或用运镜遮掩类型缺失。将源文件及所有外链、字体、贴图、模拟烘焙登记。源blend内容哈希同时覆盖相机、动作、材质、灯光。工具不替导演自动生成通用科技场景。
 
@@ -13,7 +13,7 @@ python scripts/blender_render.py shots.json --blender "<blender executable>"
 # 导入人工或其他受控任务已渲染的序列时，显式技术封存：
 python scripts/narrative_media.py shots.json --seal
 python scripts/narrative_media.py shots.json
-python scripts/render.py project.json --runtime runtime.json --output output
+python scripts/render.py project.json --backend-only --runtime runtime.json --output output
 ```
 
 `blender_render.py` 从源blend启动固定版本，覆盖清单中明确的输出/引擎/色彩参数，不保存回源blend。逐帧成功后原子记回执；中断恢复仅跳过同身份且内容哈希相同的帧。新版本、引擎、依赖或源变动使相应镜头全部失效，绝不自动换引擎。`--seal` 只表示导入帧已解码并登记身份，操作者必须确保其来自所声明源及参数，不是渲染来源的密码学证明。

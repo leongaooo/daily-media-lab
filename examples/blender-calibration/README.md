@@ -45,7 +45,7 @@ generate_scene默认只存.blend、shots及patches，不渲染；可显式加--p
 & $renderPython './skills/news-to-video/scripts/blender_render.py' "$output/shots.json" --blender $blender
 & $renderPython './skills/news-to-video/scripts/narrative_media.py' "$output/shots.json"
 & $renderPython './skills/news-to-video/scripts/check_runtime.py' --runtime $runtime --project "$output/project.json"
-& $renderPython './skills/news-to-video/scripts/render.py' "$output/project.json" --runtime $runtime --output "$output/delivery"
+& $renderPython './skills/news-to-video/scripts/render.py' "$output/project.json" --backend-only --runtime $runtime --output "$output/delivery"
 ```
 
 runtime放仓库外，仅需font、remotion_install和ffprobe等渲染依赖配置，不含tts_python、voice_profile或私人参考。参见 [环境准备](../../docs/GETTING_STARTED.md) 和 [执行契约](../../skills/news-to-video/references/blender-handoff.md)。始终向check_runtime传入此external_final项目；省略--project会进入默认TTS检查，不是纯渲染检查。

@@ -27,8 +27,8 @@ Copy-Item "$skill/assets/illustration-kit/liquid-cooled-server-rack.svg" "$job/s
 & $py "$job/source/prepare.py" $job --manifest
 & $py "$scripts/narrative_media.py" "$job/shots.json" --seal
 & $py "$scripts/check_runtime.py" --runtime $runtime --project "$job/project.json"
-& $py "$scripts/render.py" "$job/project.json" --output "$job/output" --runtime $runtime --min-free-bytes 2147483648
-& $py "$scripts/render.py" "$job/project.json" --output "$job/silent-compose" --runtime $runtime --min-free-bytes 2147483648 --picture-only
+& $py "$scripts/render.py" "$job/project.json" --backend-only --output "$job/output" --runtime $runtime --min-free-bytes 2147483648
+& $py "$scripts/render.py" "$job/project.json" --backend-only --output "$job/silent-compose" --runtime $runtime --min-free-bytes 2147483648 --picture-only
 & $py "$job/source/verify.py" $job --probe $profile.ffprobe --browser $env:NEWS_TO_VIDEO_BROWSER --output "$job/deliverables"
 ```
 

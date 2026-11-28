@@ -21,7 +21,7 @@ $publicCache = Join-Path $HOME '.cache/news-to-video/public-voice'
   --font 'C:/Windows/Fonts/msyh.ttc' --ffprobe '<tools>/ffprobe.exe'
 $publicRuntime = Join-Path $publicCache 'runtime.json'
 & $renderPython './skills/news-to-video/scripts/check_runtime.py' --runtime $publicRuntime
-& $renderPython './skills/news-to-video/scripts/render.py' `
+& $renderPython './skills/news-to-video/scripts/render.py' --backend-only `
   './examples/public-voice-smoke/project.json' `
   --runtime $publicRuntime --output './outputs/public-voice-smoke'
 ```
