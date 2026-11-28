@@ -16,6 +16,10 @@
 
 ## 先看成果
 
+### 混合分镜透明覆盖 · 2026-11-28
+
+SVG 标注叠加 Blender 时逐像素验证透明区与原始底图，并检查预期动作窗口。公开 IDC 示例用同一封存母版生成带声与静音两版，验证两版各 200 帧的完整解码、音流和字幕设置。[验证记录](docs/progress/2026-11-28-mixed-shot-transparency.md) · [可复现示例](examples/idc-mixed-shot/README.md)
+
 ![真实Editorial制作画面，生成示意与流程图交替呈现](previews/editorial-preview.gif)
 
 **图片建立直觉，图解说明关系，声音带着观众往下走。**

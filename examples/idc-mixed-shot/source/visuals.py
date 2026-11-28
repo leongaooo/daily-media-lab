@@ -3,11 +3,11 @@
 import argparse
 import html
 import json
-import os
 from pathlib import Path
 
-from PIL import Image
 from playwright.sync_api import sync_playwright
+
+from mixed_shot import PictureState, render_states, verify_motion_windows
 
 BG = "#101D29"
 CARD = "#1A2C3A"
@@ -174,7 +174,7 @@ def route_labels(projection, arrived):
         "现场接口待核",
     )
     parts[0] = rect(0, 0, 1920, 1080, "none", radius=0)
-    parts.insert(5, rect(0, 789, 1920, 291, BG, radius=0))
+    parts.insert(5, rect(0, 789, 1920, 115, BG, radius=0))
     parts[3] = label(96, 211, "计算模块进场示意", 58, TEXT, 700)
     parts[4] = label(1824, 204, "路径示意", 40, MINT, 700, "end")
     parts[6] = line(96, 790, 1824, 790, LINE, 2)
@@ -230,21 +230,6 @@ def states(boundaries):
         yield "retrofit", local, art, f"{stage}-{step:02d}-{action:02d}"
 
 
-def render_svg(page, art, source, destination, transparent=False):
-    source.write_text(art, encoding="utf-8")
-    page.set_content(art, wait_until="load")
-    page.add_style_tag(
-        content="html, body { margin: 0; overflow: hidden; background: transparent; }"
-    )
-    page.screenshot(
-        path=destination, omit_background=transparent, animations="disabled"
-    )
-    if not transparent:
-        with Image.open(destination) as image:
-            rgb = image.convert("RGB")
-        rgb.save(destination, compress_level=3)
-
-
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("job", type=Path)
@@ -253,58 +238,39 @@ def main():
     args = parser.parse_args()
     job = args.job
     cue = json.loads((job / "timing.json").read_text(encoding="utf-8"))["boundaries"]
-    sources = job / "source" / "svg"
-    sources.mkdir(parents=True, exist_ok=True)
-    cache = job / "svg-raster"
-    cache.mkdir(exist_ok=True)
     with sync_playwright() as playwright:
-        browser = playwright.chromium.launch(
-            executable_path=args.browser, args=["--no-sandbox"]
-        )
+        browser = playwright.chromium.launch(executable_path=args.browser)
         page = browser.new_page(
             viewport={"width": 1920, "height": 1080}, device_scale_factor=1
         )
         if args.phase in ("2d", "all"):
-            seen = set()
-            for shot, local_frame, art, name in states(cue):
-                raster = cache / f"{name}.png"
-                if name not in seen:
-                    render_svg(page, art, sources / f"{name}.svg", raster)
-                    seen.add(name)
-                folder = job / "frames" / shot
-                folder.mkdir(parents=True, exist_ok=True)
-                frame = folder / f"{local_frame:06d}.png"
-                frame.unlink(missing_ok=True)
-                os.link(raster, frame)
+            render_states(
+                job,
+                page,
+                (
+                    PictureState(shot, frame, name, art)
+                    for shot, frame, art, name in states(cue)
+                ),
+            )
 
         if args.phase in ("3d", "all"):
             projection = json.loads(
                 (job / "projection.json").read_text(encoding="utf-8")
             )
-            layers = []
-            for arrived in (False, True):
-                name = "route-arrived" if arrived else "route-travel"
-                layer = cache / f"{name}.png"
-                render_svg(
-                    page,
-                    route_labels(projection, arrived),
-                    sources / f"{name}.svg",
-                    layer,
-                    True,
-                )
-                with Image.open(layer) as image:
-                    layers.append(image.convert("RGBA"))
-            folder = job / "frames" / "route"
-            folder.mkdir(parents=True, exist_ok=True)
-            for frame in range(1, cue[8] - cue[6] + 1):
-                with Image.open(job / "raw3d" / f"{frame:04d}.png") as image:
-                    composite = Image.alpha_composite(
-                        image.convert("RGBA"),
-                        layers[int(frame - 1 >= projection["arrival_frame"])],
-                    )
-                    composite.convert("RGB").save(
-                        folder / f"{frame:06d}.png", compress_level=3
-                    )
+            arrival = projection["arrival_frame"]
+            artwork = {
+                "travel": route_labels(projection, False),
+                "arrived": route_labels(projection, True),
+            }
+
+            def route_states():
+                for frame in range(1, cue[8] - cue[6] + 1):
+                    key = "arrived" if frame - 1 >= arrival else "travel"
+                    plate = job / "raw3d" / f"{frame:04d}.png"
+                    yield PictureState("route", frame, key, artwork[key], plate)
+
+            render_states(job, page, route_states(), protected_y=904)
+            verify_motion_windows(job / "frames/route", [(1, arrival + 1)])
         browser.close()
 
 

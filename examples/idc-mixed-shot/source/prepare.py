@@ -80,11 +80,13 @@ def main():
     ):
         is_3d = shot_id == "route"
         dependency_names = ["blackbird.py", "visuals.py"] if is_3d else []
+        compositor = job / "source/mixed_shot.py"
         dependencies = [
             identity(job / "source" / name, job) for name in dependency_names
         ]
         if is_3d:
             dependencies.append(identity(job / "projection.json", job))
+        dependencies.append(identity(compositor, job))
         dependencies.append(identity(job / "timing.json", job))
         shots.append(
             {

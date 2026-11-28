@@ -16,6 +16,10 @@ If you want to make regular content for your project, team, or community, you ar
 
 ## See the work
 
+### Transparent overlays for mixed shots · 2026-11-28
+
+The compositor checks that transparent SVG pixels preserve the Blender plate and verifies where the picture is expected to change. The public IDC example encoded two 200-frame versions from one sealed master and checked full decoding, stream types and subtitle settings. [Validation notes](docs/progress/2026-11-28-mixed-shot-transparency.md) · [Reproduction guide](examples/idc-mixed-shot/README.md)
+
 ### Kajaani mixed-shot validation · 2026-11-27
 
 A capacity card, staged SVG highlights and an original 3D route explain how three data halls fit within the first facility and distinguish the planned second facility. The maintainer accepted the local sample. The public example generates its own narration with the public built-in voice and uses one frozen project for both cuts. [Editable example](examples/idc-kajaani/README.md) · [Production record](docs/progress/2026-11-27-idc-kajaani.md)

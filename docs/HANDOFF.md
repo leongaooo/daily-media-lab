@@ -73,3 +73,7 @@ Blackbird 同画面对照在整期复渲后补齐。下次涉及主体动作、�
 ## EXP-08 · 统一制作基线
 
 新一期通过 `production.py new` 自动读取已启用的 2026.11.28-1。已有节目通过 `production.py revalidate` 使用原期编辑计划和证据，在新路径生成复验版。公开配音沿用已授权的叔傅音色。验证和独立机器复现情况见[本批记录](progress/2026-11-28-unified-production-baseline.md)。
+
+## EXP-09 · 混合分镜透明覆盖
+
+新增覆盖 PNG、原始底图像素和动作窗口核验。公开混合分镜示例从同一封存母版生成带声与仅画面两版，路线证据、词点与复验入口见[本批核验](progress/2026-11-28-mixed-shot-transparency.md)。

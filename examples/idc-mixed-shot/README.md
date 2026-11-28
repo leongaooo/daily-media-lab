@@ -27,6 +27,7 @@ $env:NEWS_TO_VIDEO_BROWSER = $browser
 New-Item -ItemType Directory -Force "$job/source" | Out-Null
 Copy-Item "$example/narration.json" "$job/narration.json"
 Copy-Item "$example/source/*.py" "$job/source/"
+Copy-Item "$scripts/mixed_shot.py" "$job/source/mixed_shot.py"
 & $py "$job/source/freeze.py" $job --scripts $scripts --runtime $runtime
 & $py "$job/source/prepare.py" $job
 & $blender --background --factory-startup --python-exit-code 1 --python "$job/source/blackbird.py" -- $job
@@ -35,11 +36,11 @@ Copy-Item "$example/source/*.py" "$job/source/"
 & $py "$scripts/narrative_media.py" "$job/shots.json" --seal
 & $py "$scripts/check_runtime.py" --runtime $runtime --project "$job/project.json"
 & $py "$scripts/render.py" "$job/project.json" --backend-only --output "$job/output" --runtime $runtime --min-free-bytes 2147483648
-& $py "$scripts/render.py" "$job/project-silent-picture.json" --backend-only --output "$job/silent-compose" --runtime $runtime --min-free-bytes 2147483648
+& $py "$scripts/render.py" "$job/project.json" --backend-only --picture-only --output "$job/silent-compose" --runtime $runtime --min-free-bytes 2147483648
 & $py "$job/source/verify.py" $job --probe $profile.ffprobe --browser $browser --output "$job/deliverables"
 ```
 
-按顺序运行，任一步非零退出时先处理该步。`freeze.py` 以公开音色 `qwen-uncle-fu-v1` 实测句长。`prepare.py` 由句级 cue 生成整数帧边界。`blackbird.py` 由该边界生成可编辑 Blender 场景、三维帧及实际机位投影。`visuals.py` 生成可编辑 SVG、二维帧和三维标注层。两版经正式 Remotion 合成。带声版烧录字幕并交 SRT，静音版关闭口播字幕并从 MP4 移除音轨。检查读取编码文件并将记录写入 `review/encoded-checks.json`。
+按顺序运行，任一步非零退出时先处理该步。`freeze.py` 以公开音色 `qwen-uncle-fu-v1` 实测句长。`prepare.py` 由句级 cue 生成整数帧边界。`blackbird.py` 由该边界生成可编辑 Blender 场景、三维帧及实际机位投影。`visuals.py` 经混合分镜入口生成可编辑 SVG、二维帧和三维标注层，实测透明像素、字幕轨隔离和进场动作窗口。两版共用同一个项目及已封存画面母版，经正式 Remotion 合成。带声版烧录字幕并交 SRT，静音版关闭口播字幕并从 MP4 移除音轨。检查读取编码文件并将记录写入 `review/encoded-checks.json`。
 
 公开运行会按实测口播重新确定时长。技术与感知证据见[制作记录](../../docs/progress/2026-11-27-idc-mixed-shot-validation.md)。
 

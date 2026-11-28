@@ -751,6 +751,37 @@
         "references/daily-editorial-workflow.md",
         "references/editorial-handoff.md"
       ]
+    },
+    {
+      "id": 118,
+      "name": "mixed-overlay-alpha-and-motion",
+      "prompt": "混合分镜的 MP4 能解码，但三维运输动作在字幕切换之间看不到。怎么定位并把检查加到制作入口？",
+      "expected_output": "用实栅格 PNG 拒绝 Blender 上无 Alpha=0 的全幅底色，在透明像素逐个对比编码前合成与原底图 RGB，并检查字幕保护区。用局部半透明标注做正对照，纯二维允许全幅底色。按预期变化窗口复核实际像素和前中后状态，允许设计停留复用帧。",
+      "files": [
+        "references/mixed-shot-render.md",
+        "scripts/mixed_shot.py",
+        "scripts/test_mixed_shot.py"
+      ]
+    },
+    {
+      "id": 119,
+      "name": "evidence-bound-route-frozen-cue-pair",
+      "prompt": "来源只给两站间距、联合规模和乙站冷却规划。冻结原声先说两站距离，再说规模，最后回到乙站的实施状态。请做路线短段验证。",
+      "expected_output": "明确间距端点与数值口径。箭头、地形和实体连线按证据决定。设施状态标到所属主体，标签锚点取实际投影。动作和显示字幕按原声实际语序与词点，核对源样本区间、原速 PCM 和尾音。冻结同一画面编码带声和静音两版，检查编码画面、音流、字幕轨与窄屏播放，并分别登记技术、人工试听、实机及用户接受范围。",
+      "files": [
+        "references/visual-director.md",
+        "references/refinement-workflow.md",
+        "scripts/review_window.py"
+      ]
+    },
+    {
+      "id": 120,
+      "name": "media-sync-with-remote-delivery",
+      "prompt": "本批视频技能更新已选择同步并推送到确认的开源分支。验收已通过，请继续收尾。",
+      "expected_output": "定向审核可公开改动，提交并正常推送，核对远端引用与网页后汇报。沿用同批远端授权，保留本机声音及私人资产。明确选择只同步工作副本时在已验证副本交付。",
+      "files": [
+        "references/media-maintenance.md"
+      ]
     }
   ],
   "scope_notice": "2026-11-20: explicit v1/v2 component cases remain compatibility checks. New narrative_version=1 Blender shots are independent of old object slots/counts. Historical maintenance prompts now also apply the current per-batch open-source sync question; prior batch approval is not perpetual approval. Candidate value architecture cases 96-102 are appended after canonical review. They cover value intent, work/audience evidence separation, static-frame limits, read-only evaluation, high-priority column recognition, no total score, and version scope. Cases 103–105 cover independent story worlds, actual stage/audio consumers, and approval-to-public-fixture boundaries. Cases 113–116 cover the Daily Media Lab next-phase editorial plan, human direction-board decisions, explicit review gating, and title/interaction delivery."
